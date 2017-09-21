@@ -1,0 +1,17 @@
+version: '2'
+services:
+  web:
+    build: .
+    ports:
+     - "80:80"
+     - "4406:3306"
+     - "9090:9090"
+    volumes:
+     - .:/app
+     - db_data:/var/lib/mysql
+    environment:
+     PHP_XDEBUG_ENABLED: 1 # Set 1 to enable.
+     XDEBUG_CONFIG: remote_host=172.17.0.1
+
+volumes:
+ db_data:
