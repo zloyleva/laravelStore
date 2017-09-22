@@ -54,7 +54,6 @@ RUN echo mysql-server mysql-server/root_password password 12345 | debconf-set-se
     mysql -uroot -p12345 -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '12345';"
 
 # Copy supervisor conf
-COPY ./chat-worker.conf /etc/supervisor/conf.d/chat-worker.conf
 
 # Make ports available to the world outside this container
 EXPOSE 80
