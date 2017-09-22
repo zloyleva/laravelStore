@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use App\Models\User;
+use App\Models\PriceType;
 
 class UsersTableSeeder extends Seeder
 {
@@ -13,9 +14,12 @@ class UsersTableSeeder extends Seeder
     public function run()
     {
         //
+        User::truncate();
+
         $faker = \Faker\Factory::create();
         $password = Hash::make('root');
-
+        $priceTypeArray = PriceType::all()->toArray();
+// dd($priceTypeArray);
         for ($i = 1; $i < 10; $i++) {
             try {
                 User::create([
@@ -25,7 +29,7 @@ class UsersTableSeeder extends Seeder
                     'fname' => $faker->firstName,
                     'lname' => $faker->lastName,
                     'role' => 'user',
-                    'price_type' => 'dealer',
+                    'price_type' => $faker->randomElement($priceTypeArray)['type'],
                     'address' => $faker->streetAddress,
                     'town' => $faker->city,
                 ]);

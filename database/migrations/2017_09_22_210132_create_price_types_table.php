@@ -15,6 +15,7 @@ class CreatePriceTypesTable extends Migration
     {
         Schema::create('price_types', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('type');
             $table->timestamps();
         });
     }
