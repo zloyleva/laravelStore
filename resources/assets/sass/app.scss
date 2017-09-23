@@ -1,9 +1,39 @@
 
 // Fonts
-@import url("https://fonts.googleapis.com/css?family=Raleway:300,400,600");
+@import url("https://fonts.googleapis.com/css?family=Roboto:300,400,600");
 
 // Variables
 @import "variables";
 
 // Bootstrap
 @import "~bootstrap-sass/assets/stylesheets/bootstrap";
+
+.container{
+    .product_item{
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        padding: 10px;
+        .section_thumbnail{
+            .product_image{
+                width: 100%;
+                // margin: 15px 0;
+                border-radius: 5px;
+            }
+        }
+        .section_meta{}
+        .section_buy{
+            .product_price{
+                font-weight: 600;
+                font-size: 2rem;
+            }
+            .behavior_section{
+                display: flex;
+                input.products_quantity{
+                    max-width: 50px;
+                    margin-right: 5px;
+                }
+            }
+        }
+    }
+}

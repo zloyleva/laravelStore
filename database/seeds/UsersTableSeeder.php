@@ -19,11 +19,11 @@ class UsersTableSeeder extends Seeder
         $faker = \Faker\Factory::create();
         $password = Hash::make('root');
         $priceTypeArray = PriceType::all()->toArray();
-// dd($priceTypeArray);
+
         for ($i = 1; $i < 10; $i++) {
             try {
                 User::create([
-                    'user_name' => $faker->userName,
+                    'name' => $faker->userName,
                     'email' => $faker->email,
                     'password' => $password,
                     'fname' => $faker->firstName,
