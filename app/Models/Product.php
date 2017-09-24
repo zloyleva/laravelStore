@@ -3,12 +3,17 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Category;
 
 class Product extends Model
 {
     //
+    public function category(){
+        return $this->belongsTo(Category::class);
+    }
+
     public function listProducts(){
-        return $this->paginate(10);
+        return $this->with(['category'])->paginate(10);
     }
 
     public function roundNumber($number){

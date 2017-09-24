@@ -8350,6 +8350,10 @@ button.close {
   }
 }
 
+.container .text-line-through {
+  text-decoration: line-through;
+}
+
 .container .product_item {
   border: 1px solid #ddd;
   border-radius: 10px;
@@ -8376,5 +8380,8 @@ button.close {
 .container .product_item .section_buy .behavior_section input.products_quantity {
   max-width: 50px;
   margin-right: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  padding-left: 5px;
 }
 

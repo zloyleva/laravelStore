@@ -6,10 +6,11 @@ use App\Models\PriceType;
 class PriceTypesTableSeeder extends Seeder
 {
     protected $dataList = [
-        'vip',
-        'dealer',
-        '3_opt',
-        '8_opt',
+        'price_user',
+        'price_3_opt',
+        'price_8_opt',
+        'price_dealer',
+        'price_vip',
     ];
     /**
      * Run the database seeds.

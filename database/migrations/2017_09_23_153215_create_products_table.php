@@ -18,12 +18,20 @@ class CreateProductsTable extends Migration
             $table->integer('sku');
             $table->string('name');
             $table->text('description');
-            $table->float('price',8,4);
+
+            $table->float('price_user',8,4);
+            $table->float('price_3_opt',8,4);
+            $table->float('price_8_opt',8,4);
+            $table->float('price_dealer',8,4);
+            $table->float('price_vip',8,4);
+            
             $table->integer('category_id');
             $table->integer('stock');
             $table->boolean('featured');
             $table->string('image');
             $table->timestamps();
+
+            $table->unique('sku');
         });
     }
 
