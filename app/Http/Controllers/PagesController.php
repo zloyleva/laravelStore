@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Product;
+use Illuminate\Support\Facades\Auth;
 use \Cart;
 
 class PagesController extends Controller
@@ -20,10 +21,15 @@ class PagesController extends Controller
 
     public function showCard(){
 
-        Cart::add('12345', 'Product 1 has long name too long, well very long', 1, 10.00);
-        Cart::add('21345', 'Product 2', 1, 5.40);
+        if(Auth::check()){
+          $identifcator = Auth::user()->id;
+        }else {
+          $identifcator = '';
+        }
+        Cart::restore($identifcator);
+        Cart::store($identifcator);
 
-        return view('store.card',[
+        return view('store.cart',[
             'productsInCart'=>Cart::content()
         ]);
     }

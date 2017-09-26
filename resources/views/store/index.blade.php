@@ -6,7 +6,7 @@
 </div>
 <div class="container">
     @foreach( $products as $product)
-        <div id="{{$product->id}}" class="product_item col-sm-12 col-md-12 col-lg-12">
+        <div id="{{$product->id}}" class="js-row product_item col-sm-12 col-md-12 col-lg-12">
             <div class="row">
                 <div class="col-sm-3 col-md-3 col-lg-3 section_thumbnail">
                     <img class="product_image" src="{{$product->image}}" alt="">
@@ -28,7 +28,7 @@
                     @endif
                     <div class="behavior_section">
                        <input class="products_quantity" type="number"  min="1" step="1" value="1">
-                       <button class="btn btn-default">Add to cart</button>
+                       <button class="btn btn-default js-add_to_cart">Add to cart</button>
                     </div>
                 </div>
                 
