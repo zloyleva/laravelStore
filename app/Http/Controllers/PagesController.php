@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Models\Order;
 use Illuminate\Support\Facades\Auth;
-use \Cart;
+use Gloudemans\Shoppingcart\Facades\Cart;
 
 class PagesController extends Controller
 {
@@ -19,18 +20,32 @@ class PagesController extends Controller
         ]);
     }
 
-    public function showCard(){
+    public function showCard(Request $request){
 
         if(Auth::check()){
           $identifcator = Auth::user()->id;
         }else {
           $identifcator = '';
         }
+
         Cart::restore($identifcator);
         Cart::store($identifcator);
 
         return view('store.cart',[
-            'productsInCart'=>Cart::content()
+            'productsInCart'=>Cart::content(),
+            'cart' => $request->session()->get('cart')
         ]);
+    }
+
+    public function showOrders(Request $request, Order $orders){
+
+      if($request->status === 'setOrder'){
+        $orders->createOrder($request,Auth::user()->id);
+        $request->session()->forget('cart');
+      }
+
+      return view('store.orders',[
+          'orders'=>$orders->listOrdersForUser()
+      ]);
     }
 }

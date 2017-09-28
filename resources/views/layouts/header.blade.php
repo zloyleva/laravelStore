@@ -21,7 +21,7 @@
                 <div class="collapse navbar-collapse" id="app-navbar-collapse">
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
-                        &nbsp;
+                        <li><a href="{{route('store')}}">Store</a></li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->
@@ -39,7 +39,7 @@
                                 <ul class="dropdown-menu" role="menu">
                                   <li><a href="#">My Profile</a></li>
                                   <li><a href="{{ route('cart') }}">Cart</a></li>
-                                  <li><a href="#">Orsers</a></li>
+                                  <li><a href="{{ route('orders') }}">Orsers</a></li>
                                   <li>
                                     <a href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();">Logout</a>
 

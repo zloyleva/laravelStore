@@ -20,6 +20,18 @@ class UsersTableSeeder extends Seeder
         $password = Hash::make('root');
         $priceTypeArray = PriceType::all()->toArray();
 
+        User::create([
+            'name' => 'userName',
+            'email' => 'test@gmail.com',
+            'password' => $password,
+            'fname' => $faker->firstName,
+            'lname' => $faker->lastName,
+            'role' => 'user',
+            'price_type' => $faker->randomElement($priceTypeArray)['type'],
+            'address' => $faker->streetAddress,
+            'town' => $faker->city,
+        ]);
+
         for ($i = 1; $i < 10; $i++) {
             try {
                 User::create([

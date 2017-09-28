@@ -7,11 +7,13 @@ require('bootstrap');
 const page = require('page');
 
 import { PageModule } from './store/pages';
+import { CartModule } from './store/cart';
 
 $(document).ready(() => {
 
-    page('/store*', () => new PageModule());
+  page('/store*', () => new PageModule());
+  page('/cart', () => new CartModule());
 
-    page();
-    page.stop();
+  page();
+  page.stop();
 });

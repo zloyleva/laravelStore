@@ -17,9 +17,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-// Route::group(['middleware' => 'auth:api'], function () {
-    // Route::post('store/addtocart', [ 'as'=>'store.addtocart', 'uses'=>'ProductsController@addToCart']);
-// });
-
-
-Route::middleware('auth:api')->post('/store/addtocart', 'ProductsController@addToCart');
+Route::group(['middleware' => 'auth:api'], function () {
+    Route::post('store/addtocart', [ 'as'=>'store.addtocart', 'uses'=>'ProductsController@addToCart']);
+    Route::post('order', [ 'as'=>'store.order', 'uses'=>'ProductsController@createOrder']);
+});
