@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Gloudemans\Shoppingcart\Facades\Cart;
+use App\Models\OrderList;
 
 class Order extends Model
 {
@@ -27,7 +28,7 @@ class Order extends Model
         'total' => filter_var(Cart::total(), FILTER_SANITIZE_NUMBER_FLOAT,FILTER_FLAG_ALLOW_FRACTION),
         'note'  => $request->note
       ]);
-      
+
       Cart::destroy();
       return $orderInstance;
     }

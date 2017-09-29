@@ -3,6 +3,8 @@
 @section('content')
 <div class="container">
     <h1>Orders</h1>
+    {{ url()->previous() }}
+    {{route('orders')}}
 </div>
 <div class="container">
     <table class="table table-striped">
