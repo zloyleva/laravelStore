@@ -39,7 +39,7 @@
                                 <ul class="dropdown-menu" role="menu">
                                   <li><a href="#">My Profile</a></li>
                                   <li><a href="{{ route('cart') }}">Cart</a></li>
-                                  <li><a href="{{ route('orders') }}">Orsers</a></li>
+                                  <li><a href="{{ route('orders.list') }}">Orsers</a></li>
                                   <li>
                                     <a href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();">Logout</a>
 

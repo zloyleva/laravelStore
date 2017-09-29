@@ -9,7 +9,7 @@
       <table class="table table-striped">
           <thead>
               <tr>
-                  <th>#</th>
+                  <th>SKU</th>
                   <th>Product</th>
                   <th>Qty</th>
                   <th>Price</th>
@@ -22,7 +22,7 @@
               @foreach($productsInCart as $row)
 
                   <tr data-row_id="{{$row->rowId}}">
-                      <td></td>
+                      <td>{{$row->id}}</td>
                       <td>
                           <p><strong>{{$row->name}}</strong></p>
                       </td>

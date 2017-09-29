@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Order;
+use App\Models\OrderList;
 use Illuminate\Support\Facades\Auth;
 use Gloudemans\Shoppingcart\Facades\Cart;
 
@@ -37,19 +38,31 @@ class PagesController extends Controller
         ]);
     }
 
-    public function showOrders(Request $request, Order $orders){
+    public function listOrders(Request $request, Order $orders, OrderList $orderList){
 
       if($request->status === 'setOrder' ){
         Cart::restore(Auth::user()->id);
         if(Cart::count() > 0){
-          $orders->createOrder($request,Auth::user()->id);
+          $result = $orders->createOrder($request,Auth::user()->id);
           $request->session()->forget('cart');
-        }        
+
+          $orderList->createOrderList($result);
+        }
       }
 
       $request->flashOnly(['status', 'note', 'phone']);
-      return view('store.orders',[
+      return view('orders.list',[
           'orders'=>$orders->listOrdersForUser()
       ]);
+    }
+
+    public function showOrder(Request $request, Order $order){
+      $data = $order->listOrderDataForUser($request);
+      if( Auth::user()->id == $data->user_id ){
+        return view('orders.show',[
+            'order' => $data
+        ]);
+      }
+      return redirect('/');
     }
 }
