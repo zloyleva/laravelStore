@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use App\Models\OrderList;
+use Illuminate\Http\Request;
 
 class Order extends Model
 {
@@ -13,10 +14,17 @@ class Order extends Model
       'user_id','status','phone','total','note'
     ];
 
+    public function orderListItems(){
+      return $this->hasMany(OrderList::class);
+    }
+
     public function listOrdersForUser(){
       return $this->where('user_id','=',Auth::user()->id)->get();
     }
 
+    /**
+    * Create new Order
+    */
     public function createOrder($request,$userId){
       Cart::restore($userId);
       $itemsList = Cart::content();
@@ -30,6 +38,13 @@ class Order extends Model
       ]);
 
       Cart::destroy();
-      return $orderInstance;
+      return [
+        'order_id' => $orderInstance->id,
+        'orderList' => $itemsList
+      ];
+    }
+
+    public function listOrderDataForUser($request){
+      return $this->with('orderListItems')->where('id', '=', $request->id)->first();
     }
 }

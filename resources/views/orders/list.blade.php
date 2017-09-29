@@ -3,8 +3,6 @@
 @section('content')
 <div class="container">
     <h1>Orders</h1>
-    {{ url()->previous() }}
-    {{route('orders')}}
 </div>
 <div class="container">
     <table class="table table-striped">
@@ -22,7 +20,7 @@
 
           @foreach($orders as $order)
             <tr class="js-row" id="{{$order->id}}">
-                <td>{{$order->id}} <a href="{{ route('orders') }}/{{$order->id}}">Details</a></td>
+                <td>{{$order->id}} <a href="/orders/show/{{$order->id}}">Details</a></td>
                 <td>{{$order->created_at}}</td>
                 <td>{{$order->status}}</td>
                 <td>{{$order->total}}</td>
