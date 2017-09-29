@@ -39,11 +39,15 @@ class PagesController extends Controller
 
     public function showOrders(Request $request, Order $orders){
 
-      if($request->status === 'setOrder'){
-        $orders->createOrder($request,Auth::user()->id);
-        $request->session()->forget('cart');
+      if($request->status === 'setOrder' ){
+        Cart::restore(Auth::user()->id);
+        if(Cart::count() > 0){
+          $orders->createOrder($request,Auth::user()->id);
+          $request->session()->forget('cart');
+        }        
       }
 
+      $request->flashOnly(['status', 'note', 'phone']);
       return view('store.orders',[
           'orders'=>$orders->listOrdersForUser()
       ]);
