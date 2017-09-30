@@ -21,6 +21,18 @@ class UsersTableSeeder extends Seeder
         $priceTypeArray = PriceType::all()->toArray();
 
         User::create([
+            'name' => 'Admin',
+            'email' => 'admin@gmail.com',
+            'password' => $password,
+            'fname' => $faker->firstName,
+            'lname' => $faker->lastName,
+            'role' => 'admin',
+            'price_type' => $faker->randomElement($priceTypeArray)['type'],
+            'address' => $faker->streetAddress,
+            'town' => $faker->city,
+        ]);
+
+        User::create([
             'name' => 'userName',
             'email' => 'test@gmail.com',
             'password' => $password,

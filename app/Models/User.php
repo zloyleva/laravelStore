@@ -33,4 +33,10 @@ class User extends Authenticatable
       $this->api_token = null;
       $this->save();
   }
+
+  public function isAdmin()
+    {
+        return $this->role === 'admin';
+    }
+
 }

@@ -15,7 +15,7 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
+            $table->string('name')->unique();
             $table->string('fname')->default('Unnamed');
             $table->string('lname')->default('Unnamed');
             $table->string('email')->unique();
@@ -24,6 +24,7 @@ class CreateUsersTable extends Migration
             $table->string('price_type')->default('price_user');
             $table->string('address')->nullable();
             $table->string('town')->nullable();
+            $table->string('phone')->nullable();
             $table->string('api_token', 60)->unique()->nullable();
             $table->rememberToken();
             $table->timestamps();

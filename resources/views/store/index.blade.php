@@ -18,10 +18,11 @@
                     <div class="product_stock">Stock: {{$product->stock}}</div>
                 </div>
                 <div class="col-sm-3 col-md-3 col-lg-3 section_buy">
-                    <div class=" {{(Auth::check())?'text-line-through ':'product_price'}}" data-price_user="{{$product->price_user}}">
+                    <div class=" {{(Auth::check() && Auth::user()->role != 'user')?'text-line-through ':'product_price'}}" data-price_user="{{$product->price_user}}">
                         $ {{$product->roundNumber($product->price_user)}}
                     </div>
-                    @if(Auth::check())
+                    @if(Auth::check() && Auth::user()->role != 'user' )
+                    {{Auth::user()->role}}
                         <div class="product_price text-danger" data-price_type="{{$price_type = Auth::user()->price_type}}">
                             $ {{$product->roundNumber($product->$price_type)}}
                         </div>
@@ -31,7 +32,7 @@
                        <button class="btn btn-default js-add_to_cart">Add to cart</button>
                     </div>
                 </div>
-                
+
             </div>
         </div>
     @endforeach

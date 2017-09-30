@@ -15,4 +15,8 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'orders', 'as' => 'orders.']
   Route::get('/show/{id}', [ 'as'=>'show', 'uses'=>'PagesController@showOrder']);
 });
 
+Route::group(['middleware' => ['auth','admin'], 'prefix' => 'admin', 'as' => 'admin.'], function () {
+  Route::get('/orders', [ 'as'=>'list', 'uses'=>'AdminDashboardController@listOrders']);
+});
+
 Auth::routes();
