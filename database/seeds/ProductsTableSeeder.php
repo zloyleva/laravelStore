@@ -3,6 +3,7 @@
 use Illuminate\Database\Seeder;
 use App\Models\Product;
 use App\Models\Category;
+use App\Http\Controllers\PriceParcerController;
 
 class ProductsTableSeeder extends Seeder
 {
@@ -14,31 +15,40 @@ class ProductsTableSeeder extends Seeder
     public function run()
     {
         //
+        $price = new PriceParcerController;
+        $priceData = $price->readPrice();
+
+        // dd($priceData);
+
         Product::truncate();
         $faker = \Faker\Factory::create();
         $categories = Category::all()->toArray();
 
-        for ($i = 1; $i < 50; $i++) {
+        //for ($i = 1; $i < 50; $i++) {
+        foreach($priceData as $item){
+          if(!$item) continue;
             $userPrice = $faker->randomFloat($nbMaxDecimals = NULL, $min = 0, $max = 1000);
+            // dd($item);
+            $categoryId = Category::takeCategoryId($item['category']);
             try {
-                Product::create([
-                    'sku' => $faker->numberBetween($min = 1000, $max = 8000),
-                    'name' => $faker->sentence($nbWords = 6, $variableNbWords = true),
-                    'description' => $faker->text($maxNbChars = 200),
+              Product::create([
+                  'sku' => (integer) $item['sku'],
+                  'name' => $item['name'],
+                  'description' => $item['description'],
 
-                    'price_user' => $userPrice,
-                    'price_3_opt' => $userPrice - $userPrice*0.1,
-                    'price_8_opt' => $userPrice - $userPrice*0.2,
-                    'price_dealer' => $userPrice - $userPrice*0.3,
-                    'price_vip' => $userPrice - $userPrice*0.4,
+                  'price_user' => (float) strtr($item['price_user'], [',' => '.']),
+                  'price_3_opt' => (float) strtr($item['price_3_opt'], [',' => '.']),
+                  'price_8_opt' => (float) strtr($item['price_8_opt'], [',' => '.']),
+                  'price_dealer' => (float) strtr($item['price_dealer'], [',' => '.']),
+                  'price_vip' => (float) strtr($item['price_vip'], [',' => '.']),
 
-                    'category_id' => $faker->randomElements($categories)[0]['id'],
-                    'stock' => $faker->numberBetween($min = 1, $max = 5000),
-                    'featured' => $faker->boolean($chanceOfGettingTrue = 10),
-                    'image' => $faker->imageUrl(),
-                ]);        
+                  'category_id' => $categoryId,
+                  'stock' => $item['stock'],
+                  'featured' => $faker->boolean($chanceOfGettingTrue = 10),
+                  'image' => $faker->imageUrl(),
+              ]);
             }catch (Exception $e){
-
+              echo $e;
             }
         }
     }

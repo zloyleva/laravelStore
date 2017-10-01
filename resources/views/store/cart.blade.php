@@ -47,7 +47,7 @@
   <div class="container">
     <div class="row">
       <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-        <form id="create-order-form" class="" action="{{route('orders')}}" method="get">
+        <form id="create-order-form" class="" action="{{route('orders.list')}}" method="get">
           <input type="hidden" name="status" value="setOrder">
           <div class="form-group">
             <label >Enter address for delivery <sup class="alert-danger">*</sup></label>

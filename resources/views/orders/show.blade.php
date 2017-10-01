@@ -49,7 +49,7 @@
               @foreach($order->orderListItems as $row)
 
                   <tr data-row_id="{{$row->rowId}}">
-                      <td>{{$row->id}}</td>
+                      <td>{{$row->sku}}</td>
                       <td>
                           <p><strong>{{$row->name}}</strong></p>
                       </td>
