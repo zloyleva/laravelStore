@@ -8385,3 +8385,35 @@ button.close {
   padding-left: 5px;
 }
 
+#category_menu ul {
+  list-style: none;
+}
+
+#category_menu ul li a {
+  padding: 5px;
+  text-decoration: none;
+  display: block;
+}
+
+#category_menu ul li a:hover {
+  background-color: unset;
+}
+
+#category_menu ul li a.active {
+  background-color: #cbcbcb;
+}
+
+#category_menu ul li a.active ~ ul.sub_menu {
+  display: block;
+}
+
+#category_menu ul.sub_menu {
+  padding: 0;
+  display: none;
+}
+
+#category_menu ul.sub_menu.display_item {
+  display: block;
+  background-color: #e8e8e8;
+}
+

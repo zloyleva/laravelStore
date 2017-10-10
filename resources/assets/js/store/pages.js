@@ -1,9 +1,12 @@
 import {ApiModule} from '../api';
+import {CategoryModule} from './category';
 
 export class PageModule extends ApiModule {
     constructor() {
         super();
         console.log('Page: PageModule');
+
+        this.category = new CategoryModule();
 
         this.data = {};
         this.apiUrl = '/api/store/addtocart';

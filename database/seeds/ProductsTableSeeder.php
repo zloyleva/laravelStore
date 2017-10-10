@@ -30,23 +30,25 @@ class ProductsTableSeeder extends Seeder
             $userPrice = $faker->randomFloat($nbMaxDecimals = NULL, $min = 0, $max = 1000);
             // dd($item);
             $categoryId = Category::takeCategoryId($item['category']);
+
+            Product::create([
+                'sku' => (integer) $item['sku'],
+                'name' => $item['name'],
+                'description' => $item['description'],
+
+                'price_user' => (float) strtr($item['price_user'], [',' => '.']),
+                'price_3_opt' => (float) strtr($item['price_3_opt'], [',' => '.']),
+                'price_8_opt' => (float) strtr($item['price_8_opt'], [',' => '.']),
+                'price_dealer' => (float) strtr($item['price_dealer'], [',' => '.']),
+                'price_vip' => (float) strtr($item['price_vip'], [',' => '.']),
+
+                'category_id' => $categoryId,
+                'stock' => $item['stock'],
+                'featured' => $faker->boolean($chanceOfGettingTrue = 10),
+                'image' => $faker->imageUrl(),
+            ]);
             try {
-              Product::create([
-                  'sku' => (integer) $item['sku'],
-                  'name' => $item['name'],
-                  'description' => $item['description'],
 
-                  'price_user' => (float) strtr($item['price_user'], [',' => '.']),
-                  'price_3_opt' => (float) strtr($item['price_3_opt'], [',' => '.']),
-                  'price_8_opt' => (float) strtr($item['price_8_opt'], [',' => '.']),
-                  'price_dealer' => (float) strtr($item['price_dealer'], [',' => '.']),
-                  'price_vip' => (float) strtr($item['price_vip'], [',' => '.']),
-
-                  'category_id' => $categoryId,
-                  'stock' => $item['stock'],
-                  'featured' => $faker->boolean($chanceOfGettingTrue = 10),
-                  'image' => $faker->imageUrl(),
-              ]);
             }catch (Exception $e){
               echo $e;
             }

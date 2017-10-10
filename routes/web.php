@@ -7,7 +7,9 @@
 */
 
 Route::get('/', [ 'as'=>'home', 'uses'=>'PagesController@home']);
+
 Route::get('/store', [ 'as'=>'store', 'uses'=>'PagesController@store']);
+Route::get('/store/category/{slug}', [ 'as'=>'category', 'uses'=>'PagesController@category']);
 Route::get('/cart', [ 'as'=>'cart', 'uses'=>'PagesController@showCard']);
 
 Route::group(['middleware' => ['auth'], 'prefix' => 'orders', 'as' => 'orders.'], function () {

@@ -6,19 +6,22 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Order;
 use App\Models\OrderList;
+use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
 use Gloudemans\Shoppingcart\Facades\Cart;
 
 class PagesController extends Controller
 {
-    public function home(){
+    public function home(Category $categories){
         return view('welcome');
     }
 
-    public function store(Product $product){
-        return view('store.index',[
-            'products'=>$product->listProducts()
-        ]);
+    public function store(Product $product, Request $request, Category $category){
+        return view('store.index', $category->prepareCategory($request, $product));
+    }
+
+    public function category(Product $product, Request $request, Category $category){
+      return view('store.index', $category->prepareCategory($request, $product));
     }
 
     public function showCard(Request $request){
