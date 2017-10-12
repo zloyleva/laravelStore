@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
 {
-	private $menuHtml;
 	private $searchData = [];
 
     public function parent(){
@@ -88,22 +87,27 @@ class Category extends Model
 
 	public function getCategoryBreadCrumbs($collection, $data){
 
-		if(!$data || !is_array($collection)) return null; //todo: Return only HOME link
-		$breadCrumbs = [];
-		foreach ( array_reverse($collection) as $key => $item ) {
-			if ($data['current_cat_id'] == $item['id']){
-				array_unshift($breadCrumbs,[
-						'name' => $item['name'],
-						'slug' => $item['slug'],
-					]
-				);
-				$data['current_cat_id'] = $item['parent_id'];
+		$breadcrumbs = [];
+		if($data && is_array($collection)){
+			foreach ( array_reverse($collection) as $key => $item ) {
+				if ($data['current_cat_id'] == $item['id']){
+					array_unshift($breadcrumbs,[
+							'name' => $item['name'],
+							'slug' => 'store/category/'.$item['slug'],
+						]
+					);
+					$data['current_cat_id'] = $item['parent_id'];
+				}
 			}
 		}
-//		dd($breadCrumbs);
 
 
+		array_unshift($breadcrumbs,[
+				'name' => 'Shop',
+				'slug' => 'store/',
+			]
+		);
 
-		return $breadCrumbs;
+		return $breadcrumbs;
 	}
 }

@@ -65,6 +65,106 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ApiModule; });
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var ApiModule = function () {
+    function ApiModule() {
+        _classCallCheck(this, ApiModule);
+
+        console.log('ApiModule');
+
+        this.apiToken = this.readCookie('API-TOKEN');
+    }
+
+    _createClass(ApiModule, [{
+        key: 'get',
+        value: function get(settings) {
+            var api = this;
+            $.ajax(Object.assign(this.ajaxSettings(), settings)).fail(function (e) {
+                if (e.status === 401) {
+                    var failed = this;
+                    api.get({
+                        success: function success() {
+                            api.apiToken = api.readCookie('API-TOKEN');
+                            failed.headers.authorization = 'Bearer ' + api.apiToken;
+                            $.ajax(failed);
+                        }
+                    });
+                }
+            });
+        }
+    }, {
+        key: 'post',
+        value: function post(settings) {
+            console.log(this.apiToken);
+            this.get(Object.assign(settings, { type: 'post' }));
+        }
+    }, {
+        key: 'put',
+        value: function put(settings) {
+            this.get(Object.assign(settings, { type: 'put' }));
+        }
+    }, {
+        key: 'delete',
+        value: function _delete(settings) {
+            this.get(Object.assign(settings, { type: 'delete' }));
+        }
+    }, {
+        key: 'apiHeaders',
+        value: function apiHeaders() {
+            return {
+                'authorization': 'Bearer ' + this.apiToken,
+                'accept': 'application/json',
+                'content-type': 'application/x-www-form-urlencoded',
+                'cache-control': 'no-cache'
+            };
+        }
+    }, {
+        key: 'ajaxSettings',
+        value: function ajaxSettings() {
+            return {
+                headers: this.apiHeaders(),
+                type: 'get',
+                dataType: 'json',
+                data: {},
+                url: this.apiUrl,
+                beforeSend: function beforeSend() {},
+                success: function success() {},
+                error: function error() {},
+                retries: 1
+            };
+        }
+    }, {
+        key: 'readCookie',
+        value: function readCookie(name) {
+            var nameEQ = encodeURIComponent(name) + "=";
+            var cookieArray = document.cookie.split(';');
+
+            for (var i = 0; i < cookieArray.length; i++) {
+                var cookie = cookieArray[i];
+                while (cookie.charAt(0) === ' ') {
+                    cookie = cookie.substring(1, cookie.length);
+                }
+
+                if (cookie.indexOf(nameEQ) === 0) {
+                    return decodeURIComponent(cookie.substring(nameEQ.length, cookie.length));
+                }
+            }
+            return null;
+        }
+    }]);
+
+    return ApiModule;
+}();
+
+/***/ }),
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -10324,111 +10424,11 @@ return jQuery;
 
 
 /***/ }),
-/* 1 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ApiModule; });
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var ApiModule = function () {
-    function ApiModule() {
-        _classCallCheck(this, ApiModule);
-
-        console.log('ApiModule');
-
-        this.apiToken = this.readCookie('API-TOKEN');
-    }
-
-    _createClass(ApiModule, [{
-        key: 'get',
-        value: function get(settings) {
-            var api = this;
-            $.ajax(Object.assign(this.ajaxSettings(), settings)).fail(function (e) {
-                if (e.status === 401) {
-                    var failed = this;
-                    api.get({
-                        success: function success() {
-                            api.apiToken = api.readCookie('API-TOKEN');
-                            failed.headers.authorization = 'Bearer ' + api.apiToken;
-                            $.ajax(failed);
-                        }
-                    });
-                }
-            });
-        }
-    }, {
-        key: 'post',
-        value: function post(settings) {
-            console.log(this.apiToken);
-            this.get(Object.assign(settings, { type: 'post' }));
-        }
-    }, {
-        key: 'put',
-        value: function put(settings) {
-            this.get(Object.assign(settings, { type: 'put' }));
-        }
-    }, {
-        key: 'delete',
-        value: function _delete(settings) {
-            this.get(Object.assign(settings, { type: 'delete' }));
-        }
-    }, {
-        key: 'apiHeaders',
-        value: function apiHeaders() {
-            return {
-                'authorization': 'Bearer ' + this.apiToken,
-                'accept': 'application/json',
-                'content-type': 'application/x-www-form-urlencoded',
-                'cache-control': 'no-cache'
-            };
-        }
-    }, {
-        key: 'ajaxSettings',
-        value: function ajaxSettings() {
-            return {
-                headers: this.apiHeaders(),
-                type: 'get',
-                dataType: 'json',
-                data: {},
-                url: this.apiUrl,
-                beforeSend: function beforeSend() {},
-                success: function success() {},
-                error: function error() {},
-                retries: 1
-            };
-        }
-    }, {
-        key: 'readCookie',
-        value: function readCookie(name) {
-            var nameEQ = encodeURIComponent(name) + "=";
-            var cookieArray = document.cookie.split(';');
-
-            for (var i = 0; i < cookieArray.length; i++) {
-                var cookie = cookieArray[i];
-                while (cookie.charAt(0) === ' ') {
-                    cookie = cookie.substring(1, cookie.length);
-                }
-
-                if (cookie.indexOf(nameEQ) === 0) {
-                    return decodeURIComponent(cookie.substring(nameEQ.length, cookie.length));
-                }
-            }
-            return null;
-        }
-    }]);
-
-    return ApiModule;
-}();
-
-/***/ }),
 /* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(3);
-module.exports = __webpack_require__(24);
+module.exports = __webpack_require__(25);
 
 
 /***/ }),
@@ -10438,8 +10438,8 @@ module.exports = __webpack_require__(24);
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__store_pages__ = __webpack_require__(22);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__store_cart__ = __webpack_require__(23);
-window.$ = window.jQuery = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__store_cart__ = __webpack_require__(24);
+window.$ = window.jQuery = __webpack_require__(1);
 console.log('App was loaded');
 
 __webpack_require__(4);
@@ -10477,7 +10477,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
  */
 (function( factory ) {
 	if ( true ) {
-		!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(0)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+		!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(1)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
 				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
 				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -15741,8 +15741,9 @@ module.exports = Array.isArray || function (arr) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return PageModule; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__category__ = __webpack_require__(34);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__category__ = __webpack_require__(23);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__searchProduct__ = __webpack_require__(35);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -15750,6 +15751,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 
 
 
@@ -15765,6 +15767,10 @@ var PageModule = function (_ApiModule) {
         console.log('Page: PageModule');
 
         _this.category = new __WEBPACK_IMPORTED_MODULE_1__category__["a" /* CategoryModule */]();
+        if ($('#js-searchProductForm').length > 0) {
+            console.log('Page: has search product');
+            new __WEBPACK_IMPORTED_MODULE_2__searchProduct__["a" /* SearchProductModule */]();
+        }
 
         _this.data = {};
         _this.apiUrl = '/api/store/addtocart';
@@ -15808,8 +15814,51 @@ var PageModule = function (_ApiModule) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return CategoryModule; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+
+
+var CategoryModule = function (_ApiModule) {
+    _inherits(CategoryModule, _ApiModule);
+
+    function CategoryModule() {
+        _classCallCheck(this, CategoryModule);
+
+        var _this = _possibleConstructorReturn(this, (CategoryModule.__proto__ || Object.getPrototypeOf(CategoryModule)).call(this));
+
+        console.log('Module: Category');
+
+        _this.init();
+        return _this;
+    }
+
+    _createClass(CategoryModule, [{
+        key: 'init',
+        value: function init() {
+            var $categoryBox = $('#category_menu');
+            $categoryBox.find('.active').parents('ul.sub_menu').addClass('display_item');
+            console.log($categoryBox.find('.active'));
+        }
+    }]);
+
+    return CategoryModule;
+}(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
+
+/***/ }),
+/* 24 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return CartModule; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -15869,13 +15918,12 @@ var CartModule = function (_ApiModule) {
 }(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 25 */,
 /* 26 */,
 /* 27 */,
 /* 28 */,
@@ -15884,12 +15932,13 @@ var CartModule = function (_ApiModule) {
 /* 31 */,
 /* 32 */,
 /* 33 */,
-/* 34 */
+/* 34 */,
+/* 35 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return CategoryModule; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(1);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SearchProductModule; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -15900,30 +15949,105 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 
 
-var CategoryModule = function (_ApiModule) {
-    _inherits(CategoryModule, _ApiModule);
+var SearchProductModule = function (_ApiModule) {
+    _inherits(SearchProductModule, _ApiModule);
 
-    function CategoryModule() {
-        _classCallCheck(this, CategoryModule);
+    function SearchProductModule() {
+        _classCallCheck(this, SearchProductModule);
 
-        var _this = _possibleConstructorReturn(this, (CategoryModule.__proto__ || Object.getPrototypeOf(CategoryModule)).call(this));
+        var _this = _possibleConstructorReturn(this, (SearchProductModule.__proto__ || Object.getPrototypeOf(SearchProductModule)).call(this));
 
-        console.log('Module: Category');
+        console.log('Module: SearchProductModule');
 
-        _this.init();
+        _this.selectInputData = $('#inputData').val();
+
+        _this.searchFormHandler();
+        _this.changeInputData();
         return _this;
     }
 
-    _createClass(CategoryModule, [{
-        key: 'init',
-        value: function init() {
-            var $categoryBox = $('#category_menu');
-            $categoryBox.find('.active').parents('ul.sub_menu').addClass('display_item');
-            console.log($categoryBox.find('.active'));
+    _createClass(SearchProductModule, [{
+        key: 'searchFormHandler',
+        value: function searchFormHandler() {
+            var _this2 = this;
+
+            $('#js-searchProductForm').submit(function (e) {
+                e.preventDefault();
+                console.log('Enter submit');
+                _this2.searchFormMethod();
+            });
+        }
+    }, {
+        key: 'formValidationHandler',
+        value: function formValidationHandler() {
+            console.log('formValidationHandler');
+            $('#js-searchProductForm').validate({
+                rules: {
+                    sku: {
+                        digits: true,
+                        max: 100000,
+                        min: 1,
+                        required: {
+                            param: true,
+                            depends: function depends(element) {
+                                return $('#inputData').val() == 'sku';
+                            }
+
+                        }
+                    },
+                    name: {
+                        maxlength: 255,
+                        minlength: 3,
+                        required: {
+                            param: true,
+                            depends: function depends(element) {
+                                return $('#inputData').val() == 'name';
+                            }
+
+                        }
+                    }
+                }
+            });
+        }
+    }, {
+        key: 'changeInputData',
+        value: function changeInputData() {
+            var _this3 = this;
+
+            $('#inputData').change(function (e) {
+                _this3.formValidationHandler();
+                _this3.selectInputData = e.target.value;
+                console.log(_this3.selectInputData);
+
+                if (_this3.selectInputData == 'sku') {
+                    $('#inputSku').removeClass('hidden');
+                    $('#inputName').addClass('hidden');
+                } else {
+                    $('#inputSku').addClass('hidden');
+                    $('#inputName').removeClass('hidden');
+                }
+                $('#inputSku').val('');
+                $('#inputName').val('');
+                $('label.error').remove();
+            });
+        }
+    }, {
+        key: 'searchFormMethod',
+        value: function searchFormMethod() {
+            this.formValidationHandler();
+            if ($('#js-searchProductForm').valid()) {
+                console.log('SEARCH');
+                this.getSearchData();
+            }
+        }
+    }, {
+        key: 'getSearchData',
+        value: function getSearchData() {
+            window.location.href = 'http://localhost/store?' + $('#js-searchProductForm').serialize();
         }
     }]);
 
-    return CategoryModule;
+    return SearchProductModule;
 }(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
 
 /***/ })

@@ -1,10 +1,39 @@
 @extends('layouts.index')
 
 @section('content')
+<div class="container js-search-product">
+    <div class="row">
+        <form id="js-searchProductForm"  action="{{route('store')}}" method="get">
+            <div class="col-sm-12 col-md-4 col-lg-4 search-property">
+                <label for="">Search by: </label>
+                <select class="form-control"  name="inputData" id="inputData">
+                    <option value="name">Name</option>
+                    <option value="sku">SKU</option>
+                </select>
+            </div>
+            <div class="col-sm-12 col-md-8 col-lg-8 search-input">
+                <input id="inputName" name="name" type="text" class="form-control" placeholder="Enter name">
+                <input id="inputSku" name="sku" type="text" class="form-control hidden" placeholder="Enter SKU">
+                <button type="submit" class="btn btn-default">Search</button>
+            </div>
+        </form>
+    </div>
+</div>
 <div class="container">
     <h1>Store</h1>
 </div>
 <div class="container">
+    <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-12">
+            @if($breadcrumbs)
+            <ul class="breadcrumb">
+                @foreach($breadcrumbs as $item)
+                    <li><a href="{{route('home')}}/{{$item['slug']}}">{{$item['name']}}</a></li>
+                @endforeach
+            </ul>
+            @endif
+        </div>
+    </div>
     <div class="row">
         <div id="category_menu" class="col-sm-12 col-md-4 col-lg-4">
             <ul class="nav">

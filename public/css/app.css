@@ -8350,6 +8350,25 @@ button.close {
   }
 }
 
+.container.js-search-product .row form .search-property {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: baseline;
+      -ms-flex-align: baseline;
+          align-items: baseline;
+}
+
+.container.js-search-product .row form .search-property label {
+  white-space: nowrap;
+  margin-right: 10px;
+}
+
+.container .row ul.breadcrumb {
+  padding-left: 0;
+  padding-right: 0;
+}
+
 .container .text-line-through {
   text-decoration: line-through;
 }
@@ -8409,6 +8428,7 @@ button.close {
 
 #category_menu ul.sub_menu {
   padding: 0;
+  padding-left: 5px;
   display: none;
 }
 
