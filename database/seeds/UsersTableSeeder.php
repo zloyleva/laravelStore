@@ -6,7 +6,11 @@ use App\Models\PriceType;
 
 class UsersTableSeeder extends Seeder
 {
-    /**
+    protected $userRoles = [
+        'user',
+	    'buyer',
+    ];
+	/**
      * Run the database seeds.
      *
      * @return void
@@ -38,7 +42,7 @@ class UsersTableSeeder extends Seeder
             'password' => $password,
             'fname' => $faker->firstName,
             'lname' => $faker->lastName,
-            'role' => 'user',
+            'role' => 'buyer',
             'price_type' => $faker->randomElement($priceTypeArray)['type'],
             'address' => $faker->streetAddress,
             'town' => $faker->city,

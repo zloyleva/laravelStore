@@ -18,6 +18,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::group(['middleware' => 'auth:api'], function () {
-    Route::post('store/addtocart', [ 'as'=>'store.addtocart', 'uses'=>'ProductsController@addToCart']);
-    Route::post('order', [ 'as'=>'store.order', 'uses'=>'ProductsController@createOrder']);
+    Route::post('store/addtocart', [ 'as'=>'store.addtocart', 'uses'=>'CartController@addToCart']);
+    Route::post('order', [ 'as'=>'store.order', 'uses'=>'OrdersController@createOrder']);
 });

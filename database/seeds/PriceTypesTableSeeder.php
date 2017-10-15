@@ -21,7 +21,6 @@ class PriceTypesTableSeeder extends Seeder
     {
         //
         PriceType::truncate();
-        $faker = \Faker\Factory::create();
 
         foreach($this->dataList as $data){
             PriceType::create([

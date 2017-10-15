@@ -39,9 +39,12 @@ class Category extends Model
 		$collection = $collection1 = $this->collectCategories();
 		$parent_id = 0;
 
+		$categories = $this->categoryHandler($collection,$parent_id,$slug);
+		$request->searchData = $this->searchData??null;
+
 		return [
-			'categories'=>$this->categoryHandler($collection,$parent_id,$slug),
-			'products'=>$product->listProducts($this->searchData??null),
+			'categories'=>$categories,
+			'products'=>$product->listProducts($request),
 			'breadcrumbs'=>$this->getCategoryBreadCrumbs($collection1, $this->searchData??null)
 		];
 	}

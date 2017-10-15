@@ -27,8 +27,6 @@ class ProductsTableSeeder extends Seeder
         //for ($i = 1; $i < 50; $i++) {
         foreach($priceData as $item){
           if(!$item) continue;
-            $userPrice = $faker->randomFloat($nbMaxDecimals = NULL, $min = 0, $max = 1000);
-            // dd($item);
             $categoryId = Category::takeCategoryId($item['category']);
 
             Product::create([

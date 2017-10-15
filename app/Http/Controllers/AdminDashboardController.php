@@ -9,8 +9,14 @@ class AdminDashboardController extends Controller
 {
     //
     public function listOrders(){
-      return view('admin.index',[
+      return view('admin.listOrders',[
           'data'=> '',
       ]);;
     }
+
+	public function addProducts(){
+		return view('admin.addProducts',[
+			'data'=> '',
+		]);;
+	}
 }

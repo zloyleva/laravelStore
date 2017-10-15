@@ -10,18 +10,12 @@ use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
 use Gloudemans\Shoppingcart\Facades\Cart;
 
+use App\Http\Requests\Product\ProductSearchRequest;
+
 class PagesController extends Controller
 {
-    public function home(Category $categories){
+    public function home(){
         return view('welcome');
-    }
-
-    public function store(Product $product, Request $request, Category $category){
-        return view('store.index', $category->prepareCategory($request, $product));
-    }
-
-    public function category(Product $product, Request $request, Category $category){
-      return view('store.index', $category->prepareCategory($request, $product));
     }
 
     public function showCard(Request $request){

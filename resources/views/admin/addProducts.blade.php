@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container">
-    <h1>Store</h1>
+    <h1>Add products</h1>
 </div>
 <div class="container">
     
