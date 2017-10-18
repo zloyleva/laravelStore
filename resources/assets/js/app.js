@@ -3,11 +3,12 @@ console.log('App was loaded');
 
 require('jquery-validation');
 require('bootstrap');
+require('geocomplete');
 
 const page = require('page');
 
 import { PageModule } from './store/pages';
-import { CartModule } from './store/cart';
+import { CartModule } from './cart/cart';
 
 $(document).ready(() => {
 

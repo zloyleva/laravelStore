@@ -41,6 +41,9 @@ export class ApiModule {
             'accept': 'application/json',
             'content-type': 'application/x-www-form-urlencoded',
             'cache-control': 'no-cache',
+            // 'Cookie': document.cookie,
+            // 'withCredentials':'true',
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
         };
     };
 

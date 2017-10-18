@@ -37,9 +37,9 @@
                                 </a>
 
                                 @if(Auth::user()->role == 'buyer')
-                                    @include('layouts.users-right-menu')
+                                    @include('layouts.menus.users-right-menu')
                                 @elseif(Auth::user()->role == 'admin')
-                                    @include('layouts.admins-right-menu')
+                                    @include('layouts.menus.admins-right-menu')
                                 @endif
                             </li>
                         @endguest

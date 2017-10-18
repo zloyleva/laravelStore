@@ -10,7 +10,6 @@
             </div>
             <div class="col-sm-12 col-md-6 col-lg-6 search-input">
                 <input id="inputName" name="name" type="text" class="form-control" placeholder="Enter name">
-                <input id="inputSku" name="sku" type="text" class="form-control hidden" placeholder="Enter SKU">
             </div>
             <div class="col-sm-12 col-md-2 col-lg-2 search-button">
                 <button type="submit" class="btn btn-default">Search</button>

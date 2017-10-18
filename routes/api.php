@@ -20,4 +20,11 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::group(['middleware' => 'auth:api'], function () {
     Route::post('store/addtocart', [ 'as'=>'store.addtocart', 'uses'=>'CartController@addToCart']);
     Route::post('order', [ 'as'=>'store.order', 'uses'=>'OrdersController@createOrder']);
+
+
+
 });
+
+//Route::group(['middleware' => ['auth:api', 'web']], function () {
+//	Route::delete('cart', [ 'as'=>'cart.delete', 'uses'=>'CartController@deleteCart']);
+//});

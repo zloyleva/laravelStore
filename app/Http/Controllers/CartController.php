@@ -18,7 +18,7 @@ class CartController extends Controller
 	public function addToCart(Request $request,Product $product){
 
 		if(!Auth::check()){
-			return null;//user error
+			return $this->jsonResponse(['message' => 'Error user data']);//user error
 		}
 		$request->productId;
 		$getProduct = $product->find($request->productId);
@@ -29,6 +29,18 @@ class CartController extends Controller
 		Cart::add($getProduct->sku, $getProduct->name, $request->qty, $getProduct->$price_type);
 		Cart::store(Auth::user()->id);
 
-		return $this->jsonResponse(Auth::user());
+		return $this->jsonResponse($getProduct);//Todo set return data
+	}
+
+	public function deleteCart(Request $request){
+
+		Cart::restore(Auth::user()->id);
+		$request->session()->forget('cart');
+		if(!$request->session()->has('cart')){
+			$html = '<p>Cart is destroy</p>
+					 <a href="'.route('store').'" class="btn btn-primary">To Shop</a>';
+			return $this->jsonResponse(['message' => $html]);
+		}
+		return $this->jsonResponse(['message' => 'Error destroy']);
 	}
 }

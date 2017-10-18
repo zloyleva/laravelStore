@@ -57,11 +57,11 @@ export class SearchProductModule extends ApiModule {
             console.log(this.selectInputData);
 
             if (this.selectInputData == 'sku') {
-                $('#inputSku').removeClass('hidden');
-                $('#inputName').addClass('hidden');
+                $('.search-input').html('<input id="inputSku" name="sku" type="text" class="form-control" placeholder="Enter SKU">');
+                $('#inputName').remove();
             } else {
-                $('#inputSku').addClass('hidden');
-                $('#inputName').removeClass('hidden');
+                $('#inputSku').remove();
+                $('.search-input').html('<input id="inputName" name="name" type="text" class="form-control" placeholder="Enter name">');
             }
             $('#inputSku').val('');
             $('#inputName').val('');
@@ -78,6 +78,6 @@ export class SearchProductModule extends ApiModule {
     };
 
     getSearchData(){
-        window.location.href = 'http://localhost/store?' + $('#js-searchProductForm').serialize()
+        window.location.href = 'http://localhost/store/search?' + $('#js-searchProductForm').serialize();
     }
 }

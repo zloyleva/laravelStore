@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Order;
-use App\Models\OrderList;
+
 use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
 use Gloudemans\Shoppingcart\Facades\Cart;
@@ -30,27 +30,10 @@ class PagesController extends Controller
         Cart::store($identifcator);
 
         return view('store.cart',[
+        	'request'=>$request->session()->get('laravel_session'),
             'productsInCart'=>Cart::content(),
             'cart' => $request->session()->get('cart')
         ]);
-    }
-
-    public function listOrders(Request $request, Order $orders, OrderList $orderList){
-
-      if($request->status === 'setOrder' ){
-        Cart::restore(Auth::user()->id);
-        if(Cart::count() > 0){
-          $result = $orders->createOrder($request,Auth::user()->id);
-          $request->session()->forget('cart');
-
-          $orderList->createOrderList($result);
-        }
-      }
-
-      $request->flashOnly(['status', 'note', 'phone']);
-      return view('orders.list',[
-          'orders'=>$orders->listOrdersForUser()
-      ]);
     }
 
     public function showOrder(Request $request, Order $order){

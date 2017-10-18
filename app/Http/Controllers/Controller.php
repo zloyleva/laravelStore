@@ -11,6 +11,12 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
+	/**
+	 * @param array $defaultResponse
+	 * @param int $status
+	 *
+	 * @return \Illuminate\Http\JsonResponse
+	 */
     protected function jsonResponse($defaultResponse = ['message' => 'Done.'], $status = 200)
     {
         return response()->json($defaultResponse, $status);

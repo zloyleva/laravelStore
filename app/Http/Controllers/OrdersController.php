@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use Illuminate\Support\Facades\Auth;
+use App\Models\OrderList;
+use Gloudemans\Shoppingcart\Facades\Cart;
 
 class OrdersController extends Controller
 {
@@ -29,5 +31,30 @@ class OrdersController extends Controller
 			return $orderId;
 		}
 		return 'error to create Order';
+	}
+
+	/**
+	 * @param Request $request
+	 * @param Order $orders
+	 * @param OrderList $orderList
+	 *
+	 * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+	 */
+	public function listOrders(Request $request, Order $orders, OrderList $orderList){
+
+		if($request->status === 'setOrder' ){
+			Cart::restore(Auth::user()->id);
+			if(Cart::count() > 0){
+				$result = $orders->createOrder($request,Auth::user()->id);
+				$request->session()->forget('cart');
+
+				$orderList->createOrderList($result);
+			}
+		}
+
+		$request->flashOnly(['status', 'note', 'phone']);
+		return view('orders.list',[
+			'orders'=>$orders->listOrdersForUser()
+		]);
 	}
 }

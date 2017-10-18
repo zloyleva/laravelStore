@@ -5,7 +5,7 @@
     @include('layouts.search-product-form')
 
 <div class="container">
-    <h1>Store</h1>
+    <h1>{{$pageName}}</h1>
 </div>
 <div class="container">
 

@@ -12,6 +12,20 @@ class Category extends Model
         return $this->belongsTo(Category::class, 'parent_id');
     }
 
+	/**
+	 * Return collection of nested categories
+	 * @return array
+	 */
+    public function getSearchCategory(){
+    	return $this->searchData;
+    }
+
+	/**
+	 * Find category id for current product. Need for insert product.
+	 * @param array $categories
+	 *
+	 * @return int
+	 */
     public static function takeCategoryId(array $categories){
 
       $parent_id = 0;
@@ -21,9 +35,16 @@ class Category extends Model
       return $parent_id;
     }
 
+	/**
+	 * Insert or get category. And return this category's id
+	 * @param $category
+	 * @param $parent_id
+	 *
+	 * @return mixed
+	 */
     private static function insertOrGetId($category,$parent_id){
-      $categoryInstanse = Category::firstOrCreate(['name' => $category, 'parent_id' => $parent_id, 'slug' => str_slug($category,'-')]);
-      return $categoryInstanse->id;
+      $categoryInstance = Category::firstOrCreate(['name' => $category, 'parent_id' => $parent_id, 'slug' => str_slug($category,'-')]);
+      return $categoryInstance->id;
     }
 
     public function collectCategories(){
@@ -33,23 +54,7 @@ class Category extends Model
 		    ->get()->toArray();
     }
 
-	public function prepareCategory($request,$product){
-
-    	$slug = $request->slug;
-		$collection = $collection1 = $this->collectCategories();
-		$parent_id = 0;
-
-		$categories = $this->categoryHandler($collection,$parent_id,$slug);
-		$request->searchData = $this->searchData??null;
-
-		return [
-			'categories'=>$categories,
-			'products'=>$product->listProducts($request),
-			'breadcrumbs'=>$this->getCategoryBreadCrumbs($collection1, $this->searchData??null)
-		];
-	}
-
-	private function categoryHandler(&$collection,$parent_id,$slug = ''){
+	public function categoryHandler(&$collection,$parent_id,$slug = ''){
 		$menuHtml = '';
 		$slug_id = $this->searchData['find']??null;
 		foreach( $collection as $key => $value ){
@@ -81,6 +86,9 @@ class Category extends Model
 					$menuHtml .= '<li><a href="/store/category/'.$value['slug'].'" class="';
 					$menuHtml .=    ($slug == $value['slug'])?'active':'';
 					$menuHtml .=    '">'.$value['name'].'</a></li>';
+					if( $slug == $value['slug'] ) {
+						$this->searchData['current_cat_id'] = $value['id'];
+					}
 				}
 				$menuHtml .= ($parent_id == 0)?'':'</ul>';
 			}
@@ -89,11 +97,10 @@ class Category extends Model
 	}
 
 	public function getCategoryBreadCrumbs($collection, $data){
-
 		$breadcrumbs = [];
 		if($data && is_array($collection)){
 			foreach ( array_reverse($collection) as $key => $item ) {
-				if ($data['current_cat_id'] == $item['id']){
+				if (isset($data['current_cat_id']) && ($data['current_cat_id'] == $item['id']) ){
 					array_unshift($breadcrumbs,[
 							'name' => $item['name'],
 							'slug' => 'store/category/'.$item['slug'],
