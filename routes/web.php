@@ -14,6 +14,9 @@ Route::get( '/store/search', [ 'as' => 'search', 'uses' => 'SearchProductsContro
 
 Route::group( [ 'middleware' => [ 'auth' ] ], function () {
 	Route::get( '/cart', [ 'as' => 'cart', 'uses' => 'PagesController@showCard' ] );
+	Route::delete('/cart', [ 'as'=>'cart.delete', 'uses'=>'CartController@deleteCart']);
+
+	Route::delete('/cart/item', [ 'as'=>'cart_item.delete', 'uses'=>'CartController@deleteCartItem']);
 } );
 
 Route::group( [ 'middleware' => [ 'auth' ], 'prefix' => 'orders', 'as' => 'orders.' ], function () {
@@ -26,7 +29,5 @@ Route::group( [ 'middleware' => [ 'auth', 'admin' ], 'prefix' => 'admin', 'as' =
 	Route::get( '/orders', [ 'as' => 'ordersList', 'uses' => 'AdminDashboardController@listOrders' ] );
 	Route::get( '/products', [ 'as' => 'addProducts', 'uses' => 'AdminDashboardController@addProducts' ] );
 } );
-
-Route::delete('/cart', [ 'as'=>'cart.delete', 'uses'=>'CartController@deleteCart']);
 
 Auth::routes();

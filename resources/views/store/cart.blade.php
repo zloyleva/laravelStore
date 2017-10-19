@@ -14,6 +14,7 @@
                     <th>Qty</th>
                     <th>Price</th>
                     <th>Subtotal</th>
+                    <th></th>
                 </tr>
                 </thead>
 
@@ -21,15 +22,16 @@
 
                 @foreach($productsInCart as $row)
 
-                    <tr data-row_id="{{$row->rowId}}">
+                    <tr class="js-row" data-id="{{$row->rowId}}" id="{{$row->rowId}}">
                         <td>{{$row->id}}</td>
                         <td>
                             <p><strong>{{$row->name}}</strong></p>
                         </td>
-                        <td><input class="products_quantity form-control" type="number" min="0" step="1"
+                        <td id="products_qty"><input class="products_quantity form-control" type="number" min="0" step="1"
                                    value="{{$row->qty}}"></td>
                         <td>$ {{$row->price}}</td>
                         <td>$ {{$row->total}}</td>
+                        <td><button title="Remove product from cart" class="btn btn-danger js-remove-product">&times;</button></td>
                     </tr>
 
                 @endforeach
@@ -40,7 +42,8 @@
                 <tr>
                     <td colspan="3">&nbsp;</td>
                     <td>Total</td>
-                    <td><?php echo Cart::total(); ?></td>
+                    <td id="cartTotal"><?php echo Cart::total(); ?></td>
+                    <td></td>
                 </tr>
                 </tfoot>
             </table>

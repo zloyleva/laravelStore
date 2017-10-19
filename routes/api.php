@@ -24,7 +24,3 @@ Route::group(['middleware' => 'auth:api'], function () {
 
 
 });
-
-//Route::group(['middleware' => ['auth:api', 'web']], function () {
-//	Route::delete('cart', [ 'as'=>'cart.delete', 'uses'=>'CartController@deleteCart']);
-//});

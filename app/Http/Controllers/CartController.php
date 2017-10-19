@@ -9,6 +9,15 @@ use Gloudemans\Shoppingcart\Facades\Cart;
 
 class CartController extends Controller
 {
+
+	/**
+	 * @return string
+	 */
+	private function getHtmlEmptyCart(){
+		return $html = '<p>Cart is destroy</p>
+					 <a href="'.route('store').'" class="btn btn-primary">To Shop</a>';
+	}
+
 	/**
 	 * @param Request $request
 	 * @param Product $product
@@ -32,15 +41,35 @@ class CartController extends Controller
 		return $this->jsonResponse($getProduct);//Todo set return data
 	}
 
+	/**
+	 * @param Request $request
+	 *
+	 * @return \Illuminate\Http\JsonResponse
+	 */
 	public function deleteCart(Request $request){
 
 		Cart::restore(Auth::user()->id);
 		$request->session()->forget('cart');
 		if(!$request->session()->has('cart')){
-			$html = '<p>Cart is destroy</p>
-					 <a href="'.route('store').'" class="btn btn-primary">To Shop</a>';
-			return $this->jsonResponse(['message' => $html]);
+
+			return $this->jsonResponse(['html' => $this->getHtmlEmptyCart()]);
 		}
-		return $this->jsonResponse(['message' => 'Error destroy']);
+		return $this->jsonResponse(['html'=>$this->getHtmlEmptyCart()]);
+	}
+
+	public function deleteCartItem(Request $request){
+
+		Cart::restore(Auth::user()->id);
+		Cart::remove($request->rowId);
+		Cart::store(Auth::user()->id);
+
+		if(Cart::count() > 0){
+			return $this->jsonResponse([
+				'deleteId'=>$request->rowId,
+				'total'=>Cart::total(),
+			]);
+		}
+
+		return $this->jsonResponse(['html'=>$this->getHtmlEmptyCart()]);
 	}
 }
