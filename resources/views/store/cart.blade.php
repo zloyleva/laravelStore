@@ -27,10 +27,10 @@
                         <td>
                             <p><strong>{{$row->name}}</strong></p>
                         </td>
-                        <td id="products_qty"><input class="products_quantity form-control" type="number" min="0" step="1"
-                                   value="{{$row->qty}}"></td>
-                        <td>$ {{$row->price}}</td>
-                        <td>$ {{$row->total}}</td>
+                        <td id="products_qty"><button class="btn btn-danger js-sub-product">-</button><input class="products_quantity form-control" type="number" min="1" step="1"
+                                   value="{{$row->qty}}" data-qty="{{$row->qty}}"><buttton class="btn btn-success js-add-product">+</buttton></td>
+                        <td>{{$row->price}}</td>
+                        <td class="js-item-total">{{$row->total}}</td>
                         <td><button title="Remove product from cart" class="btn btn-danger js-remove-product">&times;</button></td>
                     </tr>
 

@@ -16,6 +16,8 @@ Route::group( [ 'middleware' => [ 'auth' ] ], function () {
 	Route::get( '/cart', [ 'as' => 'cart', 'uses' => 'PagesController@showCard' ] );
 	Route::delete('/cart', [ 'as'=>'cart.delete', 'uses'=>'CartController@deleteCart']);
 
+	Route::post('/cart/add_item', [ 'as'=>'cart_item.add', 'uses'=>'CartController@setCartItemAmount']);
+	Route::post('/cart/sub_item', [ 'as'=>'cart_item.sub', 'uses'=>'CartController@setCartItemAmount']);
 	Route::delete('/cart/item', [ 'as'=>'cart_item.delete', 'uses'=>'CartController@deleteCartItem']);
 } );
 

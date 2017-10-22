@@ -94,3 +94,19 @@
         }
     }
 }
+
+//Cart page
+.container.js-cart-content{
+    table{
+        .js-row{
+            #products_qty{
+                display: flex;
+                input{
+                    margin-left: 5px;
+                    margin-right: 5px;
+                    max-width: 75px;
+                }
+            }
+        }
+    }
+}

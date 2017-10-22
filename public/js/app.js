@@ -10429,7 +10429,7 @@ return jQuery;
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(3);
-module.exports = __webpack_require__(27);
+module.exports = __webpack_require__(30);
 
 
 /***/ }),
@@ -16578,6 +16578,9 @@ var SearchProductModule = function (_ApiModule) {
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return CartModule; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__removeItemCart__ = __webpack_require__(27);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__destroyCart__ = __webpack_require__(28);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__changeItemAmountCart__ = __webpack_require__(29);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -16585,6 +16588,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+
+
 
 
 
@@ -16598,52 +16604,19 @@ var CartModule = function (_ApiModule) {
 
         console.log('Page: CartModule');
 
-        _this.apiDeleteCartUrl = '/cart';
-        _this.apiDeleteProductItemUrl = '/cart/item';
+        new __WEBPACK_IMPORTED_MODULE_1__removeItemCart__["a" /* RemoveItemCartModule */]();
+        new __WEBPACK_IMPORTED_MODULE_2__destroyCart__["a" /* DestroyCartModule */]();
+        new __WEBPACK_IMPORTED_MODULE_3__changeItemAmountCart__["a" /* ChangeItemAmountModule */]();
+
         _this.googleApiKey = 'AIzaSyCFTgptWkyzCm-Js4fLEz0X0R4H_NRtFtE';
 
         _this.submitBtnHandler(); //todo need AJAX method
         _this.formValidationHandler();
-        _this.clearCartHandler();
-        _this.removeProductHandler();
         _this.initGeocomplete();
         return _this;
     }
 
     _createClass(CartModule, [{
-        key: 'removeProductHandler',
-        value: function removeProductHandler() {
-            var _this2 = this;
-
-            $('.js-remove-product').off('click').on('click', function (e) {
-                console.log('removeProductHandler');
-                var $el = $(e.target),
-                    $row = $el.parents('.js-row');
-
-                console.log($row.data('id'));
-                if ($row.data('id').length > 1) {
-                    _this2.removeProductItemMethod($row.data('id'));
-                }
-            });
-        }
-    }, {
-        key: 'removeProductItemMethod',
-        value: function removeProductItemMethod(rowId) {
-            this.delete({
-                data: { rowId: rowId },
-                url: this.apiDeleteProductItemUrl,
-                success: function success(response) {
-                    if (typeof response.deleteId != 'undefined') {
-                        console.log(response.deleteId);
-                        $('#' + response.deleteId).hide();
-                        $('#cartTotal').html(response.total);
-                    } else if (typeof response.html != 'undefined') {
-                        $('.js-cart-content').html(response.html);
-                    }
-                }
-            });
-        }
-    }, {
         key: 'initGeocomplete',
         value: function initGeocomplete() {
             $.getScript('http://maps.googleapis.com/maps/api/js?key=' + this.googleApiKey + '&libraries=places', function (data, textStatus, jqxhr) {
@@ -16683,14 +16656,121 @@ var CartModule = function (_ApiModule) {
                 }
             });
         }
+    }]);
+
+    return CartModule;
+}(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
+
+/***/ }),
+/* 27 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return RemoveItemCartModule; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+
+
+var RemoveItemCartModule = function (_ApiModule) {
+    _inherits(RemoveItemCartModule, _ApiModule);
+
+    function RemoveItemCartModule() {
+        _classCallCheck(this, RemoveItemCartModule);
+
+        var _this = _possibleConstructorReturn(this, (RemoveItemCartModule.__proto__ || Object.getPrototypeOf(RemoveItemCartModule)).call(this));
+
+        console.log('Module: RemoveItemCartModule');
+
+        _this.apiDeleteProductItemUrl = '/cart/item';
+        _this.removeProductHandler();
+        return _this;
+    }
+
+    _createClass(RemoveItemCartModule, [{
+        key: 'removeProductHandler',
+        value: function removeProductHandler() {
+            var _this2 = this;
+
+            $('.js-remove-product').off('click').on('click', function (e) {
+                console.log('removeProductHandler');
+                var $el = $(e.target),
+                    $row = $el.parents('.js-row');
+
+                console.log($row.data('id'));
+                if ($row.data('id').length > 1) {
+                    _this2.removeProductItemMethod($row.data('id'));
+                }
+            });
+        }
     }, {
+        key: 'removeProductItemMethod',
+        value: function removeProductItemMethod(rowId) {
+            this.delete({
+                data: { rowId: rowId },
+                url: this.apiDeleteProductItemUrl,
+                success: function success(response) {
+                    if (typeof response.deleteId != 'undefined') {
+                        console.log(response.deleteId);
+                        $('#' + response.deleteId).hide();
+                        $('#cartTotal').html(response.total);
+                    } else if (typeof response.html != 'undefined') {
+                        $('.js-cart-content').html(response.html);
+                    }
+                }
+            });
+        }
+    }]);
+
+    return RemoveItemCartModule;
+}(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
+
+/***/ }),
+/* 28 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return DestroyCartModule; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+
+
+var DestroyCartModule = function (_ApiModule) {
+    _inherits(DestroyCartModule, _ApiModule);
+
+    function DestroyCartModule() {
+        _classCallCheck(this, DestroyCartModule);
+
+        var _this = _possibleConstructorReturn(this, (DestroyCartModule.__proto__ || Object.getPrototypeOf(DestroyCartModule)).call(this));
+
+        console.log('Module: DestroyCartModule');
+
+        _this.apiDeleteCartUrl = '/cart';
+        _this.clearCartHandler();
+        return _this;
+    }
+
+    _createClass(DestroyCartModule, [{
         key: 'clearCartHandler',
         value: function clearCartHandler() {
-            var _this3 = this;
+            var _this2 = this;
 
             $('#clearCart').off('click').on('click', function () {
                 console.log('clearCartHandler');
-                _this3.clearCartMethod();
+                _this2.clearCartMethod();
             });
         }
     }, {
@@ -16706,11 +16786,116 @@ var CartModule = function (_ApiModule) {
         }
     }]);
 
-    return CartModule;
+    return DestroyCartModule;
 }(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
 
 /***/ }),
-/* 27 */
+/* 29 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ChangeItemAmountModule; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+
+
+var ChangeItemAmountModule = function (_ApiModule) {
+    _inherits(ChangeItemAmountModule, _ApiModule);
+
+    function ChangeItemAmountModule() {
+        _classCallCheck(this, ChangeItemAmountModule);
+
+        var _this = _possibleConstructorReturn(this, (ChangeItemAmountModule.__proto__ || Object.getPrototypeOf(ChangeItemAmountModule)).call(this));
+
+        console.log('Module: ChangeItemAmountModule');
+
+        _this.apiAmountAddItemUrl = '/cart/add_item';
+        _this.apiAmountSubItemUrl = '/cart/sub_item';
+
+        _this.changeAmountAddBtnHandler();
+        _this.changeAmountSubBtnHandler();
+        return _this;
+    }
+
+    _createClass(ChangeItemAmountModule, [{
+        key: 'changeAmountAddBtnHandler',
+        value: function changeAmountAddBtnHandler() {
+            var _this2 = this;
+
+            $('.js-add-product').off('click').on('click', function (e) {
+                console.log('changeAmountAddBtnHandler');
+                _this2.prepareDataHandler(e, _this2.apiAmountAddItemUrl, 'add');
+            });
+        }
+    }, {
+        key: 'changeAmountSubBtnHandler',
+        value: function changeAmountSubBtnHandler() {
+            var _this3 = this;
+
+            $('.js-sub-product').off('click').on('click', function (e) {
+                console.log('changeAmountSubBtnHandler');
+                _this3.prepareDataHandler(e, _this3.apiAmountSubItemUrl, 'sub');
+            });
+        }
+    }, {
+        key: 'prepareDataHandler',
+        value: function prepareDataHandler(e, urlAction, action) {
+            var $el = $(e.target),
+                $row = $el.parents('.js-row');
+            var $currentAmount = $row.find('.products_quantity').val();
+
+            if ($currentAmount < 1 || $currentAmount == 1 && action == 'sub') {
+                console.log('You enter wrong data');
+                return; //todo You enter wrong data
+            }
+
+            switch (action) {
+                case 'add':
+                    $currentAmount++;
+                    break;
+                case 'sub':
+                    $currentAmount--;
+                    break;
+                case 'set':
+                    break;
+            }
+
+            //todo check for sub method - if count = 1 return
+
+            console.log($row.data('id'), action);
+            this.changeAmountItemMethod($row.data('id'), urlAction, $currentAmount);
+        }
+    }, {
+        key: 'changeAmountItemMethod',
+        value: function changeAmountItemMethod(rowId, urlAction, amount) {
+            this.post({
+                data: {
+                    rowId: rowId,
+                    amount: amount
+                },
+                url: urlAction,
+                success: function success(response) {
+                    var $row = $('#' + response.item.rowId);
+                    $row.find('.products_quantity').val(response.item.qty);
+                    $row.find('.js-item-total').html(response.item.price * response.item.qty);
+                    $('#cartTotal').html(response.total);
+                }
+            });
+        }
+    }]);
+
+    return ChangeItemAmountModule;
+}(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
+
+/***/ }),
+/* 30 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
