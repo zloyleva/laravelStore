@@ -19,16 +19,23 @@ class OrdersController extends Controller
 	}
 
 	/**
-	 * Create order from cart items
 	 * @param Request $request
 	 * @param Order $order
+	 * @param OrderList $orderList
 	 *
-	 * @return string
+	 * @return \Illuminate\Http\JsonResponse|string
 	 */
-	public function createOrder(Request $request, Order $order){
+	public function createOrder(Request $request, Order $order, OrderList $orderList){
+
 		if(Auth::check()){
-			$orderId = $order->createOrder($request,Auth::user()->id);
-			return $orderId;
+			$result = $order->createOrder($request,Auth::user()->id);
+			$request->session()->forget('cart');
+
+			$orderList->createOrderList($result);
+			return $this->jsonResponse([
+				'message'=>'order Created',
+				'redirectUrl'=>route('orders.list'),
+			]);
 		}
 		return 'error to create Order';
 	}
@@ -36,23 +43,11 @@ class OrdersController extends Controller
 	/**
 	 * @param Request $request
 	 * @param Order $orders
-	 * @param OrderList $orderList
 	 *
 	 * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
 	 */
-	public function listOrders(Request $request, Order $orders, OrderList $orderList){
+	public function listOrders(Request $request, Order $orders){
 
-		if($request->status === 'setOrder' ){
-			Cart::restore(Auth::user()->id);
-			if(Cart::count() > 0){
-				$result = $orders->createOrder($request,Auth::user()->id);
-				$request->session()->forget('cart');
-
-				$orderList->createOrderList($result);
-			}
-		}
-
-		$request->flashOnly(['status', 'note', 'phone']);
 		return view('orders.list',[
 			'orders'=>$orders->listOrdersForUser()
 		]);

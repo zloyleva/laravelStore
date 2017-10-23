@@ -10429,7 +10429,7 @@ return jQuery;
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(3);
-module.exports = __webpack_require__(30);
+module.exports = __webpack_require__(31);
 
 
 /***/ }),
@@ -16581,6 +16581,7 @@ var SearchProductModule = function (_ApiModule) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__removeItemCart__ = __webpack_require__(27);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__destroyCart__ = __webpack_require__(28);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__changeItemAmountCart__ = __webpack_require__(29);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__createOrder__ = __webpack_require__(30);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -16588,6 +16589,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 
 
 
@@ -16607,11 +16609,10 @@ var CartModule = function (_ApiModule) {
         new __WEBPACK_IMPORTED_MODULE_1__removeItemCart__["a" /* RemoveItemCartModule */]();
         new __WEBPACK_IMPORTED_MODULE_2__destroyCart__["a" /* DestroyCartModule */]();
         new __WEBPACK_IMPORTED_MODULE_3__changeItemAmountCart__["a" /* ChangeItemAmountModule */]();
+        new __WEBPACK_IMPORTED_MODULE_4__createOrder__["a" /* CreateOrderModule */]();
 
         _this.googleApiKey = 'AIzaSyCFTgptWkyzCm-Js4fLEz0X0R4H_NRtFtE';
 
-        _this.submitBtnHandler(); //todo need AJAX method
-        _this.formValidationHandler();
         _this.initGeocomplete();
         return _this;
     }
@@ -16622,38 +16623,6 @@ var CartModule = function (_ApiModule) {
             $.getScript('http://maps.googleapis.com/maps/api/js?key=' + this.googleApiKey + '&libraries=places', function (data, textStatus, jqxhr) {
                 console.log(textStatus);
                 $('#address').geocomplete();
-            });
-        }
-    }, {
-        key: 'submitBtnHandler',
-        value: function submitBtnHandler() {
-            $('#submitCart').off('click').on('click', function () {
-                console.log('submitBtnHandler');
-                if ($('#create-order-form').valid()) {
-                    $('#create-order-form').submit();
-                }
-            });
-        }
-    }, {
-        key: 'createOrder',
-        value: function createOrder() {}
-    }, {
-        key: 'formValidationHandler',
-        value: function formValidationHandler() {
-            $('#create-order-form').validate({
-                rules: {
-                    address: {
-                        maxlength: 255,
-                        required: true
-                    },
-                    phone: {
-                        maxlength: 255,
-                        required: true
-                    },
-                    note: {
-                        maxlength: 500
-                    }
-                }
             });
         }
     }]);
@@ -16896,6 +16865,88 @@ var ChangeItemAmountModule = function (_ApiModule) {
 
 /***/ }),
 /* 30 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return CreateOrderModule; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+
+
+var CreateOrderModule = function (_ApiModule) {
+    _inherits(CreateOrderModule, _ApiModule);
+
+    function CreateOrderModule() {
+        _classCallCheck(this, CreateOrderModule);
+
+        var _this = _possibleConstructorReturn(this, (CreateOrderModule.__proto__ || Object.getPrototypeOf(CreateOrderModule)).call(this));
+
+        console.log('Module: CreateOrderModule');
+
+        _this.apisendDataUrl = '/orders/create';
+
+        _this.createOrderHandler();
+        _this.formValidationHandler();
+        return _this;
+    }
+
+    _createClass(CreateOrderModule, [{
+        key: 'createOrderHandler',
+        value: function createOrderHandler() {
+            var _this2 = this;
+
+            $('#submitCart').off('click').on('click', function () {
+                console.log('createOrderHandler');
+                if ($('#create-order-form').valid()) {
+                    console.log('valid');
+                    _this2.sendDataMethod();
+                }
+            });
+        }
+    }, {
+        key: 'sendDataMethod',
+        value: function sendDataMethod() {
+            this.post({
+                data: $('#create-order-form').serialize(),
+                url: this.apisendDataUrl,
+                success: function success(response) {
+                    window.location.replace(response.redirectUrl);
+                }
+            });
+        }
+    }, {
+        key: 'formValidationHandler',
+        value: function formValidationHandler() {
+            $('#create-order-form').validate({
+                rules: {
+                    address: {
+                        maxlength: 255,
+                        required: true
+                    },
+                    phone: {
+                        maxlength: 255,
+                        required: true
+                    },
+                    note: {
+                        maxlength: 1000
+                    }
+                }
+            });
+        }
+    }]);
+
+    return CreateOrderModule;
+}(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
+
+/***/ }),
+/* 31 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin

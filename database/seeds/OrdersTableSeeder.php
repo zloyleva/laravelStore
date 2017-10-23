@@ -24,6 +24,7 @@ class OrdersTableSeeder extends Seeder
         Order::create([
           'user_id' => $faker->randomElement($users)['id'],
           'status' => $faker->randomElement($this->ordersStatus),
+          'address' => $faker->address(),
           'phone' => $faker->tollFreePhoneNumber(),
           'total' => $faker->randomFloat($nbMaxDecimals = NULL, $min = 0, $max = 2500),
           'note' => $faker->text($maxNbChars = 200),

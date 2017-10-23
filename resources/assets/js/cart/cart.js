@@ -2,6 +2,7 @@ import {ApiModule} from '../api';
 import {RemoveItemCartModule} from './removeItemCart';
 import {DestroyCartModule} from './destroyCart';
 import {ChangeItemAmountModule} from './changeItemAmountCart';
+import {CreateOrderModule} from './createOrder';
 
 export class CartModule extends ApiModule {
     constructor() {
@@ -11,11 +12,10 @@ export class CartModule extends ApiModule {
         new RemoveItemCartModule();
         new DestroyCartModule();
         new ChangeItemAmountModule();
+        new CreateOrderModule();
 
         this.googleApiKey = 'AIzaSyCFTgptWkyzCm-Js4fLEz0X0R4H_NRtFtE';
 
-        this.submitBtnHandler();//todo need AJAX method
-        this.formValidationHandler();
         this.initGeocomplete();
     };
 
@@ -26,38 +26,6 @@ export class CartModule extends ApiModule {
                 $('#address').geocomplete();
             }
         );
-    };
-
-
-    submitBtnHandler(){
-      $('#submitCart').off('click').on('click', () => {
-        console.log('submitBtnHandler');
-        if($('#create-order-form').valid()){
-          $('#create-order-form').submit();
-        }
-      });
-    }
-
-    createOrder(){
-
-    }
-
-    formValidationHandler() {
-        $('#create-order-form').validate({
-            rules: {
-                address: {
-                    maxlength: 255,
-                    required: true
-                },
-                phone: {
-                    maxlength: 255,
-                    required: true
-                },
-                note:{
-                  maxlength: 500,
-                }
-            }
-        });
     };
 
   }

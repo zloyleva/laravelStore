@@ -22,7 +22,8 @@ Route::group( [ 'middleware' => [ 'auth' ] ], function () {
 } );
 
 Route::group( [ 'middleware' => [ 'auth' ], 'prefix' => 'orders', 'as' => 'orders.' ], function () {
-	Route::get( '/cart', [ 'as' => 'cart', 'uses' => 'PagesController@showCard' ] );
+//	Route::get( '/cart', [ 'as' => 'cart', 'uses' => 'PagesController@showCard' ] );
+	Route::post( '/create', [ 'as' => 'create', 'uses' => 'OrdersController@createOrder' ] );
 	Route::get( '/list', [ 'as' => 'list', 'uses' => 'OrdersController@listOrders' ] );
 	Route::get( '/show/{id}', [ 'as' => 'show', 'uses' => 'PagesController@showOrder' ] );
 } );

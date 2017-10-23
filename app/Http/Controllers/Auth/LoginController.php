@@ -81,4 +81,9 @@ class LoginController extends Controller
 
         return redirect('/');
     }
+
+	public function username()
+	{
+		return 'name';
+	}
 }
