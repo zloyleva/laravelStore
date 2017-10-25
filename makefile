@@ -62,7 +62,7 @@ conf: #refresh config cache
 	@sudo docker exec -it webapp_web_1 bash -c 'php artisan config:cache'
 
 test: #run test cases
-	@sudo docker exec -it webapp_web_1 bash -c 'php composer.phar test'
+	@sudo docker exec -it webapp_web_1 bash -c 'vendor/bin/phpunit'
 
 mix_dev: #run mix in dev mode
 	@sudo docker exec -it webapp_web_1 bash -c 'npm run dev && chmod -R 777 .'

@@ -13,6 +13,8 @@ Route::get( '/store/category/{slug}', [ 'as' => 'category', 'uses' => 'ProductsC
 Route::get( '/store/search', [ 'as' => 'search', 'uses' => 'SearchProductsController@searchIndex' ] );
 
 Route::group( [ 'middleware' => [ 'auth' ] ], function () {
+	Route::get( '/my_profile', [ 'as' => 'my_profile', 'uses' => 'PagesController@myProfile' ] );
+
 	Route::get( '/cart', [ 'as' => 'cart', 'uses' => 'PagesController@showCard' ] );
 	Route::delete('/cart', [ 'as'=>'cart.delete', 'uses'=>'CartController@deleteCart']);
 
@@ -22,7 +24,6 @@ Route::group( [ 'middleware' => [ 'auth' ] ], function () {
 } );
 
 Route::group( [ 'middleware' => [ 'auth' ], 'prefix' => 'orders', 'as' => 'orders.' ], function () {
-//	Route::get( '/cart', [ 'as' => 'cart', 'uses' => 'PagesController@showCard' ] );
 	Route::post( '/create', [ 'as' => 'create', 'uses' => 'OrdersController@createOrder' ] );
 	Route::get( '/list', [ 'as' => 'list', 'uses' => 'OrdersController@listOrders' ] );
 	Route::get( '/show/{id}', [ 'as' => 'show', 'uses' => 'PagesController@showOrder' ] );

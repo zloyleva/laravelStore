@@ -33,7 +33,6 @@ class UsersTableSeeder extends Seeder
             'role' => 'admin',
             'price_type' => $faker->randomElement($priceTypeArray)['type'],
             'address' => $faker->streetAddress,
-            'town' => $faker->city,
         ]);
 
         User::create([
@@ -45,7 +44,6 @@ class UsersTableSeeder extends Seeder
             'role' => 'buyer',
             'price_type' => $faker->randomElement($priceTypeArray)['type'],
             'address' => $faker->streetAddress,
-            'town' => $faker->city,
         ]);
 
         for ($i = 1; $i < 10; $i++) {
@@ -59,7 +57,6 @@ class UsersTableSeeder extends Seeder
                     'role' => 'user',
                     'price_type' => $faker->randomElement($priceTypeArray)['type'],
                     'address' => $faker->streetAddress,
-                    'town' => $faker->city,
                 ]);
             }catch (Exception $e){
 

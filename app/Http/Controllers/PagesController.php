@@ -45,4 +45,8 @@ class PagesController extends Controller
       }
       return redirect('/');
     }
+
+    public function myProfile(){
+
+    }
 }

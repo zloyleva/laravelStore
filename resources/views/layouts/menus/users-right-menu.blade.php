@@ -1,5 +1,5 @@
 <ul class="dropdown-menu" role="menu">
-    <li><a href="#">My Profile</a></li>
+    <li><a href="{{ route('my_profile') }}">My Profile</a></li>
     <li><a href="{{ route('cart') }}">Cart</a></li>
     <li><a href="{{ route('orders.list') }}">Orders</a></li>
     <li>

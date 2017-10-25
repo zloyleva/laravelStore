@@ -23,7 +23,6 @@ class CreateUsersTable extends Migration
             $table->string('role')->default('user');
             $table->string('price_type')->default('price_user');
             $table->string('address')->nullable();
-            $table->string('town')->nullable();
             $table->string('phone')->nullable();
             $table->string('api_token', 60)->unique()->nullable();
             $table->rememberToken();
