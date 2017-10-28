@@ -23,7 +23,7 @@ export class PageModule extends ApiModule {
             data: this.data,
             url: this.apiUrl,
             success: response => {
-
+                alertify.log.success('Product ' + response.name + ' added to Cart');
             },
         });
     };

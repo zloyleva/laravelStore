@@ -32,8 +32,6 @@ class ProductsController extends Controller
 				'breadcrumbs'=>$category->getCategoryBreadCrumbs($collection1, $request->searchData)
 			]
 		);
-
-//		return view('store.index', $category->prepareCategory($request, $product));
 	}
 
 }

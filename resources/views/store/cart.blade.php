@@ -54,13 +54,13 @@
                         <input type="hidden" name="status" value="setOrder">
                         <div class="form-group">
                             <label>Enter address for delivery <sup class="alert-danger">*</sup></label>
-                            <input id="address" name="address" type="text" class="form-control" value=""/>
+                            <input id="address" name="address" type="text" class="form-control" value="{{$user->address}}"/>
                             {{--https://developers.google.com/places/web-service/policies--}}
                             <img src="https://developers.google.com/places/documentation/images/powered-by-google-on-white.png">
                         </div>
                         <div class="form-group">
                             <label>Enter your phone <sup class="alert-danger">*</sup></label>
-                            <input class="form-control" type="phone" id="phone" name="phone" value=""
+                            <input class="form-control" type="phone" id="phone" name="phone" value="{{$user->phone}}"
                                    placeholder="Enter your phone. Format (099)1234567">
                         </div>
                         <div class="form-group">

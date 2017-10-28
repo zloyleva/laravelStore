@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PriceType;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Order;
@@ -32,7 +33,8 @@ class PagesController extends Controller
         return view('store.cart',[
         	'request'=>$request->session()->get('laravel_session'),
             'productsInCart'=>Cart::content(),
-            'cart' => $request->session()->get('cart')
+            'cart' => $request->session()->get('cart'),
+	        'user'=>Auth::user(),
         ]);
     }
 
@@ -46,7 +48,12 @@ class PagesController extends Controller
       return redirect('/');
     }
 
-    public function myProfile(){
-
+    public function myProfile(PriceType $price_type){
+	    return view('store.my_profile', [
+			    'pageName'=>'My profile',
+			    'user'=>Auth::user(),
+			    'price_type_desc'=>$price_type->where('type','=',Auth::user()->price_type)->first()
+		    ]
+	    );
     }
 }

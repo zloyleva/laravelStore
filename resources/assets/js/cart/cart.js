@@ -14,18 +14,7 @@ export class CartModule extends ApiModule {
         new ChangeItemAmountModule();
         new CreateOrderModule();
 
-        this.googleApiKey = 'AIzaSyCFTgptWkyzCm-Js4fLEz0X0R4H_NRtFtE';
-
         this.initGeocomplete();
-    };
-
-    initGeocomplete() {
-        $.getScript('http://maps.googleapis.com/maps/api/js?key=' +
-            this.googleApiKey + '&libraries=places', (data, textStatus, jqxhr) => {
-            console.log(textStatus);
-                $('#address').geocomplete();
-            }
-        );
     };
 
   }

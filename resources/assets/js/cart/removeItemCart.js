@@ -31,6 +31,7 @@ export class RemoveItemCartModule extends ApiModule {
                     console.log(response.deleteId);
                     $('#'+response.deleteId).hide();
                     $('#cartTotal').html(response.total);
+                    alertify.log.error('Remove product form Cart');
                 }else if(typeof response.html != 'undefined'){
                     $('.js-cart-content').html(response.html);
                 }

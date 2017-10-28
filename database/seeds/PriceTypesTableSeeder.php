@@ -6,11 +6,11 @@ use App\Models\PriceType;
 class PriceTypesTableSeeder extends Seeder
 {
     protected $dataList = [
-        'price_user',
-        'price_3_opt',
-        'price_8_opt',
-        'price_dealer',
-        'price_vip',
+        'price_user' => 'Розничная',
+        'price_3_opt' => 'Оптовая #3',
+        'price_8_opt' => 'Оптовая #8',
+        'price_dealer' => 'Диллерская',
+        'price_vip' => 'VIP',
     ];
     /**
      * Run the database seeds.
@@ -22,9 +22,10 @@ class PriceTypesTableSeeder extends Seeder
         //
         PriceType::truncate();
 
-        foreach($this->dataList as $data){
+        foreach($this->dataList as $data => $description){
             PriceType::create([
-                'type'=>$data
+                'type'=>$data,
+	            'description'=>$description
             ]);
         }
     }

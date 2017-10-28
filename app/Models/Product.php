@@ -22,12 +22,12 @@ class Product extends Model
 
         if( isset($request->inputData) && $request->inputData == 'name' && is_string($request->name) ){
 	        $query->where('name', 'like',"%{$request->name}%");
-//	        $query->withPath('custom/url');
+//todo add custom url for search	        $query->withPath('custom/url');
         }elseif ( isset($request->inputData) && $request->inputData == 'sku' && is_numeric($request->sku) ){
 		    $query->where('sku', 'like',"%{$request->sku}%");
 	    }
 
-		return $query->paginate(3);
+		return $query->paginate(5);
     }
 
     public function roundNumber($number){

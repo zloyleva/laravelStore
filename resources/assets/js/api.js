@@ -3,6 +3,7 @@ export class ApiModule {
         console.log('ApiModule');
 
         this.apiToken = this.readCookie('API-TOKEN');
+        this.googleApiKey = 'AIzaSyCFTgptWkyzCm-Js4fLEz0X0R4H_NRtFtE';
     };
 
     get (settings) {
@@ -20,6 +21,15 @@ export class ApiModule {
                 });
             }
         });
+    };
+
+    initGeocomplete() {
+        $.getScript('http://maps.googleapis.com/maps/api/js?key=' +
+            this.googleApiKey + '&libraries=places', (data, textStatus, jqxhr) => {
+                console.log(textStatus);
+                $('#address').geocomplete();
+            }
+        );
     };
 
     post(settings) {
