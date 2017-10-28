@@ -5,17 +5,19 @@ export class MyProfileModule extends ApiModule {
         super();
         console.log('Module: MyProfileModule');
 
+        this.apiUrlUdateUserData = '/api/my_profile/data';
+
         this.initGeocomplete();
         this.formUsersDataValidationHandler();
         this.submitUserDataHandler();
     }
 
     formUsersDataValidationHandler() {
-        let validationUsersName = function( value, element ) {
-            return this.optional( element ) || !(/[^a-zA-Z]+/g.test( value ));
+        let validationUsersName = function (value, element) {
+            return this.optional(element) || !(/[^a-zA-Z]+/g.test(value));
         };
 
-        $.validator.addMethod("checkName", validationUsersName ,"Please enter the correct value. Only latin chars");
+        $.validator.addMethod("checkName", validationUsersName, "Please enter the correct value. Only latin chars");
         //todo add cyrillic validation
 
         $('#usersData').validate({
@@ -63,11 +65,27 @@ export class MyProfileModule extends ApiModule {
         });
     };
 
-    submitUserDataHandler(){
+    submitUserDataHandler() {
         $('#usersData').on('submit', e => {
             e.preventDefault();
+
+            if ($('#usersData').valid()) {
+                this.sendUserFormData();
+            }
+
             console.log('submitUserDataHandler');
             alertify.log.error('submitUserDataHandler');
+        });
+    }
+
+    sendUserFormData() {
+        console.log('sendUserFormData: ');
+        this.post({
+            data: $('#usersData').serialize(),
+            url: this.apiUrlUdateUserData,
+            success: response => {
+
+            }
         });
     }
 }

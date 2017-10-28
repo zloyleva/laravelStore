@@ -18122,6 +18122,8 @@ var MyProfileModule = function (_ApiModule) {
 
         console.log('Module: MyProfileModule');
 
+        _this.apiUrlUdateUserData = '/api/my_profile/data';
+
         _this.initGeocomplete();
         _this.formUsersDataValidationHandler();
         _this.submitUserDataHandler();
@@ -18185,10 +18187,27 @@ var MyProfileModule = function (_ApiModule) {
     }, {
         key: 'submitUserDataHandler',
         value: function submitUserDataHandler() {
+            var _this2 = this;
+
             $('#usersData').on('submit', function (e) {
                 e.preventDefault();
+
+                if ($('#usersData').valid()) {
+                    _this2.sendUserFormData();
+                }
+
                 console.log('submitUserDataHandler');
                 alertify.log.error('submitUserDataHandler');
+            });
+        }
+    }, {
+        key: 'sendUserFormData',
+        value: function sendUserFormData() {
+            console.log('sendUserFormData: ');
+            this.post({
+                data: $('#usersData').serialize(),
+                url: this.apiUrlUdateUserData,
+                success: function success(response) {}
             });
         }
     }]);
