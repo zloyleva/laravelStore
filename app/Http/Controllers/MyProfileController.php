@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 class MyProfileController extends Controller
 {
-    public function updateMyProfile(User $user,Request $request){
+    public function updateMyProfileData(User $user,Request $request){
     	//name,fname,lname,address,phone
 	    $args = [];
 
@@ -30,8 +30,26 @@ class MyProfileController extends Controller
 
 	    if($args){
 		    $user->where('id', Auth::user()->id)->update($args);
+	    }else{
+		    return $this->jsonResponse(['error'=>'Error data']);
 	    }
 
-	    return $this->jsonResponse(Auth::user());
+	    return $this->jsonResponse($user->where('id', Auth::user()->id)->first());
+    }
+
+    public function updateMyProfilePassword(User $user,Request $request){
+	    $args = [];
+
+	    if($request->password && $request->password_confirmation){
+		    $args['password'] = bcrypt($request->password);
+	    }
+
+
+	    if($args){
+		    $user->where('id', Auth::user()->id)->update($args);
+	    }else{
+		    return $this->jsonResponse(['error'=>'Error data']);
+	    }
+	    return $this->jsonResponse($user->where('id', Auth::user()->id)->first());
     }
 }

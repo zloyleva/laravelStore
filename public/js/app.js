@@ -18102,13 +18102,15 @@ var CreateOrderModule = function (_ApiModule) {
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MyProfileModule; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__user_data__ = __webpack_require__(50);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__user_password__ = __webpack_require__(51);
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+
 
 
 
@@ -18122,15 +18124,66 @@ var MyProfileModule = function (_ApiModule) {
 
         console.log('Module: MyProfileModule');
 
-        _this.apiUrlUdateUserData = '/api/my_profile/data';
+        new __WEBPACK_IMPORTED_MODULE_1__user_data__["a" /* UserDataModule */]();
+        new __WEBPACK_IMPORTED_MODULE_2__user_password__["a" /* UserPasswordModule */]();
 
         _this.initGeocomplete();
+        return _this;
+    }
+
+    return MyProfileModule;
+}(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
+
+/***/ }),
+/* 40 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 41 */,
+/* 42 */,
+/* 43 */,
+/* 44 */,
+/* 45 */,
+/* 46 */,
+/* 47 */,
+/* 48 */,
+/* 49 */,
+/* 50 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return UserDataModule; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+
+
+var UserDataModule = function (_ApiModule) {
+    _inherits(UserDataModule, _ApiModule);
+
+    function UserDataModule() {
+        _classCallCheck(this, UserDataModule);
+
+        var _this = _possibleConstructorReturn(this, (UserDataModule.__proto__ || Object.getPrototypeOf(UserDataModule)).call(this));
+
+        console.log('Module: UserDataModule');
+
+        _this.apiUrlUdateUserData = '/api/my_profile/data';
+
         _this.formUsersDataValidationHandler();
         _this.submitUserDataHandler();
         return _this;
     }
 
-    _createClass(MyProfileModule, [{
+    _createClass(UserDataModule, [{
         key: 'formUsersDataValidationHandler',
         value: function formUsersDataValidationHandler() {
             var validationUsersName = function validationUsersName(value, element) {
@@ -18212,14 +18265,97 @@ var MyProfileModule = function (_ApiModule) {
         }
     }]);
 
-    return MyProfileModule;
+    return UserDataModule;
 }(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
 
 /***/ }),
-/* 40 */
-/***/ (function(module, exports) {
+/* 51 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-// removed by extract-text-webpack-plugin
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return UserPasswordModule; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+
+
+var UserPasswordModule = function (_ApiModule) {
+    _inherits(UserPasswordModule, _ApiModule);
+
+    function UserPasswordModule() {
+        _classCallCheck(this, UserPasswordModule);
+
+        var _this = _possibleConstructorReturn(this, (UserPasswordModule.__proto__ || Object.getPrototypeOf(UserPasswordModule)).call(this));
+
+        console.log('Module: UserPasswordModule');
+
+        _this.apiUrlUdateUserPassword = '/api/my_profile/password';
+
+        _this.formUsersPasswordValidationHandler();
+        _this.submitUserPasswordHandler();
+        return _this;
+    }
+
+    _createClass(UserPasswordModule, [{
+        key: 'formUsersPasswordValidationHandler',
+        value: function formUsersPasswordValidationHandler() {
+            var validationUsersPassword = function validationUsersPassword(value, element) {
+                return this.optional(element) || !/[^a-zA-Z0-9]+/g.test(value);
+            };
+
+            $.validator.addMethod("checkPassword", validationUsersPassword, "Please enter the correct value. Only latin chars, numbers");
+
+            $('#usersPassword').validate({
+                rules: {
+                    password: {
+                        maxlength: 50,
+                        minlength: 6,
+                        normalizer: function normalizer(value) {
+                            return $.trim(value);
+                        },
+                        checkPassword: true
+                    },
+                    password_confirmation: {
+                        equalTo: "#password"
+                    }
+                }
+            });
+        }
+    }, {
+        key: 'submitUserPasswordHandler',
+        value: function submitUserPasswordHandler() {
+            var _this2 = this;
+
+            $('#usersPassword').on('submit', function (e) {
+                e.preventDefault();
+
+                if ($('#usersPassword').valid()) {
+                    _this2.sendUserFormPassword();
+                }
+
+                console.log('submitUserPasswordHandler');
+            });
+        }
+    }, {
+        key: 'sendUserFormPassword',
+        value: function sendUserFormPassword() {
+            console.log('sendUserFormData: ');
+            this.post({
+                data: $('#usersPassword').serialize(),
+                url: this.apiUrlUdateUserPassword,
+                success: function success(response) {}
+            });
+        }
+    }]);
+
+    return UserPasswordModule;
+}(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
 
 /***/ })
 /******/ ]);

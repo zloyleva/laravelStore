@@ -61,21 +61,21 @@
                     </div>
                 </form>
                 <h2>Change your password</h2>
-                <form action="" class="form-horizontal">
+                <form id="usersPassword" action="" class="form-horizontal">
                     <div class="form-group">
-                        <label for="userPassword" class="col-sm-2 control-label">Your password</label>
+                        <label for="password" class="col-sm-2 control-label">Your password</label>
                         <div class="col-sm-10">
-                            <input type="password" class="form-control" id="userPassword" placeholder="Enter your new password" name="password">
+                            <input type="password" class="form-control" id="password" placeholder="Enter your new password" name="password">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="userPassword" class="col-sm-2 control-label">Confirm Your password</label>
+                        <label for="passwordConfirmation" class="col-sm-2 control-label">Confirm Your password</label>
                         <div class="col-sm-10">
-                            <input type="password" class="form-control" id="userPassword" placeholder="Confirm your new password" name="password">
+                            <input type="password" class="form-control" id="passwordConfirmation" placeholder="Confirm your new password" name="password_confirmation">
                         </div>
                     </div>
                     <div class="form-group">
-                        <button type="button" class="btn btn-primary">Change password</button>
+                        <button type="submit" class="btn btn-primary">Change password</button>
                     </div>
                 </form>
             </div>
