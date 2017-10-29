@@ -107,7 +107,7 @@ class LoginController extends Controller
 	 */
 	protected function credentials(Request $request)
 	{
-		if(preg_match('/@/', $request->name)){
+		if(filter_var($request->name, FILTER_VALIDATE_EMAIL)){
 			return $request->only('email', 'password');
 		}
 		return $request->only('name', 'password');
