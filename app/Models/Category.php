@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
 {
+	protected $fillable = ['name', 'parent_id', 'slug'];
+
 	private $searchData = [];
 
     public function parent(){
@@ -26,11 +28,11 @@ class Category extends Model
 	 *
 	 * @return int
 	 */
-    public static function takeCategoryId(array $categories){
+    public function takeCategoryId(array $categories){
 
       $parent_id = 0;
       foreach($categories as $category){
-        $parent_id = self::insertOrGetId($category,$parent_id);
+        $parent_id = $this->insertOrGetId($category,$parent_id);
       }
       return $parent_id;
     }
@@ -42,8 +44,12 @@ class Category extends Model
 	 *
 	 * @return mixed
 	 */
-    private static function insertOrGetId($category,$parent_id){
-      $categoryInstance = Category::firstOrCreate(['name' => $category, 'parent_id' => $parent_id, 'slug' => str_slug($category,'-')]);
+    private function insertOrGetId($category,$parent_id){
+    	if(!$category){
+		    $category = 'unCategory';
+		    $parent_id = 0;
+	    }
+      $categoryInstance = $this->firstOrCreate(['name' => $category, 'parent_id' => $parent_id, 'slug' => str_slug($category,'-')]);
       return $categoryInstance->id;
     }
 

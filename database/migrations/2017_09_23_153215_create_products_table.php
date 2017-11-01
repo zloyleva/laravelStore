@@ -17,7 +17,7 @@ class CreateProductsTable extends Migration
             $table->increments('id');
             $table->integer('sku');
             $table->string('name');
-            $table->text('description');
+            $table->text('description')->nullable();
 
             $table->float('price_user');
             $table->float('price_3_opt');

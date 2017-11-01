@@ -10655,7 +10655,7 @@ function applyToTag(styleElement, obj) {
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(5);
-module.exports = __webpack_require__(40);
+module.exports = __webpack_require__(42);
 
 
 /***/ }),
@@ -10667,6 +10667,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__store_pages__ = __webpack_require__(31);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__cart_cart__ = __webpack_require__(34);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__users_my_profile__ = __webpack_require__(39);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__admin_admin__ = __webpack_require__(52);
 window.$ = window.jQuery = __webpack_require__(1);
 console.log('App was loaded');
 
@@ -10682,6 +10683,7 @@ var page = __webpack_require__(27);
 
 
 
+
 $(document).ready(function () {
 
   page('/store*', function () {
@@ -10692,6 +10694,10 @@ $(document).ready(function () {
   });
   page('/my_profile', function () {
     return new __WEBPACK_IMPORTED_MODULE_2__users_my_profile__["a" /* MyProfileModule */]();
+  });
+
+  page('/admin*', function () {
+    return new __WEBPACK_IMPORTED_MODULE_3__admin_admin__["a" /* AdminModule */]();
   });
 
   page();
@@ -18102,8 +18108,8 @@ var CreateOrderModule = function (_ApiModule) {
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MyProfileModule; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__user_data__ = __webpack_require__(50);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__user_password__ = __webpack_require__(51);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__user_data__ = __webpack_require__(40);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__user_password__ = __webpack_require__(41);
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -18136,21 +18142,6 @@ var MyProfileModule = function (_ApiModule) {
 
 /***/ }),
 /* 40 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 41 */,
-/* 42 */,
-/* 43 */,
-/* 44 */,
-/* 45 */,
-/* 46 */,
-/* 47 */,
-/* 48 */,
-/* 49 */,
-/* 50 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -18269,7 +18260,7 @@ var UserDataModule = function (_ApiModule) {
 }(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
 
 /***/ }),
-/* 51 */
+/* 41 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -18355,6 +18346,82 @@ var UserPasswordModule = function (_ApiModule) {
     }]);
 
     return UserPasswordModule;
+}(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
+
+/***/ }),
+/* 42 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 43 */,
+/* 44 */,
+/* 45 */,
+/* 46 */,
+/* 47 */,
+/* 48 */,
+/* 49 */,
+/* 50 */,
+/* 51 */,
+/* 52 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AdminModule; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+
+
+var AdminModule = function (_ApiModule) {
+    _inherits(AdminModule, _ApiModule);
+
+    function AdminModule() {
+        _classCallCheck(this, AdminModule);
+
+        var _this = _possibleConstructorReturn(this, (AdminModule.__proto__ || Object.getPrototypeOf(AdminModule)).call(this));
+
+        console.log('Page: AdminModule');
+
+        _this.data = {};
+        _this.apiUpdateUrl = '/admin/products';
+
+        _this.updateProductHandler();
+        return _this;
+    }
+
+    _createClass(AdminModule, [{
+        key: 'updateProductHandler',
+        value: function updateProductHandler() {
+            var _this2 = this;
+
+            $('#updateProductsBtn').off('click').on('click', function (e) {
+                e.preventDefault();
+                console.log('updateProductHandler');
+                _this2.updateProductMethod();
+            });
+        }
+    }, {
+        key: 'updateProductMethod',
+        value: function updateProductMethod() {
+            this.post({
+                data: this.data,
+                url: this.apiUpdateUrl,
+                success: function success(response) {
+                    alertify.log.success('Product ' + response.name + ' added to Cart');
+                }
+            });
+        }
+    }]);
+
+    return AdminModule;
 }(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
 
 /***/ })
