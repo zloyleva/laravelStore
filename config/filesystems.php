@@ -63,6 +63,19 @@ return [
             'bucket' => env('AWS_BUCKET'),
         ],
 
+        'ftp' => [
+	        'driver'   => 'ftp',
+	        'host'     => '',
+	        'username' => '',
+	        'password' => '',
+
+	        // Optional FTP Settings...
+	        // 'port'     => 21,
+	        // 'root'     => '',
+	        // 'passive'  => true,
+	        // 'ssl'      => true,
+	        // 'timeout'  => 30,
+        ],
     ],
 
 ];
