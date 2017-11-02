@@ -3,43 +3,44 @@
 use Illuminate\Database\Seeder;
 use App\Models\Product;
 use App\Models\Category;
+use App\Http\Controllers\PriceParserController;
 
-class ProductsTableSeeder extends Seeder
-{
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
-    public function run()
-    {
-        //
-        Product::truncate();
-        $faker = \Faker\Factory::create();
-        $categories = Category::all()->toArray();
+class ProductsTableSeeder extends Seeder {
+	/**
+	 * Run the database seeds.
+	 *
+	 * @return void
+	 */
+	public function run() {
+		//
+		$price     = new PriceParserController;
+		$priceData = $price->readPrice();
 
-        for ($i = 1; $i < 50; $i++) {
-            $userPrice = $faker->randomFloat($nbMaxDecimals = NULL, $min = 0, $max = 1000);
-            try {
-                Product::create([
-                    'sku' => $faker->numberBetween($min = 1000, $max = 8000),
-                    'name' => $faker->sentence($nbWords = 6, $variableNbWords = true),
-                    'description' => $faker->text($maxNbChars = 200),
+		Product::truncate();
+		$faker = \Faker\Factory::create();
 
-                    'price_user' => $userPrice,
-                    'price_3_opt' => $userPrice - $userPrice*0.1,
-                    'price_8_opt' => $userPrice - $userPrice*0.2,
-                    'price_dealer' => $userPrice - $userPrice*0.3,
-                    'price_vip' => $userPrice - $userPrice*0.4,
+		foreach ( $priceData as $item ) {
+			if ( ! $item ) {
+				continue;
+			}
+			$categoryId = Category::takeCategoryId( $item['category'] );
 
-                    'category_id' => $faker->randomElements($categories)[0]['id'],
-                    'stock' => $faker->numberBetween($min = 1, $max = 5000),
-                    'featured' => $faker->boolean($chanceOfGettingTrue = 10),
-                    'image' => $faker->imageUrl(),
-                ]);        
-            }catch (Exception $e){
+			Product::create( [
+				'sku'         => (integer) $item['sku'],
+				'name'        => $item['name'],
+				'description' => $item['description'],
 
-            }
-        }
-    }
+				'price_user'   => (float) strtr( $item['price_user'], [ ',' => '.' ] ),
+				'price_3_opt'  => (float) strtr( $item['price_3_opt'], [ ',' => '.' ] ),
+				'price_8_opt'  => (float) strtr( $item['price_8_opt'], [ ',' => '.' ] ),
+				'price_dealer' => (float) strtr( $item['price_dealer'], [ ',' => '.' ] ),
+				'price_vip'    => (float) strtr( $item['price_vip'], [ ',' => '.' ] ),
+
+				'category_id' => $categoryId,
+				'stock'       => $item['stock'],
+				'featured'    => $faker->boolean( $chanceOfGettingTrue = 10 ),
+				'image'       => $faker->imageUrl(),
+			] );
+		}
+	}
 }

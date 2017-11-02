@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 class Order extends Model
 {
     protected $fillable = [
-      'user_id','status','phone','total','note'
+      'user_id','status','address','phone','total','note'
     ];
 
     public function orderListItems(){
@@ -26,6 +26,7 @@ class Order extends Model
     * Create new Order
     */
     public function createOrder($request,$userId){
+
       Cart::restore($userId);
       $itemsList = Cart::content();
 
@@ -33,6 +34,7 @@ class Order extends Model
         'user_id' => $userId,
         'status'  =>  'pending',
         'phone' =>  $request->phone,
+        'address' =>  $request->address,
         'total' => filter_var(Cart::total(), FILTER_SANITIZE_NUMBER_FLOAT,FILTER_FLAG_ALLOW_FRACTION),
         'note'  => $request->note
       ]);

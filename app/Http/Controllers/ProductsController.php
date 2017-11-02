@@ -3,35 +3,35 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Category;
 use App\Models\Product;
-use App\Models\Order;
-use Illuminate\Support\Facades\Auth;
-use Gloudemans\Shoppingcart\Facades\Cart;
+
 
 class ProductsController extends Controller
 {
-    //
-    public function addToCart(Request $request,Product $product){
+	/**
+	 * @param Product $product
+	 * @param Request $request
+	 * @param Category $category
+	 *
+	 * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+	 */
+	public function store(Product $product, Request $request, Category $category){
 
-        $request->productId;
-        $getProduct = $product->find($request->productId);
+		$slug = $request->slug;
+		$collection = $collection1 = $category->collectCategories();
+		$parent_id = 0;
 
-        $price_type = 'price_user';
-        if(Auth::check()){
-            $price_type = Auth::user()->price_type;
-        }
-        Cart::restore(Auth::user()->id);
-        Cart::add($getProduct->sku, $getProduct->name, $request->qty, $getProduct->$price_type);
-        Cart::store(Auth::user()->id);
+		$categories = $category->categoryHandler($collection,$parent_id,$slug);
+		$request->searchData = $category->getSearchCategory()??null;
 
-        return $this->jsonResponse(Auth::user());
-    }
+		return view('store.index', [
+				'pageName'=>'Store',
+				'categories'=>$categories,
+				'products'=>$product->listProducts($request),
+				'breadcrumbs'=>$category->getCategoryBreadCrumbs($collection1, $request->searchData)
+			]
+		);
+	}
 
-    public function createOrder(Request $request, Order $order){
-      if(Auth::check()){
-        $orderId = $order->createOrder($request,Auth::user()->id);
-        return $orderId;
-      }
-      return 'error to create Order';
-    }
 }

@@ -8,7 +8,39 @@
 // Bootstrap
 @import "~bootstrap-sass/assets/stylesheets/bootstrap";
 
+//Validation
+input.error{
+    border-color: #f00;
+    &.form-control:focus {
+        border-color: #f00;
+        outline: 0;
+        -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(255, 0, 30, 0.6);
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(255, 0, 30, 0.6);
+    }
+}
+
+
+.container.js-search-product{
+    .row{
+        form{
+            .search-property{
+                display: flex;
+                align-items: baseline;
+                label{
+                    white-space: nowrap;
+                    margin-right: 10px;
+                }
+            }
+        }
+    }
+}
 .container{
+    .row{
+        ul.breadcrumb{
+            padding-left: 0;
+            padding-right: 0;
+        }
+    }
     .text-line-through{
         text-decoration: line-through;
     }
@@ -38,6 +70,53 @@
                     border-radius: 5px;
                     border: 1px solid #ccc;
                     padding-left: 5px;
+                }
+            }
+        }
+    }
+}
+
+#category_menu{
+    ul{
+        list-style: none;
+        li{
+            a{
+                padding: 5px;
+                text-decoration: none;
+                display: block;
+                &:hover{
+                    background-color: unset;
+                }
+                &.active{
+                    background-color: #cbcbcb;
+                    & ~ ul.sub_menu{
+                        display: block;
+                    }
+                }
+            }
+        }
+    }
+    ul.sub_menu{
+        padding:0;
+        padding-left: 5px;
+        display: none;
+        &.display_item{
+            display: block;
+            background-color: #e8e8e8;
+        }
+    }
+}
+
+//Cart page
+.container.js-cart-content{
+    table{
+        .js-row{
+            #products_qty{
+                display: flex;
+                input{
+                    margin-left: 5px;
+                    margin-right: 5px;
+                    max-width: 75px;
                 }
             }
         }

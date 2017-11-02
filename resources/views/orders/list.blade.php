@@ -12,6 +12,7 @@
                 <th>Date</th>
                 <th>Status</th>
                 <th>Total</th>
+                <th>Address</th>
                 <th>Note</th>
             </tr>
         </thead>
@@ -24,6 +25,7 @@
                 <td>{{$order->created_at}}</td>
                 <td>{{$order->status}}</td>
                 <td>{{$order->total}}</td>
+                <td>{{$order->address}}</td>
                 <td>{{$order->note}}</td>
             </tr>
           @endforeach

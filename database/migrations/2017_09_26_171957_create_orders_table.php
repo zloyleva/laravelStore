@@ -17,6 +17,7 @@ class CreateOrdersTable extends Migration
             $table->increments('id');
             $table->integer('user_id');
             $table->string('status');
+            $table->string('address');
             $table->string('phone');
             $table->float('total');
             $table->text('note')->nullable();

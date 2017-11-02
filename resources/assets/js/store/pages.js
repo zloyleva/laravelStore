@@ -1,9 +1,17 @@
 import {ApiModule} from '../api';
+import {CategoryModule} from './category';
+import { SearchProductModule } from './searchProduct';
 
 export class PageModule extends ApiModule {
     constructor() {
         super();
         console.log('Page: PageModule');
+
+        this.category = new CategoryModule();
+        if($('#js-searchProductForm').length > 0){
+            console.log('Page: has search product');
+            new SearchProductModule();
+        }
 
         this.data = {};
         this.apiUrl = '/api/store/addtocart';
@@ -15,7 +23,7 @@ export class PageModule extends ApiModule {
             data: this.data,
             url: this.apiUrl,
             success: response => {
-
+                alertify.log.success('Product ' + response.name + ' added to Cart');
             },
         });
     };

@@ -29,11 +29,9 @@ class LoginController extends Controller
      */
     protected $redirectTo = '/';
 
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
+	/**
+	 * LoginController constructor.
+	 */
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
@@ -81,4 +79,37 @@ class LoginController extends Controller
 
         return redirect('/');
     }
+
+	public function username()
+	{
+		return 'name';
+	}
+
+	/**
+	 * Validate the user login request.
+	 *
+	 * @param  \Illuminate\Http\Request  $request
+	 * @return void
+	 */
+	protected function validateLogin(Request $request)
+	{
+		$this->validate($request, [
+			'name' => 'required|string',//validate field from BE
+			'password' => 'required|string',
+		]);
+	}
+
+	/**
+	 * Get the needed authorization credentials from the request.
+	 *
+	 * @param  \Illuminate\Http\Request  $request
+	 * @return array
+	 */
+	protected function credentials(Request $request)
+	{
+		if(filter_var($request->name, FILTER_VALIDATE_EMAIL)){
+			return $request->only('email', 'password');
+		}
+		return $request->only('name', 'password');
+	}
 }

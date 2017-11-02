@@ -2,23 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PriceType;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Order;
-use App\Models\OrderList;
+
+use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
 use Gloudemans\Shoppingcart\Facades\Cart;
+
+use App\Http\Requests\Product\ProductSearchRequest;
 
 class PagesController extends Controller
 {
     public function home(){
         return view('welcome');
-    }
-
-    public function store(Product $product){
-        return view('store.index',[
-            'products'=>$product->listProducts()
-        ]);
     }
 
     public function showCard(Request $request){
@@ -33,27 +31,11 @@ class PagesController extends Controller
         Cart::store($identifcator);
 
         return view('store.cart',[
+        	'request'=>$request->session()->get('laravel_session'),
             'productsInCart'=>Cart::content(),
-            'cart' => $request->session()->get('cart')
+            'cart' => $request->session()->get('cart'),
+	        'user'=>Auth::user(),
         ]);
-    }
-
-    public function listOrders(Request $request, Order $orders, OrderList $orderList){
-
-      if($request->status === 'setOrder' ){
-        Cart::restore(Auth::user()->id);
-        if(Cart::count() > 0){
-          $result = $orders->createOrder($request,Auth::user()->id);
-          $request->session()->forget('cart');
-
-          $orderList->createOrderList($result);
-        }
-      }
-
-      $request->flashOnly(['status', 'note', 'phone']);
-      return view('orders.list',[
-          'orders'=>$orders->listOrdersForUser()
-      ]);
     }
 
     public function showOrder(Request $request, Order $order){
@@ -64,5 +46,14 @@ class PagesController extends Controller
         ]);
       }
       return redirect('/');
+    }
+
+    public function myProfile(PriceType $price_type){
+	    return view('store.my_profile', [
+			    'pageName'=>'My profile',
+			    'user'=>Auth::user(),
+			    'price_type_desc'=>$price_type->where('type','=',Auth::user()->price_type)->first()
+		    ]
+	    );
     }
 }
