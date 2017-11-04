@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\UploadPrice;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Mockery\Exception;
 
 class AdminDashboardController extends Controller
 {
@@ -20,11 +22,13 @@ class AdminDashboardController extends Controller
 		]);;
 	}
 
-	public function getFile(){
-//		return Storage::disk('ftp')->exists('price1.json')?'true':'false';
-//		return Storage::disk('ftp')->lastModified('price.json');
-		Storage::disk('local')->put('new.file', Storage::disk('ftp')->get('price.json'), 'public');
-		Storage::setVisibility('new.file', 'public');
-		return 'upload';
+	public function getFile(UploadPrice $uploadPrice){
+
+		if($connectionId = $uploadPrice->setFtpConnection() ){
+			$uploadPrice->upDatePrice($connectionId);
+			ftp_close($connectionId);
+		}
+
+		return 'upload price ';
 	}
 }
