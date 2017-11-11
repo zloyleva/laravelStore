@@ -9,12 +9,23 @@
 
 ##RUN
 
+Install and run
+*Install and run Docker container*
+
+```
+$ make install
+```
+
 Queue:
-*todo create docker task*
+*Call ones for create queue's table*
 ```
 $ php artisan queue:table
 ```
 
+Todo: *add listener comand to Docker start file* 
+```
+$ php artisan queue:listen
+```
 
 ## License
 
