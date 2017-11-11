@@ -6,6 +6,8 @@ use App\Models\UploadPrice;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Mockery\Exception;
+use App\Jobs\UpdateProductsPrice;
+use Carbon\Carbon;
 
 class AdminDashboardController extends Controller
 {
@@ -30,5 +32,41 @@ class AdminDashboardController extends Controller
 		}
 
 		return 'upload price ';
+	}
+
+	public function queueMethod(){
+
+		//Read price to array
+		$localPriceName = storage_path('price/price.json');
+
+		while(true){
+
+			$productsPriceArray = file($localPriceName);
+			$ChunkToUpload = [];
+			//Slice from array chunks(200 ps)
+			$chunkItemCounts = (count($productsPriceArray)<200)?count($productsPriceArray):200;
+			for($i=0;$i<$chunkItemCounts;$i++){
+				$ChunkToUpload[] = json_decode($productsPriceArray[$i], JSON_UNESCAPED_UNICODE );
+				unset($productsPriceArray[$i]);
+			}
+
+			//Call Queue and pass it chunk data and slice data array
+			$this->sendToQueue($ChunkToUpload);
+
+			if(count($productsPriceArray)<1){
+				//finish read price
+				//if data's array empty - write to DB - update price is done ->> Pass status last chunk for set it
+				//delete price file
+				return 'finish upload';
+			}
+
+			file_put_contents($localPriceName, $productsPriceArray);
+		}
+	}
+
+	private function sendToQueue($ChunkToUpload){
+
+		$jobUploadPrice = (new UpdateProductsPrice($ChunkToUpload))->delay(Carbon::now()->addSeconds(30));
+		dispatch($jobUploadPrice);
 	}
 }

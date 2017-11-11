@@ -19,7 +19,9 @@ RUN apt-get update && \
     apt-get install -y php7.0-sqlite3 && \
     apt-get install -y mcrypt php7.0-mcrypt && \
     apt-get install -y git && \
-    apt-get install -y php-xdebug && \
+#    apt-get install -y php-xdebug && \
+    apt-get install -y mc && \
+    apt-get install -y cron && \
     apt-get install -y unzip && \
     apt-get install -y wget &&\
     apt-get install -y curl && \
@@ -32,17 +34,17 @@ RUN apt-get update && \
 # Configure apache
 RUN rm -rf /var/www/html && ln -fs /app/public /var/www/html && \
     a2enmod rewrite && \
-    sed -i 's/<VirtualHost \*:80>/<VirtualHost \*:80>\n<Directory \/var\/www\/html>\nOptions Indexes FollowSymLinks MultiViews\nAllowOverride All\nOrder allow,deny\nallow from all\n<\/Directory>/g' /etc/apache2/sites-available/000-default.conf && \
-    echo '[Xdebug]' >> /etc/php/7.0/apache2/php.ini  && \
-    echo 'zend_extension="/usr/lib/php/20151012/xdebug.so"' >> /etc/php/7.0/apache2/php.ini  && \
-    echo 'xdebug.remote_enable = 1' >> /etc/php/7.0/apache2/php.ini  && \
-    echo 'xdebug.remote_log="/tmp/xdebug.log"' >> /etc/php/7.0/apache2/php.ini  && \
-    echo 'xdebug.remote_host = 172.17.0.1' >> /etc/php/7.0/apache2/php.ini  && \
-    echo 'xdebug.idekey = PHPSTORM' >> /etc/php/7.0/apache2/php.ini  && \
-    echo "xdebug.default_enable = 0" >> /etc/php/7.0/apache2/php.ini  && \
-    echo "xdebug.remote_autostart = 0" >> /etc/php/7.0/apache2/php.ini  && \
-    echo "xdebug.remote_connect_back = 0" >> /etc/php/7.0/apache2/php.ini  && \
-    echo "xdebug.profiler_enable = 0" >> /etc/php/7.0/apache2/php.ini
+    sed -i 's/<VirtualHost \*:80>/<VirtualHost \*:80>\n<Directory \/var\/www\/html>\nOptions Indexes FollowSymLinks MultiViews\nAllowOverride All\nOrder allow,deny\nallow from all\n<\/Directory>/g' /etc/apache2/sites-available/000-default.conf &&
+#    echo '[Xdebug]' >> /etc/php/7.0/apache2/php.ini  && \
+#    echo 'zend_extension="/usr/lib/php/20151012/xdebug.so"' >> /etc/php/7.0/apache2/php.ini  && \
+#    echo 'xdebug.remote_enable = 1' >> /etc/php/7.0/apache2/php.ini  && \
+#    echo 'xdebug.remote_log="/tmp/xdebug.log"' >> /etc/php/7.0/apache2/php.ini  && \
+#    echo 'xdebug.remote_host = 172.17.0.1' >> /etc/php/7.0/apache2/php.ini  && \
+#    echo 'xdebug.idekey = PHPSTORM' >> /etc/php/7.0/apache2/php.ini  && \
+#    echo "xdebug.default_enable = 0" >> /etc/php/7.0/apache2/php.ini  && \
+#    echo "xdebug.remote_autostart = 0" >> /etc/php/7.0/apache2/php.ini  && \
+#    echo "xdebug.remote_connect_back = 0" >> /etc/php/7.0/apache2/php.ini  && \
+#    echo "xdebug.profiler_enable = 0" >> /etc/php/7.0/apache2/php.ini
 
 # Configure mysql
 RUN echo mysql-server mysql-server/root_password password 12345 | debconf-set-selections && \
