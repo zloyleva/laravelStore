@@ -24,10 +24,18 @@ class Product extends Model
 	    'image',
     ];
 
+	/**
+	 * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+	 */
     public function category(){
         return $this->belongsTo(Category::class);
     }
 
+	/**
+	 * @param $request
+	 *
+	 * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+	 */
     public function listProducts($request){
 		$query = $this->with(['category']);
 
@@ -45,6 +53,12 @@ class Product extends Model
 		return $query->paginate(15);
     }
 
+	/**
+	 * Round number to 2 signs
+	 * @param $number
+	 *
+	 * @return float
+	 */
     public function roundNumber($number){
         return round($number, 2);
     }
@@ -54,7 +68,6 @@ class Product extends Model
 	 * @param $categoryId
 	 */
     public function insertOrUpdateProducts($item, $categoryId){
-	    $faker = \Faker\Factory::create();
 
 	    $imageURL = '';
 		if($this->isImageExist($item['sku'].'.jpeg')){
@@ -77,12 +90,18 @@ class Product extends Model
 
 			    'category_id' => $categoryId,
 			    'stock'       => $item['stock'],
-			    'featured'    => $faker->boolean( $chanceOfGettingTrue = 10 ),
+			    'featured'    => false,
 			    'image'       => $imageURL
 		    ]
 	    );
     }
 
+	/**
+	 * Check exist this file in directory
+	 * @param $imageFileName
+	 *
+	 * @return mixed
+	 */
     private function isImageExist($imageFileName){
 	    return Storage::disk('public_images')->exists($imageFileName);
     }

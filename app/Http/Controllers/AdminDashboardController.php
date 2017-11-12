@@ -56,7 +56,7 @@ class AdminDashboardController extends Controller
 
 			//Call Queue and pass it chunk data and slice data array
 			$this->sendToQueue($ChunkToUpload, $product, $category);
-			dd('STOP');
+
 			if(count($productsPriceArray)<1){
 				//finish read price
 				//if data's array empty - write to DB - update price is done ->> Pass status last chunk for set it
