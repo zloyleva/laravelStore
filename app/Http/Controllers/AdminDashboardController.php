@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
+use App\Models\Product;
 use App\Models\UploadPrice;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -34,7 +36,9 @@ class AdminDashboardController extends Controller
 		return 'upload price ';
 	}
 
-	public function queueMethod(){
+	public function queueMethod(Product $product, Category $category){
+
+		$chunkSize = 250;
 
 		//Read price to array
 		$localPriceName = storage_path('price/price.json');
@@ -44,14 +48,14 @@ class AdminDashboardController extends Controller
 			$productsPriceArray = file($localPriceName);
 			$ChunkToUpload = [];
 			//Slice from array chunks(200 ps)
-			$chunkItemCounts = (count($productsPriceArray)<200)?count($productsPriceArray):200;
+			$chunkItemCounts = (count($productsPriceArray)<$chunkSize)?count($productsPriceArray):$chunkSize;
 			for($i=0;$i<$chunkItemCounts;$i++){
 				$ChunkToUpload[] = json_decode($productsPriceArray[$i], JSON_UNESCAPED_UNICODE );
 				unset($productsPriceArray[$i]);
 			}
 
 			//Call Queue and pass it chunk data and slice data array
-			$this->sendToQueue($ChunkToUpload);
+			$this->sendToQueue($ChunkToUpload, $product, $category);
 
 			if(count($productsPriceArray)<1){
 				//finish read price
@@ -64,9 +68,9 @@ class AdminDashboardController extends Controller
 		}
 	}
 
-	private function sendToQueue($ChunkToUpload){
+	private function sendToQueue($ChunkToUpload, $product, $category){
 
-		$jobUploadPrice = (new UpdateProductsPrice($ChunkToUpload))->delay(Carbon::now()->addSeconds(30));
+		$jobUploadPrice = (new UpdateProductsPrice($ChunkToUpload, $product, $category))->delay(Carbon::now()->addSeconds(50));
 		dispatch($jobUploadPrice);
 	}
 }

@@ -17,14 +17,15 @@ $ make install
 ```
 
 Queue:
-*Call ones for create queue's table*
+*Call ones for create queue's table if no have current tables*
 ```
 $ php artisan queue:table
+$ php artisan queue:failed-table
 ```
 
 Todo: *add listener comand to Docker start file* 
 ```
-$ php artisan queue:listen
+$ php artisan queue:listen --tries=2
 ```
 
 ## License

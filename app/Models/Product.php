@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class Product extends Model
 {
@@ -23,10 +24,18 @@ class Product extends Model
 	    'image',
     ];
 
+	/**
+	 * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+	 */
     public function category(){
         return $this->belongsTo(Category::class);
     }
 
+	/**
+	 * @param $request
+	 *
+	 * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+	 */
     public function listProducts($request){
 		$query = $this->with(['category']);
 
@@ -41,9 +50,15 @@ class Product extends Model
 		    $query->where('sku', 'like',"%{$request->sku}%");
 	    }
 
-		return $query->paginate(5);
+		return $query->paginate(15);
     }
 
+	/**
+	 * Round number to 2 signs
+	 * @param $number
+	 *
+	 * @return float
+	 */
     public function roundNumber($number){
         return round($number, 2);
     }
@@ -53,11 +68,17 @@ class Product extends Model
 	 * @param $categoryId
 	 */
     public function insertOrUpdateProducts($item, $categoryId){
-	    $faker = \Faker\Factory::create();
+
+	    $imageURL = '';
+		if($this->isImageExist($item['sku'].'.jpeg')){
+			$imageURL = '/images/'.$item['sku'].'.jpeg';
+		}else{
+			$imageURL = '/images/no-image.png';
+		}
+
 	    return $this->updateOrCreate(
 		    ['sku'         => (integer) $item['sku']],
 		    [
-//		    	'sku'         => (integer) $item['sku'],
 			    'name'        => $item['name'],
 			    'description' => $item['description'],
 
@@ -69,9 +90,19 @@ class Product extends Model
 
 			    'category_id' => $categoryId,
 			    'stock'       => $item['stock'],
-			    'featured'    => $faker->boolean( $chanceOfGettingTrue = 10 ),
-			    'image'       => $faker->imageUrl()
+			    'featured'    => false,
+			    'image'       => $imageURL
 		    ]
 	    );
+    }
+
+	/**
+	 * Check exist this file in directory
+	 * @param $imageFileName
+	 *
+	 * @return mixed
+	 */
+    private function isImageExist($imageFileName){
+	    return Storage::disk('public_images')->exists($imageFileName);
     }
 }
