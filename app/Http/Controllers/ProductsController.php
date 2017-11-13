@@ -29,7 +29,8 @@ class ProductsController extends Controller
 				'pageName'=>'Store',
 				'categories'=>$categories,
 				'products'=>$product->listProducts($request),
-				'breadcrumbs'=>$category->getCategoryBreadCrumbs($collection1, $request->searchData)
+				'breadcrumbs'=>$category->getCategoryBreadCrumbs($collection1, $request->searchData),
+                'searchParams'=>[]
 			]
 		);
 	}

@@ -20,7 +20,11 @@ class SearchProductsController extends Controller
 			    'pageName'=>'Search',
 			    'categories'=>$categories,
 			    'products'=>$product->listProducts($request),
-			    'breadcrumbs'=>$category->getCategoryBreadCrumbs($collection1, $request->searchData)
+			    'breadcrumbs'=>$category->getCategoryBreadCrumbs($collection1, $request->searchData),
+                'searchParams'=>[
+                    'inputData'=>$request->input('inputData'),
+                    $request->input('inputData')=>$request->input($request->input('inputData'))
+                ]
 		    ]
 	    );
     }

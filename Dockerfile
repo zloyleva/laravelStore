@@ -34,7 +34,7 @@ RUN apt-get update && \
 # Configure apache
 RUN rm -rf /var/www/html && ln -fs /app/public /var/www/html && \
     a2enmod rewrite && \
-    sed -i 's/<VirtualHost \*:80>/<VirtualHost \*:80>\n<Directory \/var\/www\/html>\nOptions Indexes FollowSymLinks MultiViews\nAllowOverride All\nOrder allow,deny\nallow from all\n<\/Directory>/g' /etc/apache2/sites-available/000-default.conf &&
+    sed -i 's/<VirtualHost \*:80>/<VirtualHost \*:80>\n<Directory \/var\/www\/html>\nOptions Indexes FollowSymLinks MultiViews\nAllowOverride All\nOrder allow,deny\nallow from all\n<\/Directory>/g' /etc/apache2/sites-available/000-default.conf
 #    echo '[Xdebug]' >> /etc/php/7.0/apache2/php.ini  && \
 #    echo 'zend_extension="/usr/lib/php/20151012/xdebug.so"' >> /etc/php/7.0/apache2/php.ini  && \
 #    echo 'xdebug.remote_enable = 1' >> /etc/php/7.0/apache2/php.ini  && \
