@@ -13,3 +13,4 @@ yarn-error.log
 composer.lock
 makefile
 /storage/price/price.json
+/public/images/*.jpeg
