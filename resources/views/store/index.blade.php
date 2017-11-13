@@ -51,7 +51,7 @@
                         </div>
                     </div>
                 @endforeach
-                <div id="pagination_link" class="col-sm-12 col-md-12 col-lg-12">{{$products->links()}}</div>
+                <div id="pagination_link" class="col-sm-12 col-md-12 col-lg-12">{{$products->appends($searchParams)->links()}}</div>
             </div>
         </div>
 
