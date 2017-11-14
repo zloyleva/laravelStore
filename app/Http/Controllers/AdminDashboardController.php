@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\UploadPrice;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Mockery\Exception;
@@ -17,14 +18,21 @@ class AdminDashboardController extends Controller
     public function listOrders(){
       return view('admin.listOrders',[
           'data'=> '',
-      ]);;
+      ]);
     }
 
 	public function addProducts(){
 		return view('admin.addProducts',[
 			'data'=> '',
-		]);;
+		]);
 	}
+
+	public function usersList(User $user){
+
+        return view('admin.usersList',[
+            'users'=> $user->get(),
+        ]);
+    }
 
 	public function getFile(UploadPrice $uploadPrice){
 
@@ -68,6 +76,11 @@ class AdminDashboardController extends Controller
 		}
 	}
 
+    /**
+     * @param $ChunkToUpload
+     * @param $product
+     * @param $category
+     */
 	private function sendToQueue($ChunkToUpload, $product, $category){
 
 		$jobUploadPrice = (new UpdateProductsPrice($ChunkToUpload, $product, $category))->delay(Carbon::now()->addSeconds(50));
