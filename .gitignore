@@ -11,6 +11,6 @@ npm-debug.log
 yarn-error.log
 .env
 composer.lock
-makefile
 /storage/price/price.json
 /public/images/*.jpeg
+docker.log
