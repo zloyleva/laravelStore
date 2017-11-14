@@ -12,6 +12,7 @@ class Product extends Model
     protected $fillable =[
 	    'sku',
 	    'name',
+	    'slug',
 	    'description',
 	    'price_user',
 	    'price_3_opt',
@@ -76,10 +77,12 @@ class Product extends Model
 			$imageURL = '/images/no-image.png';
 		}
 
+
 	    return $this->updateOrCreate(
 		    ['sku'         => (integer) $item['sku']],
 		    [
 			    'name'        => $item['name'],
+			    'slug'        => str_slug($item['name'],'-') . '-' . $item['sku'],
 			    'description' => $item['description'],
 
 			    'price_user'   => (float) strtr( $item['price_user'], [ ',' => '.' ] ),

@@ -37,9 +37,7 @@ Route::group( [ 'middleware' => [ 'auth', 'admin' ], 'prefix' => 'admin', 'as' =
 	Route::get( '/get_file', [ 'as' => 'get_file', 'uses' => 'AdminDashboardController@getFile' ] );
 	Route::get( '/queue_method', [ 'as' => 'get_file', 'uses' => 'AdminDashboardController@queueMethod' ] );
 
-
 	Route::post( '/products', [ 'as' => 'updateProducts', 'uses' => 'AddProductsController@updateProducts' ] );
-
 } );
 
 Auth::routes();
