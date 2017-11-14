@@ -4,16 +4,13 @@ help: #prints list of commands
 	@cat ./makefile | grep : | grep -v "grep"
 
 install: #start docker container #
-	@cp ./.env.example ./.env && sudo docker-compose up -d && sudo docker exec -it $(docker_name) bash -c 'php composer.phar update && chmod -R 777 . && php composer.phar dump-autoload && php artisan migrate:refresh --seed'
-
-scenario: #scenario deploy
-	@cp ./.env.scenario ./.env && php composer.phar update && chmod -R 777 . && php composer.phar dump-autoload && npm i && artisan migrate:refresh --seed && npm run production && service supervisor restart && mkdir -m 777 public/img/tmp
+	@sudo docker-compose up -d && sudo docker exec -it $(docker_name) bash -c 'php composer.phar update && chmod -R 777 . && php composer.phar dump-autoload && php artisan migrate:refresh --seed'
 
 start: #start docker container #
-	@sudo sudo docker-compose up -d
+	@sudo docker-compose up -d
 
 stop: #stop docker container
-	@sudo sudo docker-compose down
+	@sudo docker-compose down
 
 remove: #remove docker image
 	@sudo docker-compose down; sudo docker rmi -f $(docker_name)
