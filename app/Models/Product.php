@@ -82,7 +82,7 @@ class Product extends Model
 		    ['sku'         => (integer) $item['sku']],
 		    [
 			    'name'        => $item['name'],
-			    'slug'        => str_slug($item['name'],'-').'-'.$item['sku'],
+			    'slug'        => str_slug($item['name'],'-') . '-' . $item['sku'],
 			    'description' => $item['description'],
 
 			    'price_user'   => (float) strtr( $item['price_user'], [ ',' => '.' ] ),
