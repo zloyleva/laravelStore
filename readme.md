@@ -39,6 +39,10 @@ Todo: *add listener comand to Docker start file*
 ```
 $ php artisan queue:listen --tries=2
 ```
+If you got error: "No application encryption key has been specified."
+```
+$ php artisan key:generate
+```
 
 ## License
 
