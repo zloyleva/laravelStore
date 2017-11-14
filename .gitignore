@@ -12,3 +12,4 @@ yarn-error.log
 .env
 composer.lock
 /storage/price/price.json
+/public/images/*.jpeg
