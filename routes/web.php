@@ -12,6 +12,8 @@ Route::get( '/store', [ 'as' => 'store', 'uses' => 'ProductsController@store' ] 
 Route::get( '/store/category/{slug}', [ 'as' => 'category', 'uses' => 'ProductsController@store' ] );
 Route::get( '/store/search', [ 'as' => 'search', 'uses' => 'SearchProductsController@searchIndex' ] );
 
+Route::get( '/store/product/{slug}', [ 'as' => 'show_product', 'uses' => 'ProductsController@showProduct' ] );
+
 Route::group( [ 'middleware' => [ 'auth' ] ], function () {
 	Route::get( '/my_profile', [ 'as' => 'my_profile', 'uses' => 'PagesController@myProfile' ] );
 

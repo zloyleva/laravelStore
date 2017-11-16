@@ -108,4 +108,8 @@ class Product extends Model
     private function isImageExist($imageFileName){
 	    return Storage::disk('public_images')->exists($imageFileName);
     }
+
+    public function getProduct($slug){
+        return $this->where('slug',$slug)->first();
+    }
 }

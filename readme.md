@@ -44,6 +44,9 @@ If you got error: "No application encryption key has been specified."
 $ php artisan key:generate
 ```
 
+### Product's images
+path to images: 'app/public/images'
+
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
