@@ -22,8 +22,27 @@ input.error{
 //Buttons
 .btn-default{
     background-color: #ccc;
+    &:hover{
+        border-color: #f00;
+        background-color: #f00;
+        color: #fff;
+    }
+}
+.btn{
+    border-radius: 0px;
 }
 
+//Forms elements
+.form-control{
+    border-radius: 0px;
+}
+
+a{
+    color: #2b0000;
+    &:hover{
+        color: #ff0000;
+    }
+}
 
 .container.js-search-product{
     .row{
@@ -54,6 +73,7 @@ input.error{
         border-top: 1px solid #ddd;
         margin-bottom: 10px;
         padding: 10px;
+        padding-top: 20px;
         .section_thumbnail{
             .product_image{
                 width: 100%;
@@ -76,13 +96,14 @@ input.error{
             .product_price{
                 font-weight: 600;
                 font-size: 2rem;
+                color: #f00;
             }
             .behavior_section{
                 display: flex;
                 input.products_quantity{
                     max-width: 45px;
                     margin-right: 5px;
-                    border-radius: 5px;
+                    //border-radius: 5px;
                     border: 1px solid #ccc;
                     padding-left: 3px;
                 }

@@ -40,7 +40,7 @@
                                 </div>
                                 @if(Auth::check() && Auth::user()->role != 'user' )
                                     {{Auth::user()->role}}
-                                    <div class="product_price text-danger"
+                                    <div class="product_price"
                                          data-price_type="{{$price_type = Auth::user()->price_type}}">
                                         $ {{$product->roundNumber($product->$price_type)}}
                                     </div>

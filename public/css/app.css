@@ -8365,6 +8365,28 @@ input.error.form-control:focus {
   background-color: #ccc;
 }
 
+.btn-default:hover {
+  border-color: #f00;
+  background-color: #f00;
+  color: #fff;
+}
+
+.btn {
+  border-radius: 0px;
+}
+
+.form-control {
+  border-radius: 0px;
+}
+
+a {
+  color: #2b0000;
+}
+
+a:hover {
+  color: #ff0000;
+}
+
 .container.js-search-product .row form .search-property {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -8393,6 +8415,7 @@ input.error.form-control:focus {
   border-top: 1px solid #ddd;
   margin-bottom: 10px;
   padding: 10px;
+  padding-top: 20px;
 }
 
 .container .product_item .section_thumbnail .product_image {
@@ -8412,6 +8435,7 @@ input.error.form-control:focus {
 .container .product_item .section_buy .product_price {
   font-weight: 600;
   font-size: 2rem;
+  color: #f00;
 }
 
 .container .product_item .section_buy .behavior_section {
@@ -8423,7 +8447,6 @@ input.error.form-control:focus {
 .container .product_item .section_buy .behavior_section input.products_quantity {
   max-width: 45px;
   margin-right: 5px;
-  border-radius: 5px;
   border: 1px solid #ccc;
   padding-left: 3px;
 }
