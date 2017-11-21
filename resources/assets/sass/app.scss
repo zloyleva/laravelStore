@@ -19,6 +19,11 @@ input.error{
     }
 }
 
+//Buttons
+.btn-default{
+    background-color: #ccc;
+}
+
 
 .container.js-search-product{
     .row{
@@ -39,14 +44,14 @@ input.error{
         ul.breadcrumb{
             padding-left: 0;
             padding-right: 0;
+            background-color: transparent;
         }
     }
     .text-line-through{
         text-decoration: line-through;
     }
     .product_item{
-        border: 1px solid #ddd;
-        border-radius: 10px;
+        border-top: 1px solid #ddd;
         margin-bottom: 10px;
         padding: 10px;
         .section_thumbnail{
@@ -56,7 +61,17 @@ input.error{
                 border-radius: 5px;
             }
         }
-        .section_meta{}
+        .section_meta{
+            h3.product_name{
+                margin-top: 0;
+                font-size: 22px;
+                a{
+                    &:hover{
+                        text-decoration: none;
+                    }
+                }
+            }
+        }
         .section_buy{
             .product_price{
                 font-weight: 600;
@@ -65,11 +80,11 @@ input.error{
             .behavior_section{
                 display: flex;
                 input.products_quantity{
-                    max-width: 50px;
+                    max-width: 45px;
                     margin-right: 5px;
                     border-radius: 5px;
                     border: 1px solid #ccc;
-                    padding-left: 5px;
+                    padding-left: 3px;
                 }
             }
         }

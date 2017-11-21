@@ -16,10 +16,10 @@
             <div class="col-sm-12 col-md-8 col-lg-8">
                 <div id="{{$product->id}}" class="js-row product_item ">
                     <div class="row">
-                        <div class="col-sm-4 col-md-4 col-lg-4 section_thumbnail">
+                        <div class="col-sm-6 col-md-6 col-lg-6 section_thumbnail">
                             <img class="product_image" src="{{$product->image}}" alt="">
                         </div>
-                        <div class="col-sm-8 col-md-8 col-lg-8 section_meta">
+                        <div class="col-sm-6 col-md-6 col-lg-6 section_meta">
                             <h3 class="product_name">{{$product->name}}</h3>
                             <div class="product_category">Category: {{$product->category->name}}</div>
                             <div class="product_sku">Sku: {{$product->sku}}</div>

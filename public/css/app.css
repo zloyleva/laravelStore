@@ -8361,6 +8361,10 @@ input.error.form-control:focus {
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(255, 0, 30, 0.6);
 }
 
+.btn-default {
+  background-color: #ccc;
+}
+
 .container.js-search-product .row form .search-property {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -8378,6 +8382,7 @@ input.error.form-control:focus {
 .container .row ul.breadcrumb {
   padding-left: 0;
   padding-right: 0;
+  background-color: transparent;
 }
 
 .container .text-line-through {
@@ -8385,8 +8390,7 @@ input.error.form-control:focus {
 }
 
 .container .product_item {
-  border: 1px solid #ddd;
-  border-radius: 10px;
+  border-top: 1px solid #ddd;
   margin-bottom: 10px;
   padding: 10px;
 }
@@ -8394,6 +8398,15 @@ input.error.form-control:focus {
 .container .product_item .section_thumbnail .product_image {
   width: 100%;
   border-radius: 5px;
+}
+
+.container .product_item .section_meta h3.product_name {
+  margin-top: 0;
+  font-size: 22px;
+}
+
+.container .product_item .section_meta h3.product_name a:hover {
+  text-decoration: none;
 }
 
 .container .product_item .section_buy .product_price {
@@ -8408,11 +8421,11 @@ input.error.form-control:focus {
 }
 
 .container .product_item .section_buy .behavior_section input.products_quantity {
-  max-width: 50px;
+  max-width: 45px;
   margin-right: 5px;
   border-radius: 5px;
   border: 1px solid #ccc;
-  padding-left: 5px;
+  padding-left: 3px;
 }
 
 #category_menu ul {

@@ -14,19 +14,19 @@
                     <div class="form-group">
                         <label for="userName" class="col-sm-2 control-label">Your login</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" id="userName" placeholder="{{$user->name}}" name="name" value="{{ old('name') }}">
+                            <input type="text" class="form-control" id="userName" name="name" value="{{ old('name')??$user->name }}">
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="userFirstName" class="col-sm-2 control-label">Your first name</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" id="userFirstName" placeholder="{{$user->fname}}" name="fname" value="{{ old('fname') }}">
+                            <input type="text" class="form-control" id="userFirstName" name="fname" value="{{ old('fname')??$user->fname }}">
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="userLastName" class="col-sm-2 control-label">Your last name</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" id="userLastName" placeholder="{{$user->lname}}" name="lname" value="{{ old('lname') }}">
+                            <input type="text" class="form-control" id="userLastName" name="lname" value="{{ old('lname')??$user->lname }}">
                         </div>
                     </div>
                     <div class="form-group">
@@ -44,7 +44,7 @@
                     <div class="form-group">
                         <label for="userAddress" class="col-sm-2 control-label">Your address</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" id="address" placeholder="{{$user->address}}" name="address" value="{{ old('address') }}">
+                            <input type="text" class="form-control" id="address" name="address" value="{{ old('address')??$user->address }}">
                             {{--https://developers.google.com/places/web-service/policies--}}
                             <img src="https://developers.google.com/places/documentation/images/powered-by-google-on-white.png">
                         </div>
@@ -52,7 +52,7 @@
                     <div class="form-group">
                         <label for="userPhone" class="col-sm-2 control-label">Your phone</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" id="userPhone" placeholder="{{$user->phone}}" name="phone" value="{{ old('phone') }}">
+                            <input type="text" class="form-control" id="userPhone" name="phone" value="{{ old('phone')??$user->phone }}">
                         </div>
                     </div>
 
