@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\CreatedOrder;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\UploadPrice;
@@ -11,6 +12,7 @@ use Illuminate\Support\Facades\Storage;
 use Mockery\Exception;
 use App\Jobs\UpdateProductsPrice;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
 
 class AdminDashboardController extends Controller
 {
@@ -86,4 +88,11 @@ class AdminDashboardController extends Controller
 		$jobUploadPrice = (new UpdateProductsPrice($ChunkToUpload, $product, $category))->delay(Carbon::now()->addSeconds(50));
 		dispatch($jobUploadPrice);
 	}
+
+	public function sendEmail(User $user){
+
+	    $sendTo = $user->find(2);
+
+        Mail::to($sendTo)->send(new CreatedOrder());
+    }
 }

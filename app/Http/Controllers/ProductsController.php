@@ -42,7 +42,6 @@ class ProductsController extends Controller
         $parent_id = 0;
 
         $categories = $category->categoryHandler($collection,$parent_id,'');
-//dd($product->getProduct($productSlug));
         return view('product.index', [
                 'categories'=>$categories,
                 'product'=>$product->getProduct($productSlug),
