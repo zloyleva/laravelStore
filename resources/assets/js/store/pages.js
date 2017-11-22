@@ -38,6 +38,12 @@ export class PageModule extends ApiModule {
             };
             
             console.log(this.data);
+
+            if(this.apiToken == null){
+                Alertify.dialog.alert("You need to login for add product to cart</br><a href='/login'>Login Pls</a>");
+                return;
+            }
+
             this.addProductToCart();
         });
     };

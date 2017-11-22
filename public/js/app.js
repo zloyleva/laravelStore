@@ -17571,6 +17571,12 @@ var PageModule = function (_ApiModule) {
                 };
 
                 console.log(_this2.data);
+
+                if (_this2.apiToken == null) {
+                    Alertify.dialog.alert("You need to login for add product to cart</br><a href='/login'>Login Pls</a>");
+                    return;
+                }
+
                 _this2.addProductToCart();
             });
         }

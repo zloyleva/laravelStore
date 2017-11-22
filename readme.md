@@ -47,6 +47,16 @@ $ php artisan key:generate
 ### Product's images
 path to images: 'app/public/images'
 
+### Errors
+=============
+#### proc_open(): fork failed errors
+
+*up memory_limit in php.ini*
+https://getcomposer.org/doc/articles/troubleshooting.md#proc-open-fork-failed-errors
+
+*create swap*
+https://www.digitalocean.com/community/tutorials/how-to-add-swap-space-on-ubuntu-16-04
+
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
