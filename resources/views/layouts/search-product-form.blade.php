@@ -12,7 +12,7 @@
                 <input id="inputName" name="name" type="text" class="form-control" placeholder="Enter name">
             </div>
             <div class="col-sm-12 col-md-2 col-lg-2 search-button">
-                <button type="submit" class="btn btn-default">Search</button>
+                <button type="submit" class="btn btn-default btn-search">Search</button>
             </div>
         </form>
     </div>
