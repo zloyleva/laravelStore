@@ -1,28 +1,41 @@
 <body>
     <div id="app">
+        <div class="container-fluid info-bar">
+            <div class="row">
+                <div class="container">
+                    <div class="info-phones">
+                        <a href="tel:0617699545"><i class="fa fa-phone" aria-hidden="true"></i> (061) 769 95 45</a>,
+                        <a href="tel:0676180545"><i class="fa fa-mobile" aria-hidden="true"></i> (067) 618 05 45</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container logo-bar">
+            <!-- Branding Image -->
+            <a class="navbar-brand" href="{{ url('/') }}">
+                <img src="/images_service/logo.png" alt="">
+            </a>
+            <h3 class="logo-description">Самый крупный в Запорожье супермаркет-склад канцелярии, школьной продукции, детских игрушек и новогодних товаров</h3>
+        </div>
         <nav class="navbar navbar-default navbar-static-top">
             <div class="container">
                 <div class="navbar-header">
 
                     <!-- Collapsed Hamburger -->
                     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#app-navbar-collapse">
-                        <span class="sr-only">Toggle Navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
+                        <span>
+                            <i class="fa fa-bars" aria-hidden="true"></i>
+                        </span>
+                        <span class="menu-text">Menu</span>
                     </button>
 
-                    <!-- Branding Image -->
-                    <a class="navbar-brand" href="{{ url('/') }}">
-                        {{ config('app.name', 'Laravel') }}
-                    </a>
                 </div>
 
                 <div class="collapse navbar-collapse" id="app-navbar-collapse">
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
-                        <li><a href="{{route('store')}}">Store</a></li>
-                        <li><a href="{{route('cart')}}">Cart</a></li>
+                        <li><a href="{{route('store')}}"><i class="fa fa-shopping-bag" aria-hidden="true"></i> Store</a></li>
+                        <li><a href="{{route('cart')}}"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Cart</a></li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->

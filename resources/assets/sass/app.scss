@@ -47,6 +47,63 @@ a{
     }
 }
 
+.container-fluid.info-bar{
+    background-color: #636b6f;
+    color: #fff;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #000000;
+    .row{
+        .container{
+            .info-phones{
+                a{
+                    color: #fff;
+                }
+            }
+        }
+    }
+}
+
+.container.logo-bar{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    a.navbar-brand{
+        height:auto;
+    }
+    h3.logo-description{
+        margin-top: 0;
+        text-align: center;
+    }
+}
+nav{
+    &.navbar{
+        min-height: unset;
+    }
+    &.navbar-static-top {
+        border-width: 1px 0 1px;
+    }
+    .container{
+        .navbar-header{
+            display: flex;
+            justify-content: center;
+            button.navbar-toggle{
+                //float: none;
+                //display: flex;
+                //align-items: center;
+                //justify-content: center;
+                margin: 0;
+                border: none;
+                background-color: transparent;
+                width: 100%;
+                .menu-text{
+                    margin-left: 10px;
+                }
+            }
+        }
+    }
+}
+
 .container.js-search-product{
     .row{
         form{
