@@ -8361,6 +8361,36 @@ input.error.form-control:focus {
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(255, 0, 30, 0.6);
 }
 
+label.error {
+  color: #f00;
+}
+
+.btn-default {
+  background-color: #ccc;
+}
+
+.btn-default:hover {
+  border-color: #f00;
+  background-color: #f00;
+  color: #fff;
+}
+
+.btn {
+  border-radius: 0px;
+}
+
+.form-control {
+  border-radius: 0px;
+}
+
+a {
+  color: #2b0000;
+}
+
+a:hover {
+  color: #ff0000;
+}
+
 .container.js-search-product .row form .search-property {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -8368,6 +8398,7 @@ input.error.form-control:focus {
   -webkit-box-align: baseline;
       -ms-flex-align: baseline;
           align-items: baseline;
+  margin-bottom: 5px;
 }
 
 .container.js-search-product .row form .search-property label {
@@ -8375,9 +8406,18 @@ input.error.form-control:focus {
   margin-right: 10px;
 }
 
+.container.js-search-product .row form .search-input {
+  margin-bottom: 5px;
+}
+
+.container.js-search-product .row form .search-button .btn-search {
+  width: 100%;
+}
+
 .container .row ul.breadcrumb {
   padding-left: 0;
   padding-right: 0;
+  background-color: transparent;
 }
 
 .container .text-line-through {
@@ -8385,10 +8425,10 @@ input.error.form-control:focus {
 }
 
 .container .product_item {
-  border: 1px solid #ddd;
-  border-radius: 10px;
+  border-top: 1px solid #ddd;
   margin-bottom: 10px;
   padding: 10px;
+  padding-top: 20px;
 }
 
 .container .product_item .section_thumbnail .product_image {
@@ -8396,9 +8436,19 @@ input.error.form-control:focus {
   border-radius: 5px;
 }
 
+.container .product_item .section_meta h3.product_name {
+  margin-top: 0;
+  font-size: 22px;
+}
+
+.container .product_item .section_meta h3.product_name a:hover {
+  text-decoration: none;
+}
+
 .container .product_item .section_buy .product_price {
   font-weight: 600;
   font-size: 2rem;
+  color: #f00;
 }
 
 .container .product_item .section_buy .behavior_section {
@@ -8408,11 +8458,10 @@ input.error.form-control:focus {
 }
 
 .container .product_item .section_buy .behavior_section input.products_quantity {
-  max-width: 50px;
+  max-width: 45px;
   margin-right: 5px;
-  border-radius: 5px;
   border: 1px solid #ccc;
-  padding-left: 5px;
+  padding-left: 3px;
 }
 
 #category_menu ul {
@@ -8439,13 +8488,12 @@ input.error.form-control:focus {
 
 #category_menu ul.sub_menu {
   padding: 0;
-  padding-left: 5px;
+  padding-left: 10px;
   display: none;
 }
 
 #category_menu ul.sub_menu.display_item {
   display: block;
-  background-color: #e8e8e8;
 }
 
 .container.js-cart-content table .js-row #products_qty {

@@ -22,6 +22,7 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
                         <li><a href="{{route('store')}}">Store</a></li>
+                        <li><a href="{{route('cart')}}">Cart</a></li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->

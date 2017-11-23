@@ -22,6 +22,8 @@ RUN apt-get update && \
     curl -sL https://deb.nodesource.com/setup_6.x | bash - && \
     apt-get update && \
     apt-get install -y nodejs && \
+    npm i alertify-webpack && \
+    npm install geocomplete && \
     apt-get install -y build-essential
 
 # Configure apache

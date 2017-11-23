@@ -1,4 +1,5 @@
 docker_name = laravelstore_web_1
+docker_image = laravelstore_web
 
 help: #prints list of commands
 	@cat ./makefile | grep : | grep -v "grep"
@@ -13,7 +14,7 @@ stop: #stop docker container
 	@sudo docker-compose down
 
 remove: #remove docker image
-	@sudo docker-compose down; sudo docker rmi -f $(docker_name)
+	@sudo docker-compose down; sudo docker rmi -f $(docker_image)
 
 composer_update: #update vendors
 	@sudo docker exec -it $(docker_name) bash -c 'php composer.phar update && chmod -R 777 . && php composer.phar dump-autoload'

@@ -7,13 +7,25 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
 </p>
 
-##RUN
+#Laravel store
 
-Install and run
+ >install dependencies
+
+###Install Docker
+*see here:*
+[Docker install link](https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/#install-from-a-package)
+
+###Install Docker Compose
+*see here:*
+[Docker-Compose link](https://docs.docker.com/compose/install/#install-compose)
+
+=====================
+###Make environment
 *Install and run Docker container*
 
 ```
 $ make install
+$ make start
 ```
 
 Queue:
@@ -27,6 +39,23 @@ Todo: *add listener comand to Docker start file*
 ```
 $ php artisan queue:listen --tries=2
 ```
+If you got error: "No application encryption key has been specified."
+```
+$ php artisan key:generate
+```
+
+### Product's images
+path to images: 'app/public/images'
+
+### Errors
+=============
+#### proc_open(): fork failed errors
+
+*up memory_limit in php.ini*
+https://getcomposer.org/doc/articles/troubleshooting.md#proc-open-fork-failed-errors
+
+*create swap*
+https://www.digitalocean.com/community/tutorials/how-to-add-swap-space-on-ubuntu-16-04
 
 ## License
 

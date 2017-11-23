@@ -29,6 +29,10 @@
                     <dd>{{$order->address}}</dd>
                 </dl>
                 <dl class="dl-horizontal">
+                    <dt>Phone</dt>
+                    <dd>{{$order->phone}}</dd>
+                </dl>
+                <dl class="dl-horizontal">
                     <dt>Note</dt>
                     <dd>{{$order->note}}</dd>
                 </dl>

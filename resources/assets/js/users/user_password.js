@@ -41,9 +41,9 @@ export class UserPasswordModule extends ApiModule {
 
             if ($('#usersPassword').valid()) {
                 this.sendUserFormPassword();
+                alertify.log.info("Changed user's password");
+                this.cleanFormFields();
             }
-
-            console.log('submitUserPasswordHandler');
         });
     }
 
@@ -56,5 +56,10 @@ export class UserPasswordModule extends ApiModule {
 
             }
         });
+    }
+
+    cleanFormFields(){
+        $('#password').val('');
+        $('#passwordConfirmation').val('');
     }
 }

@@ -70,10 +70,8 @@ export class UserDataModule extends ApiModule {
 
             if ($('#usersData').valid()) {
                 this.sendUserFormData();
+                alertify.log.info("Changed user's data");
             }
-
-            console.log('submitUserDataHandler');
-            alertify.log.error('submitUserDataHandler');
         });
     }
 

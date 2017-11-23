@@ -35,4 +35,18 @@ class ProductsController extends Controller
 		);
 	}
 
+	public function showProduct(Request $request, Product $product, Category $category){
+
+	    $productSlug = $request->slug;
+        $collection = $collection1 = $category->collectCategories();
+        $parent_id = 0;
+
+        $categories = $category->categoryHandler($collection,$parent_id,'');
+        return view('product.index', [
+                'categories'=>$categories,
+                'product'=>$product->getProduct($productSlug),
+            ]
+        );
+    }
+
 }

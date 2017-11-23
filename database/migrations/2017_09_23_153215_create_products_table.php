@@ -30,6 +30,9 @@ class CreateProductsTable extends Migration
             $table->integer('stock');
             $table->boolean('featured');
             $table->string('image');
+
+            $table->integer('views')->default(0);
+
             $table->timestamps();
 
             $table->unique('sku');

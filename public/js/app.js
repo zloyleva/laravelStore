@@ -10655,7 +10655,7 @@ function applyToTag(styleElement, obj) {
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(5);
-module.exports = __webpack_require__(42);
+module.exports = __webpack_require__(43);
 
 
 /***/ }),
@@ -10667,7 +10667,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__store_pages__ = __webpack_require__(31);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__cart_cart__ = __webpack_require__(34);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__users_my_profile__ = __webpack_require__(39);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__admin_admin__ = __webpack_require__(52);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__admin_admin__ = __webpack_require__(42);
 window.$ = window.jQuery = __webpack_require__(1);
 console.log('App was loaded');
 
@@ -17571,6 +17571,12 @@ var PageModule = function (_ApiModule) {
                 };
 
                 console.log(_this2.data);
+
+                if (_this2.apiToken == null) {
+                    Alertify.dialog.alert("You need to login for add product to cart</br><a href='/login'>Login Pls</a>");
+                    return;
+                }
+
                 _this2.addProductToCart();
             });
         }
@@ -18238,10 +18244,8 @@ var UserDataModule = function (_ApiModule) {
 
                 if ($('#usersData').valid()) {
                     _this2.sendUserFormData();
+                    alertify.log.info("Changed user's data");
                 }
-
-                console.log('submitUserDataHandler');
-                alertify.log.error('submitUserDataHandler');
             });
         }
     }, {
@@ -18328,9 +18332,9 @@ var UserPasswordModule = function (_ApiModule) {
 
                 if ($('#usersPassword').valid()) {
                     _this2.sendUserFormPassword();
+                    alertify.log.info("Changed user's password");
+                    _this2.cleanFormFields();
                 }
-
-                console.log('submitUserPasswordHandler');
             });
         }
     }, {
@@ -18343,6 +18347,12 @@ var UserPasswordModule = function (_ApiModule) {
                 success: function success(response) {}
             });
         }
+    }, {
+        key: 'cleanFormFields',
+        value: function cleanFormFields() {
+            $('#password').val('');
+            $('#passwordConfirmation').val('');
+        }
     }]);
 
     return UserPasswordModule;
@@ -18350,21 +18360,6 @@ var UserPasswordModule = function (_ApiModule) {
 
 /***/ }),
 /* 42 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 43 */,
-/* 44 */,
-/* 45 */,
-/* 46 */,
-/* 47 */,
-/* 48 */,
-/* 49 */,
-/* 50 */,
-/* 51 */,
-/* 52 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -18423,6 +18418,12 @@ var AdminModule = function (_ApiModule) {
 
     return AdminModule;
 }(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
+
+/***/ }),
+/* 43 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
 
 /***/ })
 /******/ ]);

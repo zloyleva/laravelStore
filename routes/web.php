@@ -12,6 +12,8 @@ Route::get( '/store', [ 'as' => 'store', 'uses' => 'ProductsController@store' ] 
 Route::get( '/store/category/{slug}', [ 'as' => 'category', 'uses' => 'ProductsController@store' ] );
 Route::get( '/store/search', [ 'as' => 'search', 'uses' => 'SearchProductsController@searchIndex' ] );
 
+Route::get( '/store/product/{slug}', [ 'as' => 'show_product', 'uses' => 'ProductsController@showProduct' ] );
+
 Route::group( [ 'middleware' => [ 'auth' ] ], function () {
 	Route::get( '/my_profile', [ 'as' => 'my_profile', 'uses' => 'PagesController@myProfile' ] );
 
@@ -36,6 +38,7 @@ Route::group( [ 'middleware' => [ 'auth', 'admin' ], 'prefix' => 'admin', 'as' =
 
 	Route::get( '/get_file', [ 'as' => 'get_file', 'uses' => 'AdminDashboardController@getFile' ] );
 	Route::get( '/queue_method', [ 'as' => 'get_file', 'uses' => 'AdminDashboardController@queueMethod' ] );
+	Route::get( '/send_email', [ 'as' => 'send_email', 'uses' => 'AdminDashboardController@sendEmail' ] );
 
 	Route::post( '/products', [ 'as' => 'updateProducts', 'uses' => 'AddProductsController@updateProducts' ] );
 } );
