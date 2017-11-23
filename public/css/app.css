@@ -8391,6 +8391,68 @@ a:hover {
   color: #ff0000;
 }
 
+.container-fluid.info-bar {
+  background-color: #636b6f;
+  color: #fff;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #000000;
+}
+
+.container-fluid.info-bar .row .container .info-phones a {
+  color: #fff;
+}
+
+.container.logo-bar {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.container.logo-bar a.navbar-brand {
+  height: auto;
+}
+
+.container.logo-bar h3.logo-description {
+  margin-top: 0;
+  text-align: center;
+}
+
+nav.navbar {
+  min-height: unset;
+}
+
+nav.navbar-static-top {
+  border-width: 1px 0 1px;
+}
+
+nav .container .navbar-header {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+nav .container .navbar-header button.navbar-toggle {
+  margin: 0;
+  border: none;
+  background-color: transparent;
+  width: 100%;
+}
+
+nav .container .navbar-header button.navbar-toggle .menu-text {
+  margin-left: 10px;
+}
+
 .container.js-search-product .row form .search-property {
   display: -webkit-box;
   display: -ms-flexbox;
