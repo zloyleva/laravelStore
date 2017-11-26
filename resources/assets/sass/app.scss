@@ -227,3 +227,47 @@ nav{
         }
     }
 }
+
+//Pagination
+ul.pagination{
+    li{
+        &.active{
+            span{
+                background-color: #ff002e;
+                border-color: #dd0000;
+            }
+        }
+        a{
+            color: #636b6f;
+        }
+    }
+}
+
+
+footer{
+    background-color: #fff;
+    //color: #fff;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-top: 1px solid #d3e0e9;
+    .container{
+        .row{
+            .section_logo{
+                display: flex;
+                flex-direction: column;
+                a.navbar-brand{
+                    height: auto;
+                    padding-bottom: 0;
+                    padding-left: 0;
+                    img{
+                        height: 100px;
+                    }
+                }
+                h3{
+                    margin-top: 10px;
+                    font-size: 18px;
+                }
+            }
+        }
+    }
+}
