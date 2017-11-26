@@ -9,11 +9,11 @@
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th>SKU</th>
-                    <th>Product</th>
-                    <th>Qty</th>
-                    <th>Price</th>
-                    <th>Subtotal</th>
+                    <th>Артикул</th>
+                    <th>Название</th>
+                    <th>Количество</th>
+                    <th>Цена</th>
+                    <th>Сумма</th>
                     <th></th>
                 </tr>
                 </thead>
@@ -41,8 +41,8 @@
                 <tfoot>
                 <tr>
                     <td colspan="3">&nbsp;</td>
-                    <td>Total</td>
-                    <td id="cartTotal"><?php echo Cart::total(); ?></td>
+                    <td>Итого</td>
+                    <td id="cartTotal"><?php echo Cart::total(); ?> грн</td>
                     <td></td>
                 </tr>
                 </tfoot>
@@ -53,24 +53,24 @@
                     <form id="create-order-form" class="" action="{{route('orders.list')}}" method="get">
                         <input type="hidden" name="status" value="setOrder">
                         <div class="form-group">
-                            <label>Enter address for delivery <sup>*</sup></label>
+                            <label>Введите адресс доставки <sup>*</sup></label>
                             <input id="address" name="address" type="text" class="form-control" value="{{$user->address}}"/>
                             {{--https://developers.google.com/places/web-service/policies--}}
                             <img src="https://developers.google.com/places/documentation/images/powered-by-google-on-white.png">
                         </div>
                         <div class="form-group">
-                            <label>Enter your phone <sup>*</sup></label>
+                            <label>Введите Ваш телефон(для связи) <sup>*</sup></label>
                             <input class="form-control" type="phone" id="phone" name="phone" value="{{$user->phone}}"
-                                   placeholder="Enter your phone. Format (099)1234567">
+                                   placeholder="Телефон в формате (099)1234567">
                         </div>
                         <div class="form-group">
-                            <label>Enter note</label>
+                            <label>Поле для особых пожеланий к заказу</label>
                             <textarea class="form-control" id="note" name="note" rows="8" cols="80"
-                                      placeholder="Enter address for delivery"></textarea>
+                                      placeholder="Введите свои пожелания"></textarea>
                         </div>
                         <div class="form-group">
-                            <input id="submitCart" class="btn btn-primary" type="button" value="Submit">
-                            <input id="clearCart" class="btn btn-danger" type="button" value="Clear Cart">
+                            <input id="submitCart" class="btn btn-primary" type="button" value="Сделать заказ">
+                            <input id="clearCart" class="btn btn-danger" type="button" value="Очистить корзину">
                         </div>
                     </form>
                 </div>
@@ -78,7 +78,7 @@
         </div>
     @else
         <div class="container js-cart-content">
-            Your cart is empty
+            Ваша козина пуста
         </div>
     @endif
 @stop

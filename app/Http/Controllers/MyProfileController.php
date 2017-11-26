@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 class MyProfileController extends Controller
 {
     public function updateMyProfileData(User $user,Request $request){
-    	//name,fname,lname,address,phone
+
 	    $args = [];
 
 	    if($request->name){

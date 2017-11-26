@@ -2,18 +2,18 @@
 
 @section('content')
 <div class="container">
-    <h1>Orders</h1>
+    <h1>Ваши заказы</h1>
 </div>
 <div class="container">
+    @if( count($orders) > 0 )
     <table class="table table-striped">
         <thead>
             <tr>
                 <th>#</th>
-                <th>Date</th>
-                <th>Status</th>
-                <th>Total</th>
-                <th>Address</th>
-                <th>Note</th>
+                <th>Дата</th>
+                <th>Статус</th>
+                <th>Сумма</th>
+                <th></th>
             </tr>
         </thead>
 
@@ -21,16 +21,20 @@
 
           @foreach($orders as $order)
             <tr class="js-row" id="{{$order->id}}">
-                <td>{{$order->id}} <a href="/orders/show/{{$order->id}}">Details</a></td>
+                <td>{{$order->id}}</td>
                 <td>{{$order->created_at}}</td>
                 <td>{{$order->status}}</td>
                 <td>{{$order->total}}</td>
-                <td>{{$order->address}}</td>
-                <td>{{$order->note}}</td>
+                <td><a href="/orders/show/{{$order->id}}"><i class="fa fa-files-o" aria-hidden="true"></i> Показать детали заказа</a></td>
             </tr>
           @endforeach
 
         </tbody>
     </table>
+    @else
+        <div>
+            У Вас нет еще заказов
+        </div>
+    @endif
 </div>
 @stop

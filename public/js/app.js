@@ -18184,7 +18184,7 @@ var UserDataModule = function (_ApiModule) {
         key: 'formUsersDataValidationHandler',
         value: function formUsersDataValidationHandler() {
             var validationUsersName = function validationUsersName(value, element) {
-                return this.optional(element) || !/[^a-zA-Z]+/g.test(value);
+                return this.optional(element) || !/[^a-zA-Zа-яА-Я]+/g.test(value);
             };
 
             $.validator.addMethod("checkName", validationUsersName, "Please enter the correct value. Only latin chars");

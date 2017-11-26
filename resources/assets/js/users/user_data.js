@@ -13,7 +13,7 @@ export class UserDataModule extends ApiModule {
 
     formUsersDataValidationHandler() {
         let validationUsersName = function (value, element) {
-            return this.optional(element) || !(/[^a-zA-Z]+/g.test(value));
+            return this.optional(element) || !(/[^a-zA-Zа-яА-Я]+/g.test(value));
         };
 
         $.validator.addMethod("checkName", validationUsersName, "Please enter the correct value. Only latin chars");
