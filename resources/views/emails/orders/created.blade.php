@@ -1,14 +1,12 @@
-<h1>Here is  Email</h1>
-
 <div class="container">
-    <h1>Order</h1>
+    <h1>Заказ</h1>
 </div>
 <div class="container">
 
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <dl class="dl-horizontal">
-                <dt>Order #</dt>
+                <dt>Заказ #</dt>
                 <dd>{{$order->id}}</dd>
             </dl>
             <dl class="dl-horizontal">

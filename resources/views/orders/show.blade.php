@@ -2,38 +2,38 @@
 
 @section('content')
     <div class="container">
-        <h1>Order</h1>
+        <h1>Детали заказа</h1>
     </div>
     <div class="container">
 
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <dl class="dl-horizontal">
-                    <dt>Order #</dt>
+                    <dt>Заказ #</dt>
                     <dd>{{$order->id}}</dd>
                 </dl>
                 <dl class="dl-horizontal">
-                    <dt>Status</dt>
+                    <dt>Статус</dt>
                     <dd>{{$order->status}}</dd>
                 </dl>
                 <dl class="dl-horizontal">
-                    <dt>Created date</dt>
+                    <dt>Дата заказа</dt>
                     <dd>{{$order->created_at}}</dd>
                 </dl>
                 <dl class="dl-horizontal">
-                    <dt>Total</dt>
-                    <dd>$ {{$order->total}}</dd>
+                    <dt>Сумма</dt>
+                    <dd>{{$order->total}} грн</dd>
                 </dl>
                 <dl class="dl-horizontal">
-                    <dt>Address</dt>
+                    <dt>Адресс доставки</dt>
                     <dd>{{$order->address}}</dd>
                 </dl>
                 <dl class="dl-horizontal">
-                    <dt>Phone</dt>
+                    <dt>Телефон</dt>
                     <dd>{{$order->phone}}</dd>
                 </dl>
                 <dl class="dl-horizontal">
-                    <dt>Note</dt>
+                    <dt>Пожелания</dt>
                     <dd>{{$order->note}}</dd>
                 </dl>
             </div>
@@ -44,11 +44,11 @@
                 <table class="table table-striped">
                     <thead>
                     <tr>
-                        <th>SKU</th>
-                        <th>Product</th>
-                        <th>Qty</th>
-                        <th>Price</th>
-                        <th>Subtotal</th>
+                        <th>Артикул</th>
+                        <th>Название</th>
+                        <th>Количество</th>
+                        <th>Цена</th>
+                        <th>Сумма</th>
                     </tr>
                     </thead>
 
@@ -62,8 +62,8 @@
                                 <p><strong>{{$row->name}}</strong></p>
                             </td>
                             <td>{{$row->qty}}</td>
-                            <td>$ {{$row->price}}</td>
-                            <td>$ {{$row->total}}</td>
+                            <td>{{$row->price}}</td>
+                            <td>{{$row->total}}</td>
                         </tr>
 
                     @endforeach
@@ -73,8 +73,8 @@
                     <tfoot>
                     <tr>
                         <td colspan="3">&nbsp;</td>
-                        <td>Total</td>
-                        <td>$ {{$order->total}}</td>
+                        <td>Всего</td>
+                        <td>{{$order->total}} грн</td>
                     </tr>
                     </tfoot>
                 </table>

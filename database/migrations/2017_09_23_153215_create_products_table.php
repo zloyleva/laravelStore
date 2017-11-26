@@ -32,6 +32,7 @@ class CreateProductsTable extends Migration
             $table->string('image');
 
             $table->integer('views')->default(0);
+            $table->integer('sales_count')->default(0);
 
             $table->timestamps();
 

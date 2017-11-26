@@ -26,7 +26,7 @@
                         <span>
                             <i class="fa fa-bars" aria-hidden="true"></i>
                         </span>
-                        <span class="menu-text">Menu</span>
+                        <span class="menu-text">Меню</span>
                     </button>
 
                 </div>
@@ -34,23 +34,23 @@
                 <div class="collapse navbar-collapse" id="app-navbar-collapse">
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
-                        <li><a href="{{route('store')}}"><i class="fa fa-shopping-bag" aria-hidden="true"></i> Store</a></li>
-                        <li><a href="{{route('cart')}}"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Cart</a></li>
+                        <li><a href="{{route('store')}}"><i class="fa fa-shopping-bag" aria-hidden="true"></i> Магазин</a></li>
+                        <li><a href="{{route('cart')}}"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Корзина</a></li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->
                     <ul class="nav navbar-nav navbar-right">
                         <!-- Authentication Links -->
                         @guest
-                            <li><a href="{{ route('login') }}">Login</a></li>
-                            <li><a href="{{ route('register') }}">Register</a></li>
+                            <li><a href="{{ route('login') }}"><i class="fa fa-sign-in" aria-hidden="true"></i> Вход</a></li>
+                            <li><a href="{{ route('register') }}"><i class="fa fa-user-plus" aria-hidden="true"></i> Регистрация</a></li>
                         @else
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                    {{ Auth::user()->name }} <span class="caret"></span>
+                                    Привет, {{ Auth::user()->name }} <span class="caret"></span>
                                 </a>
 
-                                @if(Auth::user()->role == 'buyer')
+                                @if(Auth::user()->role == 'buyer' || Auth::user()->role == 'user')
                                     @include('layouts.menus.users-right-menu')
                                 @elseif(Auth::user()->role == 'admin')
                                     @include('layouts.menus.admins-right-menu')
