@@ -16,8 +16,10 @@ class SearchProductsController extends Controller
 	    $categories = $category->categoryHandler($collection,$parent_id,$slug);
 	    $request->searchData = $category->getSearchCategory()??null;
 
+	    $pageName =  'Страница поиска. Вы искали "' . $request->input($request->input('inputData')) . '"';
+
 	    return view('store.index', [
-			    'pageName'=>'Search',
+			    'pageName'=>$pageName,
 			    'categories'=>$categories,
 			    'products'=>$product->listProducts($request),
 			    'breadcrumbs'=>$category->getCategoryBreadCrumbs($collection1, $request->searchData),

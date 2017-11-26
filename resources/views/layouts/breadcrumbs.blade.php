@@ -3,7 +3,7 @@
         @if(isset($breadcrumbs))
             <ul class="breadcrumb">
                 @foreach($breadcrumbs as $item)
-                    <li><a href="{{route('home')}}/{{$item['slug']}}">{{$item['name']}}</a></li>
+                    <li><a href="{{route('home')}}/{{$item['slug']}}">{!! $item['name'] !!}</a></li>
                 @endforeach
             </ul>
         @endif

@@ -2,7 +2,7 @@
 
 @section('content')
         <div class="container page-name">
-            <h1>Card</h1>
+            <h1>Корзина</h1>
         </div>
     @if(count($productsInCart) > 0)
         <div class="container js-cart-content">
