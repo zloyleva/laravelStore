@@ -84,3 +84,6 @@ chat: #start chat service
 
 connect: #connect to container bash
 	@sudo docker exec -it $(docker_name) bash
+
+queue_product: #run
+    @sudo docker exec -it $(docker_name) bash -c 'php artisan queue:listen --tries=2'

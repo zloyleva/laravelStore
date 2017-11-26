@@ -27,6 +27,7 @@ class CreateUsersTable extends Migration
             $table->string('api_token', 60)->unique()->nullable();
 
             $table->integer('visits')->default(0);
+            $table->integer('manager_id')->default(0);
 
             $table->rememberToken();
             $table->timestamps();
