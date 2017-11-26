@@ -32,9 +32,35 @@ class Category extends Model
 
       $parent_id = 0;
       foreach($categories as $category){
-        $parent_id = $this->insertOrGetId($category,$parent_id);
+          // Custom filters for current store!!!!
+          if($this->isNoNeedCategories($category)){
+              continue;
+          }
+          $category = $this->filterCategoriesNames($category);
+          $category = $this->changeCategoryName($category);
+
+          $parent_id = $this->insertOrGetId($category,$parent_id);
       }
       return $parent_id;
+    }
+
+    private function isNoNeedCategories($categoryItem){
+        if ($categoryItem == "2. Продукция других производителей" || $categoryItem == "1. Наша продукция"){
+            return true;
+        }
+        return false;
+    }
+
+    private function changeCategoryName($categoryItem){
+        if ($categoryItem == "ИГРУШКА"){
+            return "Игрушки";
+        }
+        return $categoryItem;
+    }
+
+    private function filterCategoriesNames($categoryItem){
+        $pattern = "/((\d+\.*)+\s)?(\D.+)/";
+        return preg_replace($pattern, '$3', $categoryItem);
     }
 
 	/**

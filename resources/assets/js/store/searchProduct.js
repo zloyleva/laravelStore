@@ -78,6 +78,6 @@ export class SearchProductModule extends ApiModule {
     };
 
     getSearchData(){
-        window.location.href = 'http://localhost/store/search?' + $('#js-searchProductForm').serialize();
+        window.location.href = '//' + window.location.hostname + '/store/search?' + $('#js-searchProductForm').serialize();
     }
 }
