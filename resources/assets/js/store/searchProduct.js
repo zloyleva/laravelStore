@@ -57,11 +57,11 @@ export class SearchProductModule extends ApiModule {
             console.log(this.selectInputData);
 
             if (this.selectInputData == 'sku') {
-                $('.search-input').html('<input id="inputSku" name="sku" type="text" class="form-control" placeholder="Enter SKU">');
+                $('.search-input').html('<input id="inputSku" name="sku" type="text" class="form-control" placeholder="Введите артикул">');
                 $('#inputName').remove();
             } else {
                 $('#inputSku').remove();
-                $('.search-input').html('<input id="inputName" name="name" type="text" class="form-control" placeholder="Enter name">');
+                $('.search-input').html('<input id="inputName" name="name" type="text" class="form-control" placeholder="Введите название">');
             }
             $('#inputSku').val('');
             $('#inputName').val('');

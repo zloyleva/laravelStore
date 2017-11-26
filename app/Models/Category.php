@@ -145,11 +145,17 @@ class Category extends Model
 
 
 		array_unshift($breadcrumbs,[
-				'name' => 'Shop',
+				'name' => 'Магазин',
 				'slug' => 'store/',
 			]
 		);
+        array_unshift($breadcrumbs,[
+                'name' => '<i class="fa fa-home" aria-hidden="true"></i>',
+                'slug' => '',
+            ]
+        );
 
-		return $breadcrumbs;
+
+        return $breadcrumbs;
 	}
 }

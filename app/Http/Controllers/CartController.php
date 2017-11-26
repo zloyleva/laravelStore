@@ -14,8 +14,8 @@ class CartController extends Controller
 	 * @return string
 	 */
 	private function getHtmlEmptyCart(){
-		return $html = '<p>Cart is destroy</p>
-					 <a href="'.route('store').'" class="btn btn-primary">To Shop</a>';
+		return $html = '<p>Корзина удалена</p>
+					 <a href="'.route('store').'" class="btn btn-primary">В магазин</a>';
 	}
 
 	/**

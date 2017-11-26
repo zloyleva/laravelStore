@@ -26,7 +26,7 @@ class ProductsController extends Controller
 		$request->searchData = $category->getSearchCategory()??null;
 
 		return view('store.index', [
-				'pageName'=>'Store',
+				'pageName'=>'Магазин',
 				'categories'=>$categories,
 				'products'=>$product->listProducts($request),
 				'breadcrumbs'=>$category->getCategoryBreadCrumbs($collection1, $request->searchData),
