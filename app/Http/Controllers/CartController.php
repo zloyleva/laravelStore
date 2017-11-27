@@ -96,4 +96,27 @@ class CartController extends Controller
 		}
 	}
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function showCard(Request $request){
+
+        if(Auth::check()){
+            $identifcator = Auth::user()->id;
+        }else {
+            $identifcator = '';
+        }
+
+        Cart::restore($identifcator);
+        Cart::store($identifcator);
+
+        return view('store.cart',[
+            'request'=>$request->session()->get('laravel_session'),
+            'productsInCart'=>Cart::content(),
+            'cart' => $request->session()->get('cart'),
+            'user'=>Auth::user(),
+        ]);
+    }
+
 }

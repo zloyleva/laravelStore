@@ -19,35 +19,6 @@ class PagesController extends Controller
         return view('welcome');
     }
 
-    public function showCard(Request $request){
-
-        if(Auth::check()){
-          $identifcator = Auth::user()->id;
-        }else {
-          $identifcator = '';
-        }
-
-        Cart::restore($identifcator);
-        Cart::store($identifcator);
-
-        return view('store.cart',[
-        	'request'=>$request->session()->get('laravel_session'),
-            'productsInCart'=>Cart::content(),
-            'cart' => $request->session()->get('cart'),
-	        'user'=>Auth::user(),
-        ]);
-    }
-
-    public function showOrder(Request $request, Order $order){
-      $data = $order->listOrderDataForUser($request);
-      if( Auth::user()->id == $data->user_id ){
-        return view('orders.show',[
-            'order' => $data
-        ]);
-      }
-      return redirect('/');
-    }
-
     public function myProfile(PriceType $price_type){
 	    return view('store.my_profile', [
 			    'pageName'=>'My profile',

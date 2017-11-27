@@ -9,40 +9,40 @@
 
         <div class="row">
             <div class="col-sm-12 col-md-12 col-lg-12">
-                <h2>User data</h2>
+                <h2>Ваши данные</h2>
                 <form id="usersData" action="" class="form-horizontal">
                     <div class="form-group">
-                        <label for="userName" class="col-sm-2 control-label">Your login</label>
+                        <label for="userName" class="col-sm-2 control-label">Логин</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" id="userName" name="name" value="{{ old('name')??$user->name }}">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="userFirstName" class="col-sm-2 control-label">Your first name</label>
+                        <label for="userFirstName" class="col-sm-2 control-label">Имя</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" id="userFirstName" name="fname" value="{{ old('fname')??$user->fname }}">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="userLastName" class="col-sm-2 control-label">Your last name</label>
+                        <label for="userLastName" class="col-sm-2 control-label">Фамилия</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" id="userLastName" name="lname" value="{{ old('lname')??$user->lname }}">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="userEmail" class="col-sm-2 control-label">Your Email</label>
+                        <label for="userEmail" class="col-sm-2 control-label">Email</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" id="userEmail" placeholder="{{$user->email}}" disabled>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="userEmail" class="col-sm-2 control-label">Your price type</label>
+                        <label for="userEmail" class="col-sm-2 control-label">Тип цены</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" id="userEmail" placeholder="{{$price_type_desc->description}}" disabled>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="userAddress" class="col-sm-2 control-label">Your address</label>
+                        <label for="userAddress" class="col-sm-2 control-label">Адресс доставки</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" id="address" name="address" value="{{ old('address')??$user->address }}">
                             {{--https://developers.google.com/places/web-service/policies--}}
@@ -50,32 +50,32 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="userPhone" class="col-sm-2 control-label">Your phone</label>
+                        <label for="userPhone" class="col-sm-2 control-label">Телефон для связи</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" id="userPhone" name="phone" value="{{ old('phone')??$user->phone }}">
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <button type="submit" class="btn btn-primary">Update</button>
+                        <button type="submit" class="btn btn-primary">Обновить данные</button>
                     </div>
                 </form>
-                <h2>Change your password</h2>
+                <h2>Сменить пароль</h2>
                 <form id="usersPassword" action="" class="form-horizontal">
                     <div class="form-group">
-                        <label for="password" class="col-sm-2 control-label">Your password</label>
+                        <label for="password" class="col-sm-2 control-label">Новый пароль</label>
                         <div class="col-sm-10">
-                            <input type="password" class="form-control" id="password" placeholder="Enter your new password" name="password">
+                            <input type="password" class="form-control" id="password" placeholder="Введите Ваш новый пароль" name="password">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="passwordConfirmation" class="col-sm-2 control-label">Confirm Your password</label>
+                        <label for="passwordConfirmation" class="col-sm-2 control-label">Подтвердите новый пароль</label>
                         <div class="col-sm-10">
-                            <input type="password" class="form-control" id="passwordConfirmation" placeholder="Confirm your new password" name="password_confirmation">
+                            <input type="password" class="form-control" id="passwordConfirmation" placeholder="Подтвердите Ваш новый пароль" name="password_confirmation">
                         </div>
                     </div>
                     <div class="form-group">
-                        <button type="submit" class="btn btn-primary">Change password</button>
+                        <button type="submit" class="btn btn-primary">Сменить пароль</button>
                     </div>
                 </form>
             </div>

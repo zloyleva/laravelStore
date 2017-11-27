@@ -8399,7 +8399,16 @@ a:hover {
   border-bottom: 1px solid #000000;
 }
 
-.container-fluid.info-bar .row .container .info-phones a {
+.container-fluid.info-bar .row .container.top-bar {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.container-fluid.info-bar .row .container.top-bar .info-phones a {
   color: #fff;
 }
 
