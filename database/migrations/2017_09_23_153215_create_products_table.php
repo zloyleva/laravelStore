@@ -33,6 +33,7 @@ class CreateProductsTable extends Migration
 
             $table->integer('views')->default(0);
             $table->integer('sales_count')->default(0);
+            $table->float('rate')->default(0);
 
             $table->timestamps();
 
