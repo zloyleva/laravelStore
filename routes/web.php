@@ -17,7 +17,7 @@ Route::get( '/store/product/{slug}', [ 'as' => 'show_product', 'uses' => 'Produc
 Route::group( [ 'middleware' => [ 'auth' ] ], function () {
 	Route::get( '/my_profile', [ 'as' => 'my_profile', 'uses' => 'PagesController@myProfile' ] );
 
-	Route::get( '/cart', [ 'as' => 'cart', 'uses' => 'PagesController@showCard' ] );
+	Route::get( '/cart', [ 'as' => 'cart', 'uses' => 'CartController@showCard' ] );
 	Route::delete('/cart', [ 'as'=>'cart.delete', 'uses'=>'CartController@deleteCart']);
 
 	Route::post('/cart/add_item', [ 'as'=>'cart_item.add', 'uses'=>'CartController@setCartItemAmount']);
@@ -28,7 +28,7 @@ Route::group( [ 'middleware' => [ 'auth' ] ], function () {
 Route::group( [ 'middleware' => [ 'auth' ], 'prefix' => 'orders', 'as' => 'orders.' ], function () {
 	Route::post( '/create', [ 'as' => 'create', 'uses' => 'OrdersController@createOrder' ] );
 	Route::get( '/list', [ 'as' => 'list', 'uses' => 'OrdersController@listOrders' ] );
-	Route::get( '/show/{id}', [ 'as' => 'show', 'uses' => 'PagesController@showOrder' ] );
+	Route::get( '/show/{id}', [ 'as' => 'show', 'uses' => 'OrdersController@showOrder' ] );
 } );
 
 Route::group( [ 'middleware' => [ 'auth', 'admin' ], 'prefix' => 'admin', 'as' => 'admin.' ], function () {

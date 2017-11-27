@@ -66,4 +66,19 @@ class OrdersController extends Controller
 			'orders'=>$orders->listOrdersForUser()
 		]);
 	}
+
+    /**
+     * @param Request $request
+     * @param Order $order
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
+     */
+    public function showOrder(Request $request, Order $order){
+        $data = $order->listOrderDataForUser($request);
+        if( Auth::user()->id == $data->user_id ){
+            return view('orders.show',[
+                'order' => $data
+            ]);
+        }
+        return redirect('/');
+    }
 }

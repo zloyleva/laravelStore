@@ -54,7 +54,9 @@ a{
     padding-bottom: 5px;
     border-bottom: 1px solid #000000;
     .row{
-        .container{
+        .container.top-bar{
+            display: flex;
+            justify-content: space-between;
             .info-phones{
                 a{
                     color: #fff;
