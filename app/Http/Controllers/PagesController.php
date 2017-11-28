@@ -16,7 +16,9 @@ use App\Http\Requests\Product\ProductSearchRequest;
 class PagesController extends Controller
 {
     public function home(){
-        return view('welcome');
+//        return view('welcome');
+        // new year redirect
+        return redirect('store/category/novogodnie-tovary');
     }
 
     public function myProfile(PriceType $price_type){

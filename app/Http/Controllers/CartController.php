@@ -116,6 +116,7 @@ class CartController extends Controller
             'productsInCart'=>Cart::content(),
             'cart' => $request->session()->get('cart'),
             'user'=>Auth::user(),
+            'totalSum'=>Cart::total()
         ]);
     }
 

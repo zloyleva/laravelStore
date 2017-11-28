@@ -23,7 +23,7 @@ export class PageModule extends ApiModule {
             data: this.data,
             url: this.apiUrl,
             success: response => {
-                alertify.log.success('Product ' + response.name + ' added to Cart');
+                alertify.log.success('Продукт ' + response.name + ' добавлен в корзину');
             },
         });
     };
@@ -40,7 +40,7 @@ export class PageModule extends ApiModule {
             console.log(this.data);
 
             if(this.apiToken == null){
-                Alertify.dialog.alert("You need to login for add product to cart</br><a href='/login'>Login Pls</a>");
+                Alertify.dialog.alert("Вам нужно войти в магазин</br><a href='/login'>Перейти к странице входа</a>");
                 return;
             }
 

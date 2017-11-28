@@ -17553,7 +17553,7 @@ var PageModule = function (_ApiModule) {
                 data: this.data,
                 url: this.apiUrl,
                 success: function success(response) {
-                    alertify.log.success('Product ' + response.name + ' added to Cart');
+                    alertify.log.success('Продукт ' + response.name + ' добавлен в корзину');
                 }
             });
         }
@@ -17573,7 +17573,7 @@ var PageModule = function (_ApiModule) {
                 console.log(_this2.data);
 
                 if (_this2.apiToken == null) {
-                    Alertify.dialog.alert("You need to login for add product to cart</br><a href='/login'>Login Pls</a>");
+                    Alertify.dialog.alert("Вам нужно войти в магазин</br><a href='/login'>Перейти к странице входа</a>");
                     return;
                 }
 
@@ -17850,6 +17850,7 @@ var RemoveItemCartModule = function (_ApiModule) {
                         console.log(response.deleteId);
                         $('#' + response.deleteId).hide();
                         $('#cartTotal').html(response.total);
+                        $('#cartTotal').data('total_sum', response.total);
                         alertify.log.error('Remove product form Cart');
                     } else if (typeof response.html != 'undefined') {
                         $('.js-cart-content').html(response.html);
@@ -18015,8 +18016,9 @@ var ChangeItemAmountModule = function (_ApiModule) {
                 success: function success(response) {
                     var $row = $('#' + response.item.rowId);
                     $row.find('.products_quantity').val(response.item.qty);
-                    $row.find('.js-item-total').html(response.item.price * response.item.qty);
-                    $('#cartTotal').html(response.total);
+                    $row.find('.js-item-total').html((response.item.price * response.item.qty).toFixed(2));
+                    $('#cartTotal').html(parseFloat(response.total).toFixed(2));
+                    $('#cartTotal').data('total_sum', response.total);
                 }
             });
         }
@@ -18053,6 +18055,7 @@ var CreateOrderModule = function (_ApiModule) {
         console.log('Module: CreateOrderModule');
 
         _this.apisendDataUrl = '/orders/create';
+        _this.minOrderAmount = 200;
 
         _this.createOrderHandler();
         _this.formValidationHandler();
@@ -18060,14 +18063,28 @@ var CreateOrderModule = function (_ApiModule) {
     }
 
     _createClass(CreateOrderModule, [{
+        key: 'isCartAmountLessThanMin',
+        value: function isCartAmountLessThanMin() {
+            var total_sum = $('#cartTotal').data('total_sum');
+            if (parseInt(total_sum) < this.minOrderAmount) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }, {
         key: 'createOrderHandler',
         value: function createOrderHandler() {
             var _this2 = this;
 
             $('#submitCart').off('click').on('click', function () {
                 console.log('createOrderHandler');
+                if (_this2.isCartAmountLessThanMin()) {
+                    console.log('isCartAmountLessThanMin');
+                    Alertify.dialog.alert('Минимальная сумма заказа - 200 грн');
+                    return;
+                }
                 if ($('#create-order-form').valid()) {
-                    console.log('valid');
                     _this2.sendDataMethod();
                 }
             });
