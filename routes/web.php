@@ -7,6 +7,8 @@
 */
 
 Route::get( '/', [ 'as' => 'home', 'uses' => 'PagesController@home' ] );
+Route::get( '/how_to_buy', [ 'as' => 'home', 'uses' => 'PagesController@howToBuy' ] );
+Route::get( '/delivery', [ 'as' => 'home', 'uses' => 'PagesController@delivery' ] );
 
 Route::get( '/store', [ 'as' => 'store', 'uses' => 'ProductsController@store' ] );
 Route::get( '/store/category/{slug}', [ 'as' => 'category', 'uses' => 'ProductsController@store' ] );

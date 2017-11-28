@@ -63,8 +63,9 @@ export class ChangeItemAmountModule extends ApiModule {
             success: response => {
                 const $row = $('#'+response.item.rowId);
                 $row.find('.products_quantity').val(response.item.qty);
-                $row.find('.js-item-total').html(response.item.price*response.item.qty);
-                $('#cartTotal').html(response.total);
+                $row.find('.js-item-total').html( (response.item.price*response.item.qty).toFixed(2) );
+                $('#cartTotal').html( parseFloat(response.total).toFixed(2) );
+                $('#cartTotal').data('total_sum', response.total);
             },
         });
     }
