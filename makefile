@@ -52,6 +52,9 @@ seed: #run migration
 refresh: #Refresh the database and run all database seeds
 	@sudo docker exec -it $(docker_name) bash -c 'php composer.phar dump-autoload && php artisan migrate:refresh --seed'
 
+migrate: #To run all of your outstanding migrations
+	@sudo docker exec -it $(docker_name) bash -c 'php artisan migrate'
+
 chmod: #allow RW to all
 	@sudo chmod -R 777 .
 
