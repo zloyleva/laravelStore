@@ -17,6 +17,10 @@ class User extends Authenticatable
       'password', 'remember_token','api_token'
   ];
 
+  public function manager(){
+      return $this->belongsTo(Manager::class);
+  }
+
   public function generateToken()
   {
       $this->api_token = str_random(60);

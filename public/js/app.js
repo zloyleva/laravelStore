@@ -18480,7 +18480,6 @@ var ManagersModule = function (_ApiModule) {
 
             $('#createManagerBtn').off('click').on('click', function (e) {
                 e.preventDefault();
-                console.log('createManagerBtn');
 
                 _this2.createManagerMethod();
             });

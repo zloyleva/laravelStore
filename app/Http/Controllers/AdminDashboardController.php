@@ -42,7 +42,7 @@ class AdminDashboardController extends Controller
 	public function usersList(User $user){
 
         return view('admin.usersList',[
-            'users'=> $user->get(),
+            'users'=> $user->with('manager')->get(),
         ]);
     }
 

@@ -11,7 +11,6 @@ export class ManagersModule extends ApiModule {
     createManagerHandler() {
         $('#createManagerBtn').off('click').on('click', e => {
             e.preventDefault();
-            console.log('createManagerBtn');
 
             this.createManagerMethod();
         });

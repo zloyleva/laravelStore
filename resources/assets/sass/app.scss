@@ -245,6 +245,16 @@ ul.pagination{
     }
 }
 
+//Admin section
+
+.container.usersList{
+    display: flex;
+    align-items: center;
+    h1{
+        flex: 1;
+    }
+}
+
 
 footer{
     background-color: #fff;
