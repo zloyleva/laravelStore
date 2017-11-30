@@ -10655,7 +10655,7 @@ function applyToTag(styleElement, obj) {
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(5);
-module.exports = __webpack_require__(43);
+module.exports = __webpack_require__(44);
 
 
 /***/ }),
@@ -18382,6 +18382,7 @@ var UserPasswordModule = function (_ApiModule) {
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AdminModule; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__managers__ = __webpack_require__(43);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -18389,6 +18390,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 
 
 
@@ -18401,6 +18403,10 @@ var AdminModule = function (_ApiModule) {
         var _this = _possibleConstructorReturn(this, (AdminModule.__proto__ || Object.getPrototypeOf(AdminModule)).call(this));
 
         console.log('Page: AdminModule');
+
+        if ($('h1').data('page') == 'admin_managers') {
+            new __WEBPACK_IMPORTED_MODULE_1__managers__["a" /* ManagersModule */]();
+        }
 
         _this.data = {};
         _this.apiUpdateUrl = '/admin/products';
@@ -18438,6 +18444,57 @@ var AdminModule = function (_ApiModule) {
 
 /***/ }),
 /* 43 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ManagersModule; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+
+
+var ManagersModule = function (_ApiModule) {
+    _inherits(ManagersModule, _ApiModule);
+
+    function ManagersModule() {
+        _classCallCheck(this, ManagersModule);
+
+        var _this = _possibleConstructorReturn(this, (ManagersModule.__proto__ || Object.getPrototypeOf(ManagersModule)).call(this));
+
+        console.log('Page: ManagersModule');
+
+        _this.createManagerHandler();
+        return _this;
+    }
+
+    _createClass(ManagersModule, [{
+        key: 'createManagerHandler',
+        value: function createManagerHandler() {
+            var _this2 = this;
+
+            $('#createManagerBtn').off('click').on('click', function (e) {
+                e.preventDefault();
+                console.log('createManagerBtn');
+
+                _this2.createManagerMethod();
+            });
+        }
+    }, {
+        key: 'createManagerMethod',
+        value: function createManagerMethod() {}
+    }]);
+
+    return ManagersModule;
+}(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
+
+/***/ }),
+/* 44 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
