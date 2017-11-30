@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Mail\CreatedOrder;
 use App\Models\Category;
+use App\Models\Manager;
 use App\Models\Product;
 use App\Models\UploadPrice;
 use App\Models\User;
@@ -16,23 +17,43 @@ use Illuminate\Support\Facades\Mail;
 
 class AdminDashboardController extends Controller
 {
-    //
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function listOrders(){
       return view('admin.listOrders',[
           'data'=> '',
       ]);
     }
 
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
 	public function addProducts(){
 		return view('admin.addProducts',[
 			'data'=> '',
 		]);
 	}
 
+    /**
+     * @param User $user
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
 	public function usersList(User $user){
 
         return view('admin.usersList',[
             'users'=> $user->get(),
+        ]);
+    }
+
+    /**
+     * @param Manager $manager
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function managersList(Manager $manager){
+
+        return view('admin.managersList',[
+            'managers'=> $manager->get(),
         ]);
     }
 
