@@ -4,7 +4,7 @@ export class ManagersModule extends ApiModule {
     constructor() {
         super();
         console.log('Page: ManagersModule');
-
+        this.apiUpdateUrl = '/api/managers';
         this.createManagerHandler();
     };
 
@@ -18,6 +18,12 @@ export class ManagersModule extends ApiModule {
     };
 
     createManagerMethod(){
+        this.post({
+            data: $('#addManagerForm').serialize(),
+            url: this.apiUpdateUrl,
+            success: response => {
 
+            },
+        });
     }
 }

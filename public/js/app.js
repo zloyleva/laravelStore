@@ -18468,7 +18468,7 @@ var ManagersModule = function (_ApiModule) {
         var _this = _possibleConstructorReturn(this, (ManagersModule.__proto__ || Object.getPrototypeOf(ManagersModule)).call(this));
 
         console.log('Page: ManagersModule');
-
+        _this.apiUpdateUrl = '/api/managers';
         _this.createManagerHandler();
         return _this;
     }
@@ -18487,7 +18487,13 @@ var ManagersModule = function (_ApiModule) {
         }
     }, {
         key: 'createManagerMethod',
-        value: function createManagerMethod() {}
+        value: function createManagerMethod() {
+            this.post({
+                data: $('#addManagerForm').serialize(),
+                url: this.apiUpdateUrl,
+                success: function success(response) {}
+            });
+        }
     }]);
 
     return ManagersModule;
