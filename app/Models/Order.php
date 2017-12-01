@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Gloudemans\Shoppingcart\Facades\Cart;
+use App\Models\User;
 use App\Models\OrderList;
 use Illuminate\Http\Request;
 
@@ -16,6 +17,10 @@ class Order extends Model
 
     public function orderListItems(){
       return $this->hasMany(OrderList::class);
+    }
+
+    public function user(){
+        return $this->belongsTo(User::class);
     }
 
     public function listOrdersForUser(){
@@ -44,6 +49,10 @@ class Order extends Model
         'order_id' => $orderInstance->id,
         'orderList' => $itemsList
       ];
+    }
+
+    public function showOrdersAdmin(){
+        return $this->with('user')->paginate(20);
     }
 
     public function listOrderDataForUser($request){
