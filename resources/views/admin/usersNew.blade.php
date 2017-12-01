@@ -31,12 +31,14 @@
                 </div>
                 <div class="form-group">
                     <label for="InputRole">Role</label>
-                    <select name="role" class="form-control" id="InputRole">
+                    <select name="role" class="form-control" id="InputRole" disabled>
+                        <option value="buyer" selected>buyer</option>
+                        <option value="manager">manager</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label for="InputPrice">Price type</label>
-                    <select name="role" class="form-control" id="InputPrice">
+                    <select name="price_type" class="form-control" id="InputPrice">
                         @foreach($priceTypeList as $item)
                             <option value="{{$item->id}}">{{$item->description}}</option>
                         @endforeach
@@ -51,6 +53,14 @@
                 <div class="form-group">
                     <label for="InputPhone">Phone</label>
                     <input name="phone" type="tel" class="form-control" id="InputPhone" placeholder="Enter phone">
+                </div>
+                <div class="form-group">
+                    <label for="InputPrice">Manager</label>
+                    <select name="manager_id" class="form-control" id="InputPrice">
+                        @foreach($managerList as $manager)
+                            <option value="{{$manager->id}}">{{$manager->name}}</option>
+                        @endforeach
+                    </select>
                 </div>
                 <div class="form-group">
                     <button id="addUser" class="btn btn-primary">Add user</button>

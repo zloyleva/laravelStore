@@ -23,7 +23,6 @@
                             <th class="js-column-order" data-column="status">Manager</th>
                             <th class="js-column-order" data-column="status">Phone</th>
                             <th class="js-column-order" data-column="status">Address</th>
-                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -39,18 +38,6 @@
                             <td class="js-phone" data-row="{{$user->manager->id}}">{{$user->manager->name}}</td>
                             <td class="js-phone" data-row="{{$user->phone}}">{{$user->phone}}</td>
                             <td class="js-address" data-row="{{$user->address}}">{{$user->address}}</td>
-                            <td>
-                                <div class="form-group select-block">
-                                    <select class="js-action form-control">
-                                        <option hidden>Action</option>
-                                        <option>Activate</option>
-                                        <option>Deactivate</option>
-                                        <option value="admin">Set as administrator</option>
-                                        <option value="user">Set as user</option>
-                                    </select>
-                                </div>
-                            </td>
-
                         </tr>
                     @endforeach
                     </tbody>
