@@ -10655,7 +10655,7 @@ function applyToTag(styleElement, obj) {
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(5);
-module.exports = __webpack_require__(44);
+module.exports = __webpack_require__(45);
 
 
 /***/ }),
@@ -18383,13 +18383,13 @@ var UserPasswordModule = function (_ApiModule) {
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AdminModule; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__managers__ = __webpack_require__(43);
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__add_user__ = __webpack_require__(44);
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 
 
 
@@ -18407,37 +18407,12 @@ var AdminModule = function (_ApiModule) {
         if ($('h1').data('page') == 'admin_managers') {
             new __WEBPACK_IMPORTED_MODULE_1__managers__["a" /* ManagersModule */]();
         }
+        if ($('h1').data('page') == 'add_user') {
+            new __WEBPACK_IMPORTED_MODULE_2__add_user__["a" /* AddUserModule */]();
+        }
 
-        _this.data = {};
-        _this.apiUpdateUrl = '/admin/products';
-
-        _this.updateProductHandler();
         return _this;
     }
-
-    _createClass(AdminModule, [{
-        key: 'updateProductHandler',
-        value: function updateProductHandler() {
-            var _this2 = this;
-
-            $('#updateProductsBtn').off('click').on('click', function (e) {
-                e.preventDefault();
-                console.log('updateProductHandler');
-                _this2.updateProductMethod();
-            });
-        }
-    }, {
-        key: 'updateProductMethod',
-        value: function updateProductMethod() {
-            this.post({
-                data: this.data,
-                url: this.apiUpdateUrl,
-                success: function success(response) {
-                    alertify.log.success('Product ' + response.name + ' added to Cart');
-                }
-            });
-        }
-    }]);
 
     return AdminModule;
 }(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
@@ -18468,7 +18443,7 @@ var ManagersModule = function (_ApiModule) {
         var _this = _possibleConstructorReturn(this, (ManagersModule.__proto__ || Object.getPrototypeOf(ManagersModule)).call(this));
 
         console.log('Page: ManagersModule');
-
+        _this.apiUpdateUrl = '/api/managers';
         _this.createManagerHandler();
         return _this;
     }
@@ -18480,14 +18455,19 @@ var ManagersModule = function (_ApiModule) {
 
             $('#createManagerBtn').off('click').on('click', function (e) {
                 e.preventDefault();
-                console.log('createManagerBtn');
 
                 _this2.createManagerMethod();
             });
         }
     }, {
         key: 'createManagerMethod',
-        value: function createManagerMethod() {}
+        value: function createManagerMethod() {
+            this.post({
+                data: $('#addManagerForm').serialize(),
+                url: this.apiUpdateUrl,
+                success: function success(response) {}
+            });
+        }
     }]);
 
     return ManagersModule;
@@ -18495,6 +18475,65 @@ var ManagersModule = function (_ApiModule) {
 
 /***/ }),
 /* 44 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AddUserModule; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+
+
+var AddUserModule = function (_ApiModule) {
+    _inherits(AddUserModule, _ApiModule);
+
+    function AddUserModule() {
+        _classCallCheck(this, AddUserModule);
+
+        var _this = _possibleConstructorReturn(this, (AddUserModule.__proto__ || Object.getPrototypeOf(AddUserModule)).call(this));
+
+        console.log('Page: AddUserModule');
+
+        _this.apiUpdateUrl = '/api/users';
+        _this.createUserHandler();
+        return _this;
+    }
+
+    _createClass(AddUserModule, [{
+        key: 'createUserHandler',
+        value: function createUserHandler() {
+            var _this2 = this;
+
+            $('#addUser').off('click').on('click', function (e) {
+                e.preventDefault();
+                console.log('createUserHandler');
+                _this2.createUserMethod();
+            });
+        }
+    }, {
+        key: 'createUserMethod',
+        value: function createUserMethod() {
+            this.post({
+                data: $('#addUserForm').serialize(),
+                url: this.apiUpdateUrl,
+                success: function success(response) {
+                    console.log(response);
+                }
+            });
+        }
+    }]);
+
+    return AddUserModule;
+}(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
+
+/***/ }),
+/* 45 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin

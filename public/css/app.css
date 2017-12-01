@@ -8588,6 +8588,21 @@ ul.pagination li a {
   color: #636b6f;
 }
 
+.container.usersList {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.container.usersList h1 {
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+}
+
 footer {
   background-color: #fff;
   padding-top: 5px;

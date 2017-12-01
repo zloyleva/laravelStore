@@ -47,7 +47,7 @@
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12  col-lg-12">
             <h2>Add new manager</h2>
-            <form action="">
+            <form action="" id="addManagerForm">
                 <div class="form-group">
                     <label for="InputName">Name</label>
                     <input name="name" type="email" class="form-control" id="InputName" placeholder="Name">
@@ -56,7 +56,9 @@
                     <label for="InputEmail">Email address</label>
                     <input name="email" type="email" class="form-control" id="InputEmail" placeholder="Email">
                 </div>
-                <button id="createManagerBtn" type="button" class="btn btn-default">Create</button>
+                <div class="form-group">
+                    <button id="createManagerBtn" type="button" class="btn btn-default">Create</button>
+                </div>
             </form>
         </div>
     </div>

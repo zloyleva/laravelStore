@@ -1,8 +1,11 @@
 @extends('layouts.index')
 
 @section('content')
-<div class="container">
+<div class="container usersList">
     <h1>Users list</h1>
+    <div class="addUserSection">
+        <a href="/admin/users/new" class="btn btn-primary">Add new User</a>
+    </div>
 </div>
 <div class="container">
     <div class="row">
@@ -17,9 +20,9 @@
                             <th class="js-column-order" data-column="email">Email</th>
                             <th class="js-column-order" data-column="status">Role</th>
                             <th class="js-column-order" data-column="status">Price type</th>
+                            <th class="js-column-order" data-column="status">Manager</th>
                             <th class="js-column-order" data-column="status">Phone</th>
                             <th class="js-column-order" data-column="status">Address</th>
-                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -32,20 +35,9 @@
                             <td class="js-email" data-row="{{$user->email}}">{{$user->email}}</td>
                             <td class="js-role" data-row="{{$user->role}}">{{$user->role}}</td>
                             <td class="js-price_type" data-row="{{$user->price_type}}">{{$user->price_type}}</td>
+                            <td class="js-phone" data-row="{{$user->manager->id}}">{{$user->manager->name}}</td>
                             <td class="js-phone" data-row="{{$user->phone}}">{{$user->phone}}</td>
                             <td class="js-address" data-row="{{$user->address}}">{{$user->address}}</td>
-                            <td>
-                                <div class="form-group select-block">
-                                    <select class="js-action form-control">
-                                        <option hidden>Action</option>
-                                        <option>Activate</option>
-                                        <option>Deactivate</option>
-                                        <option value="admin">Set as administrator</option>
-                                        <option value="user">Set as user</option>
-                                    </select>
-                                </div>
-                            </td>
-
                         </tr>
                     @endforeach
                     </tbody>
