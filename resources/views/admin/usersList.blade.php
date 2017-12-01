@@ -4,7 +4,7 @@
 <div class="container usersList">
     <h1>Users list</h1>
     <div class="addUserSection">
-        <a href="" class="btn btn-primary">Add new User</a>
+        <a href="/admin/users/new" class="btn btn-primary">Add new User</a>
     </div>
 </div>
 <div class="container">
