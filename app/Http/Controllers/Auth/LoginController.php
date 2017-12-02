@@ -73,14 +73,12 @@ class LoginController extends Controller
      */
     public function logout(Request $request)
     {
-        if(!Auth::check()){
-            return redirect('/');
+        if(Auth::check()){
+            $this->guard()->user()->clearToken();
+            $this->guard()->logout();
+
+            $request->session()->invalidate();
         }
-        $this->guard()->user()->clearToken();
-        $this->guard()->logout();
-
-        $request->session()->invalidate();
-
         return redirect('/');
     }
 
