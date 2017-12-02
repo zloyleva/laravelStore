@@ -20,7 +20,7 @@ class OrdersTableSeeder extends Seeder
       $faker = \Faker\Factory::create();
       $users = User::all()->toArray();
 
-      for($i=1; $i < 30; $i++){
+      for($i=1; $i < 3; $i++){
         Order::create([
           'user_id' => $faker->randomElement($users)['id'],
           'status' => $faker->randomElement($this->ordersStatus),

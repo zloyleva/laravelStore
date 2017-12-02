@@ -22,6 +22,9 @@ class CreateOrdersTable extends Migration
             $table->float('total');
             $table->text('note')->nullable();
             $table->timestamps();
+
+            $table->index('user_id');
+            $table->index('status');
         });
     }
 

@@ -40,7 +40,7 @@ class OrdersController extends Controller
             /**
              * todo need to move to own Class
              */
-            $sendTo = $user->find(2);
+            $sendTo = $user->find(Auth::user()->id);
             Mail::to($sendTo)->send(new CreatedOrder($result['order_id'], $order));
 
             Log::info('send mail');

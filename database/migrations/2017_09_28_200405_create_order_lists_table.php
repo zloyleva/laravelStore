@@ -22,6 +22,8 @@ class CreateOrderListsTable extends Migration
             $table->float('price');
             $table->float('total');
             $table->timestamps();
+
+            $table->index('order_id');
         });
     }
 

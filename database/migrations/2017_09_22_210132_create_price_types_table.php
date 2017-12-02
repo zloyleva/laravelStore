@@ -18,6 +18,8 @@ class CreatePriceTypesTable extends Migration
             $table->string('type');
             $table->string('description');
             $table->timestamps();
+
+            $table->index('id');
         });
     }
 

@@ -4,6 +4,10 @@ export class ApiModule {
 
         this.apiToken = this.readCookie('API-TOKEN');
         this.googleApiKey = 'AIzaSyCFTgptWkyzCm-Js4fLEz0X0R4H_NRtFtE';
+
+        // set Validation Messages
+        this.requiredField = "Это поле обязательно для заполнения";
+        this.minlengthField = "Вы ввели слишком мало символов";
     };
 
     get (settings) {

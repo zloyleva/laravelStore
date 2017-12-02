@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Http\Request;
 
@@ -72,11 +73,12 @@ class LoginController extends Controller
      */
     public function logout(Request $request)
     {
-        $this->guard()->user()->clearToken();
-        $this->guard()->logout();
+        if(Auth::check()){
+            $this->guard()->user()->clearToken();
+            $this->guard()->logout();
 
-        $request->session()->invalidate();
-
+            $request->session()->invalidate();
+        }
         return redirect('/');
     }
 
