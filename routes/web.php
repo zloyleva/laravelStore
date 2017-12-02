@@ -50,3 +50,4 @@ Route::group( [ 'middleware' => [ 'auth', 'admin' ], 'prefix' => 'admin', 'as' =
 } );
 
 Auth::routes();
+Route::get('/logout', 'Auth\LoginController@logout');
