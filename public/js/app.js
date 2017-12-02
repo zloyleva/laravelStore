@@ -81,6 +81,10 @@ var ApiModule = function () {
 
         this.apiToken = this.readCookie('API-TOKEN');
         this.googleApiKey = 'AIzaSyCFTgptWkyzCm-Js4fLEz0X0R4H_NRtFtE';
+
+        // set Validation Messages
+        this.requiredField = "Это поле обязательно для заполнения";
+        this.minlengthField = "Вы ввели слишком мало символов";
     }
 
     _createClass(ApiModule, [{
@@ -10655,7 +10659,7 @@ function applyToTag(styleElement, obj) {
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(5);
-module.exports = __webpack_require__(45);
+module.exports = __webpack_require__(46);
 
 
 /***/ }),
@@ -10668,6 +10672,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__cart_cart__ = __webpack_require__(34);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__users_my_profile__ = __webpack_require__(39);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__admin_admin__ = __webpack_require__(42);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__auth_login__ = __webpack_require__(45);
 window.$ = window.jQuery = __webpack_require__(1);
 console.log('App was loaded');
 
@@ -10684,24 +10689,29 @@ var page = __webpack_require__(27);
 
 
 
+
 $(document).ready(function () {
 
-  page('/store*', function () {
-    return new __WEBPACK_IMPORTED_MODULE_0__store_pages__["a" /* PageModule */]();
-  });
-  page('/cart', function () {
-    return new __WEBPACK_IMPORTED_MODULE_1__cart_cart__["a" /* CartModule */]();
-  });
-  page('/my_profile', function () {
-    return new __WEBPACK_IMPORTED_MODULE_2__users_my_profile__["a" /* MyProfileModule */]();
-  });
+    page('/login', function () {
+        return new __WEBPACK_IMPORTED_MODULE_4__auth_login__["a" /* LoginModule */]();
+    });
 
-  page('/admin*', function () {
-    return new __WEBPACK_IMPORTED_MODULE_3__admin_admin__["a" /* AdminModule */]();
-  });
+    page('/store*', function () {
+        return new __WEBPACK_IMPORTED_MODULE_0__store_pages__["a" /* PageModule */]();
+    });
+    page('/cart', function () {
+        return new __WEBPACK_IMPORTED_MODULE_1__cart_cart__["a" /* CartModule */]();
+    });
+    page('/my_profile', function () {
+        return new __WEBPACK_IMPORTED_MODULE_2__users_my_profile__["a" /* MyProfileModule */]();
+    });
 
-  page();
-  page.stop();
+    page('/admin*', function () {
+        return new __WEBPACK_IMPORTED_MODULE_3__admin_admin__["a" /* AdminModule */]();
+    });
+
+    page();
+    page.stop();
 });
 
 /***/ }),
@@ -18534,6 +18544,98 @@ var AddUserModule = function (_ApiModule) {
 
 /***/ }),
 /* 45 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LoginModule; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+
+
+var LoginModule = function (_ApiModule) {
+    _inherits(LoginModule, _ApiModule);
+
+    function LoginModule() {
+        _classCallCheck(this, LoginModule);
+
+        var _this = _possibleConstructorReturn(this, (LoginModule.__proto__ || Object.getPrototypeOf(LoginModule)).call(this));
+
+        console.log('Page: LoginModule');
+
+        _this.loginBtnHandler();
+        _this.checkForm();
+        return _this;
+    }
+
+    _createClass(LoginModule, [{
+        key: 'loginBtnHandler',
+        value: function loginBtnHandler() {
+            var _this2 = this;
+
+            $('#loginForm').off('click').on('click', function (e) {
+                e.preventDefault();
+
+                _this2.loginMethod();
+            });
+        }
+    }, {
+        key: 'loginMethod',
+        value: function loginMethod() {
+            console.log('loginBtnHandler');
+            if ($('#loginForm').valid()) {
+                $('#loginForm').submit();
+            } else {
+                console.log('not valid Form');
+            }
+        }
+    }, {
+        key: 'checkForm',
+        value: function checkForm() {
+            $('#loginForm').validate({
+                rules: {
+                    name: {
+                        required: true,
+                        minlength: 3,
+                        normalizer: function normalizer(value) {
+                            return $.trim(value);
+                        }
+
+                    },
+                    password: {
+                        required: true,
+                        minlength: 3,
+                        normalizer: function normalizer(value) {
+                            return $.trim(value);
+                        }
+
+                    }
+                },
+                messages: {
+                    name: {
+                        required: this.requiredField,
+                        minlength: this.minlengthField
+                    },
+                    password: {
+                        required: this.requiredField,
+                        minlength: this.minlengthField
+                    }
+                }
+            });
+        }
+    }]);
+
+    return LoginModule;
+}(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
+
+/***/ }),
+/* 46 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
