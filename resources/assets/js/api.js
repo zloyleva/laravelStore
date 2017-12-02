@@ -8,6 +8,8 @@ export class ApiModule {
         // set Validation Messages
         this.requiredField = "Это поле обязательно для заполнения";
         this.minlengthField = "Вы ввели слишком мало символов";
+        this.emailField = "Проверьте правильность Вашего Email";
+        this.equalToField = 'Пароли не совпадают!';
     };
 
     get (settings) {
