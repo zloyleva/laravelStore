@@ -14,10 +14,12 @@ import {CartModule} from './cart/cart';
 import {MyProfileModule} from './users/my_profile';
 import {AdminModule} from './admin/admin';
 import {LoginModule} from './auth/login';
+import {RegisterModule} from './auth/register';
 
 $(document).ready(() => {
 
     page('/login', () => new LoginModule());
+    page('/register', () => new RegisterModule());
 
     page('/store*', () => new PageModule());
     page('/cart', () => new CartModule());

@@ -85,6 +85,8 @@ var ApiModule = function () {
         // set Validation Messages
         this.requiredField = "Это поле обязательно для заполнения";
         this.minlengthField = "Вы ввели слишком мало символов";
+        this.emailField = "Проверьте правильность Вашего Email";
+        this.equalToField = 'Пароли не совпадают!';
     }
 
     _createClass(ApiModule, [{
@@ -10659,7 +10661,7 @@ function applyToTag(styleElement, obj) {
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(5);
-module.exports = __webpack_require__(46);
+module.exports = __webpack_require__(47);
 
 
 /***/ }),
@@ -10673,6 +10675,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__users_my_profile__ = __webpack_require__(39);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__admin_admin__ = __webpack_require__(42);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__auth_login__ = __webpack_require__(45);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__auth_register__ = __webpack_require__(46);
 window.$ = window.jQuery = __webpack_require__(1);
 console.log('App was loaded');
 
@@ -10690,10 +10693,14 @@ var page = __webpack_require__(27);
 
 
 
+
 $(document).ready(function () {
 
     page('/login', function () {
         return new __WEBPACK_IMPORTED_MODULE_4__auth_login__["a" /* LoginModule */]();
+    });
+    page('/register', function () {
+        return new __WEBPACK_IMPORTED_MODULE_5__auth_register__["a" /* RegisterModule */]();
     });
 
     page('/store*', function () {
@@ -18579,7 +18586,7 @@ var LoginModule = function (_ApiModule) {
         value: function loginBtnHandler() {
             var _this2 = this;
 
-            $('#loginForm').off('click').on('click', function (e) {
+            $('#loginBtn').off('click').on('click', function (e) {
                 e.preventDefault();
 
                 _this2.loginMethod();
@@ -18636,6 +18643,111 @@ var LoginModule = function (_ApiModule) {
 
 /***/ }),
 /* 46 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return RegisterModule; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+
+
+var RegisterModule = function (_ApiModule) {
+    _inherits(RegisterModule, _ApiModule);
+
+    function RegisterModule() {
+        _classCallCheck(this, RegisterModule);
+
+        var _this = _possibleConstructorReturn(this, (RegisterModule.__proto__ || Object.getPrototypeOf(RegisterModule)).call(this));
+
+        console.log('Page: RegisterModule');
+
+        _this.registerBtnHandler();
+        _this.checkForm();
+        return _this;
+    }
+
+    _createClass(RegisterModule, [{
+        key: 'registerBtnHandler',
+        value: function registerBtnHandler() {
+            var _this2 = this;
+
+            $('#registerBtn').off('click').on('click', function (e) {
+                e.preventDefault();
+                _this2.registerMethod();
+            });
+        }
+    }, {
+        key: 'registerMethod',
+        value: function registerMethod() {
+            if ($('#registerForm').valid()) {
+                $('#registerForm').submit();
+            } else {
+                console.log('not valid Form');
+            }
+        }
+    }, {
+        key: 'checkForm',
+        value: function checkForm() {
+            $('#registerForm').validate({
+                rules: {
+                    name: {
+                        required: true,
+                        minlength: 3,
+                        normalizer: function normalizer(value) {
+                            return $.trim(value);
+                        }
+                    },
+                    email: {
+                        required: true,
+                        email: true,
+                        normalizer: function normalizer(value) {
+                            return $.trim(value);
+                        }
+
+                    },
+                    password: {
+                        required: true,
+                        minlength: 4
+                    },
+                    password_confirmation: {
+                        equalTo: "#password"
+                    }
+
+                },
+                messages: {
+                    name: {
+                        required: this.requiredField,
+                        minlength: this.minlengthField
+                    },
+                    email: {
+                        required: this.requiredField,
+                        email: this.emailField
+                    },
+                    password: {
+                        required: this.requiredField,
+                        minlength: this.minlengthField
+                    },
+                    password_confirmation: {
+                        required: this.requiredField,
+                        equalTo: this.equalToField
+                    }
+                }
+            });
+        }
+    }]);
+
+    return RegisterModule;
+}(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
+
+/***/ }),
+/* 47 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin

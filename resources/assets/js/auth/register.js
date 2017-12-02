@@ -1,33 +1,31 @@
 import {ApiModule} from '../api';
 
-export class LoginModule extends ApiModule {
+export class RegisterModule extends ApiModule {
     constructor() {
         super();
-        console.log('Page: LoginModule');
+        console.log('Page: RegisterModule');
 
-        this.loginBtnHandler();
+        this.registerBtnHandler();
         this.checkForm();
     };
 
-    loginBtnHandler(){
-        $('#loginBtn').off('click').on('click', e => {
-            e.preventDefault();
-
-            this.loginMethod();
-        })
+    registerBtnHandler(){
+        $('#registerBtn').off('click').on('click', e => {
+           e.preventDefault();
+           this.registerMethod();
+        });
     }
 
-    loginMethod(){
-        console.log('loginBtnHandler');
-        if ($('#loginForm').valid() ){
-            $('#loginForm').submit();
+    registerMethod(){
+        if($('#registerForm').valid()){
+            $('#registerForm').submit();
         }else {
             console.log('not valid Form');
         }
     }
 
     checkForm() {
-        $('#loginForm').validate({
+        $('#registerForm').validate({
             rules: {
                 name: {
                     required: true,
@@ -35,28 +33,42 @@ export class LoginModule extends ApiModule {
                     normalizer: function (value) {
                         return $.trim(value);
                     }
-
                 },
-                password: {
+                email: {
                     required: true,
-                    minlength: 3,
+                    email: true,
                     normalizer: function (value) {
                         return $.trim(value);
                     }
 
                 },
+                password: {
+                    required: true,
+                    minlength: 4,
+                },
+                password_confirmation: {
+                    equalTo: "#password"
+                }
+
             },
             messages: {
                 name: {
                     required: this.requiredField,
                     minlength: this.minlengthField
                 },
+                email: {
+                    required: this.requiredField,
+                    email: this.emailField
+                },
                 password: {
                     required: this.requiredField,
                     minlength: this.minlengthField
+                },
+                password_confirmation: {
+                    required: this.requiredField,
+                    equalTo: this.equalToField
                 }
             }
         });
     };
-
 }
