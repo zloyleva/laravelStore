@@ -18,6 +18,8 @@ class CreateManagersTable extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamps();
+
+            $table->index('id');
         });
     }
 

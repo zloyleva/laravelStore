@@ -37,6 +37,13 @@ class CreateProductsTable extends Migration
 
             $table->timestamps();
 
+            $table->index('id');
+            $table->index('sku');
+            $table->index('name');
+            $table->index('category_id');
+            $table->index('sales_count');
+            $table->index('rate');
+
             $table->unique('sku');
         });
     }
