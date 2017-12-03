@@ -8365,6 +8365,19 @@ label.error {
   color: #f00;
 }
 
+label.error#qty-error {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-ordinal-group: 11;
+      -ms-flex-order: 10;
+          order: 10;
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  min-width: 200px;
+}
+
 .btn-default {
   background-color: #ccc;
 }
@@ -8526,6 +8539,8 @@ nav .container .navbar-header button.navbar-toggle .menu-text {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
 }
 
 .container .product_item .section_buy .behavior_section input.products_quantity {

@@ -87,6 +87,9 @@ var ApiModule = function () {
         this.minlengthField = "Вы ввели слишком мало символов";
         this.emailField = "Проверьте правильность Вашего Email";
         this.equalToField = 'Пароли не совпадают!';
+        this.digitsField = 'Неверный формат данных. Должны быть только цыфры.';
+        this.maxValueField = 'Вы ввели слишком большое число';
+        this.minValueField = 'Вы ввели слишком маленькое число';
     }
 
     _createClass(ApiModule, [{
@@ -17550,6 +17553,7 @@ var PageModule = function (_ApiModule) {
         var _this = _possibleConstructorReturn(this, (PageModule.__proto__ || Object.getPrototypeOf(PageModule)).call(this));
 
         console.log('Page: PageModule');
+        _this.x = _this.requiredField;
 
         _this.category = new __WEBPACK_IMPORTED_MODULE_1__category__["a" /* CategoryModule */]();
         if ($('#js-searchProductForm').length > 0) {
@@ -17560,10 +17564,50 @@ var PageModule = function (_ApiModule) {
         _this.data = {};
         _this.apiUrl = '/api/store/addtocart';
         _this.addProductToCartBtnHandler();
+        _this.checkForm();
         return _this;
     }
 
     _createClass(PageModule, [{
+        key: 'checkForm',
+        value: function checkForm() {
+            var _this2 = this;
+
+            $('form.addProductToCart').each(function (index, item) {
+                console.log(item);
+                $(item).validate({
+                    rules: {
+                        productId: {
+                            digits: true,
+                            max: 100000,
+                            min: 1,
+                            required: true
+                        },
+                        qty: {
+                            digits: true,
+                            max: 100000,
+                            min: 1,
+                            required: true
+                        }
+                    },
+                    messages: {
+                        productId: {
+                            digits: _this2.digitsField,
+                            max: _this2.maxValueField,
+                            min: _this2.minValueField,
+                            required: _this2.requiredField
+                        },
+                        qty: {
+                            digits: _this2.digitsField,
+                            max: _this2.maxValueField,
+                            min: _this2.minValueField,
+                            required: _this2.requiredField
+                        }
+                    }
+                });
+            });
+        }
+    }, {
         key: 'addProductToCart',
         value: function addProductToCart() {
             this.post({
@@ -17577,24 +17621,25 @@ var PageModule = function (_ApiModule) {
     }, {
         key: 'addProductToCartBtnHandler',
         value: function addProductToCartBtnHandler() {
-            var _this2 = this;
+            var _this3 = this;
 
             $('.js-add_to_cart').off('click').on('click', function (e) {
-                var $el = $(e.target),
-                    $row = $el.parents('.js-row');
-                _this2.data = {
-                    productId: $row[0].id,
-                    qty: $row.find('.products_quantity').val()
-                };
-
-                console.log(_this2.data);
-
-                if (_this2.apiToken == null) {
-                    Alertify.dialog.alert("Вам нужно войти в магазин</br><a href='/login'>Перейти к странице входа</a>");
+                if (_this3.apiToken == null) {
+                    Alertify.dialog.alert("<p>Для того чтобы положить товар в корзину</p>Вам необходимо войти в магазин</p>" + "<a href='/login'>Перейти к странице входа <i class='fa fa-sign-in' aria-hidden='true'></i></a>");
                     return;
                 }
 
-                _this2.addProductToCart();
+                var $el = $(e.target),
+                    $form = $el.closest('form.addProductToCart');
+                _this3.data = $form.serialize();
+
+                console.log(_this3.data);
+
+                if ($form.valid()) {
+                    _this3.addProductToCart();
+                } else {
+                    console.log('not valid');
+                }
             });
         }
     }]);

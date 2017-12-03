@@ -20,6 +20,12 @@ input.error{
 }
 label.error{
     color: #f00;
+    &#qty-error{
+        display: flex;
+        order: 10;
+        flex: 1;
+        min-width: 200px;
+    }
 }
 
 //Buttons
@@ -171,6 +177,7 @@ nav{
             }
             .behavior_section{
                 display: flex;
+                flex-wrap: wrap;
                 input.products_quantity{
                     max-width: 45px;
                     margin-right: 5px;
