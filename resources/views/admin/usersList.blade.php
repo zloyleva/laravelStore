@@ -34,7 +34,9 @@
                             <td class="js-name" data-row="{{$user->name}}">{{$user->name}}</td>
                             <td class="js-email" data-row="{{$user->email}}">{{$user->email}}</td>
                             <td class="js-role" data-row="{{$user->role}}">{{$user->role}}</td>
-                            <td class="js-price_type" data-row="{{$user->price_type}}">{{$user->price_type}}</td>
+
+                            <td class="js-price_type" data-row="{{$user->price_type}}">{{$priceTypeList[$user->price_type]['description']}}</td>
+
                             <td class="js-phone" data-row="{{$user->manager->id}}">{{$user->manager->name}}</td>
                             <td class="js-phone" data-row="{{$user->phone}}">{{$user->phone}}</td>
                             <td class="js-address" data-row="{{$user->address}}">{{$user->address}}</td>

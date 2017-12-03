@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Product\AddNewUserRequest;
 use App\Models\Manager;
 use App\Models\PriceType;
 use App\Models\User;
@@ -18,7 +19,7 @@ class UsersController extends Controller
         ]);
     }
 
-    public function store(Request $request, User $user){
-        $user->create($request->all());
+    public function store(AddNewUserRequest $request, User $user){
+        $user->addNewUser($request->all());
     }
 }

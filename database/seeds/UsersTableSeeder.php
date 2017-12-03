@@ -31,7 +31,7 @@ class UsersTableSeeder extends Seeder
             'fname' => $faker->firstName,
             'lname' => $faker->lastName,
             'role' => 'admin',
-            'price_type' => $faker->randomElement($priceTypeArray)['type'],
+            'price_type' => $faker->randomElement($priceTypeArray)['id'],
             'address' => $faker->streetAddress,
         ]);
 
@@ -42,7 +42,7 @@ class UsersTableSeeder extends Seeder
             'fname' => $faker->firstName,
             'lname' => $faker->lastName,
             'role' => 'buyer',
-            'price_type' => $faker->randomElement($priceTypeArray)['type'],
+            'price_type' => $faker->randomElement($priceTypeArray)['id'],
             'address' => $faker->streetAddress,
         ]);
 
