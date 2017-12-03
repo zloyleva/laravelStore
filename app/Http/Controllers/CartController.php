@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Product\AddProductToCartRequest;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
@@ -18,18 +19,17 @@ class CartController extends Controller
 					 <a href="'.route('store').'" class="btn btn-primary">В магазин</a>';
 	}
 
-	/**
-	 * @param Request $request
-	 * @param Product $product
-	 *
-	 * @return \Illuminate\Http\JsonResponse|null
-	 */
-	public function addToCart(Request $request,Product $product){
+    /**
+     * @param AddProductToCartRequest $request
+     * @param Product $product
+     * @return \Illuminate\Http\JsonResponse
+     */
+	public function addToCart(AddProductToCartRequest $request,Product $product){
 
 		if(!Auth::check()){
 			return $this->jsonResponse(['message' => 'Error user data']);//user error
 		}
-		$request->productId;
+
 		$getProduct = $product->find($request->productId);
 
 		$price_type = Auth::user()->price_type??'price_user';
