@@ -18563,6 +18563,7 @@ var AddUserModule = function (_ApiModule) {
 
         _this.apiUpdateUrl = '/api/users';
         _this.createUserHandler();
+        _this.checkForm();
         return _this;
     }
 
@@ -18574,7 +18575,11 @@ var AddUserModule = function (_ApiModule) {
             $('#addUser').off('click').on('click', function (e) {
                 e.preventDefault();
                 console.log('createUserHandler');
-                _this2.createUserMethod();
+                if ($('#addUserForm').valid()) {
+                    _this2.createUserMethod();
+                } else {
+                    console.log('not valid');
+                }
             });
         }
     }, {
@@ -18585,6 +18590,77 @@ var AddUserModule = function (_ApiModule) {
                 url: this.apiUpdateUrl,
                 success: function success(response) {
                     console.log(response);
+                }
+            });
+        }
+    }, {
+        key: 'checkForm',
+        value: function checkForm() {
+            $('#addUserForm').validate({
+                rules: {
+                    name: {
+                        required: true,
+                        minlength: 3,
+                        normalizer: function normalizer(value) {
+                            return $.trim(value);
+                        }
+                    },
+                    fname: {
+                        minlength: 3,
+                        normalizer: function normalizer(value) {
+                            return $.trim(value);
+                        }
+                    },
+                    lname: {
+                        minlength: 3,
+                        normalizer: function normalizer(value) {
+                            return $.trim(value);
+                        }
+                    },
+                    email: {
+                        required: true,
+                        email: true,
+                        normalizer: function normalizer(value) {
+                            return $.trim(value);
+                        }
+                    },
+                    password: {
+                        required: true,
+                        minlength: 3,
+                        normalizer: function normalizer(value) {
+                            return $.trim(value);
+                        }
+                    },
+                    role: {
+                        minlength: 3,
+                        normalizer: function normalizer(value) {
+                            return $.trim(value);
+                        }
+                    },
+                    price_type: {
+                        required: true,
+                        digits: true,
+                        max: 10,
+                        min: 1
+                    },
+                    address: {
+                        minlength: 5,
+                        normalizer: function normalizer(value) {
+                            return $.trim(value);
+                        }
+                    },
+                    phone: {
+                        minlength: 5,
+                        normalizer: function normalizer(value) {
+                            return $.trim(value);
+                        }
+                    },
+                    manager_id: {
+                        required: true,
+                        digits: true,
+                        max: 20,
+                        min: 1
+                    }
                 }
             });
         }

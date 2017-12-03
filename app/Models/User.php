@@ -43,4 +43,18 @@ class User extends Authenticatable
         return $this->role === 'admin';
     }
 
+    public function addNewUser($data){
+        return User::create([
+            'name' => $data['name'],
+            'fname' => $data['fname']??'Unnamed',
+            'lname' => $data['lname']??'Unnamed',
+            'email' => $data['email'],
+            'password' => bcrypt($data['password']),
+            'role' => $data['role']??'user',
+            'price_type' => $data['price_type']??'price_user',
+            'address' => $data['address']??'',
+            'phone' => $data['phone']??'',
+            'manager_id' => $data['manager_id'],
+        ]);
+    }
 }

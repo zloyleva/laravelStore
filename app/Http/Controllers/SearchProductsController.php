@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PriceType;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Category;
 
 class SearchProductsController extends Controller
 {
-    public function searchIndex(Product $product, Request $request, Category $category){
+    public function searchIndex(Product $product, Request $request, Category $category, PriceType $priceType){
 	    $slug = $request->slug;
 	    $collection = $collection1 = $category->collectCategories();
 	    $parent_id = 0;
@@ -26,7 +27,8 @@ class SearchProductsController extends Controller
                 'searchParams'=>[
                     'inputData'=>$request->input('inputData'),
                     $request->input('inputData')=>$request->input($request->input('inputData'))
-                ]
+                ],
+                'priceTypeList' => $priceType->get()
 		    ]
 	    );
     }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PriceType;
 use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\Product;
@@ -16,7 +17,7 @@ class ProductsController extends Controller
 	 *
 	 * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
 	 */
-	public function store(Product $product, Request $request, Category $category){
+	public function store(Product $product, Request $request, Category $category, PriceType $priceType){
 
 		$slug = $request->slug;
 		$collection = $collection1 = $category->collectCategories();
@@ -30,12 +31,13 @@ class ProductsController extends Controller
 				'categories'=>$categories,
 				'products'=>$product->listProducts($request),
 				'breadcrumbs'=>$category->getCategoryBreadCrumbs($collection1, $request->searchData),
-                'searchParams'=>[]
+                'searchParams'=>[],
+                'priceTypeList' => $priceType->get()
 			]
 		);
 	}
 
-	public function showProduct(Request $request, Product $product, Category $category){
+	public function showProduct(Request $request, Product $product, Category $category, PriceType $priceType){
 
 	    $productSlug = $request->slug;
         $collection = $collection1 = $category->collectCategories();
@@ -45,6 +47,7 @@ class ProductsController extends Controller
         return view('product.index', [
                 'categories'=>$categories,
                 'product'=>$product->getProduct($productSlug),
+                'priceTypeList' => $priceType->get()
             ]
         );
     }

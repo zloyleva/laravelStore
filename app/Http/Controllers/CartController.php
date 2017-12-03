@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Product\AddProductToCartRequest;
+use App\Models\PriceType;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
@@ -24,15 +25,16 @@ class CartController extends Controller
      * @param Product $product
      * @return \Illuminate\Http\JsonResponse
      */
-	public function addToCart(AddProductToCartRequest $request,Product $product){
+	public function addToCart(AddProductToCartRequest $request,Product $product, PriceType $priceType){
 
 		if(!Auth::check()){
 			return $this->jsonResponse(['message' => 'Error user data']);//user error
 		}
 
 		$getProduct = $product->find($request->productId);
+        $getAllPriceTypes = $priceType->get();
 
-		$price_type = Auth::user()->price_type??'price_user';
+		$price_type = $getAllPriceTypes[Auth::user()->price_type]['type']??'price_user';
 
 		Cart::restore(Auth::user()->id);
 		Cart::add($getProduct->sku, $getProduct->name, $request->qty, $getProduct->$price_type);

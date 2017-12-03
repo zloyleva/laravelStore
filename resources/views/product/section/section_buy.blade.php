@@ -6,7 +6,7 @@
     </div>
     @if(Auth::check() && Auth::user()->role != 'user' )
         <div class="product_price"
-             data-price_type="{{$price_type = Auth::user()->price_type}}">
+             data-price_type="{{$price_type =   $priceTypeList[Auth::user()->price_type]['type']}}">
             {{$product->roundNumber($product->$price_type)}} грн
         </div>
     @endif

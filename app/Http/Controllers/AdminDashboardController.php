@@ -6,6 +6,7 @@ use App\Mail\CreatedOrder;
 use App\Models\Category;
 use App\Models\Manager;
 use App\Models\Order;
+use App\Models\PriceType;
 use App\Models\Product;
 use App\Models\UploadPrice;
 use App\Models\User;
@@ -43,11 +44,11 @@ class AdminDashboardController extends Controller
      * @param User $user
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function usersList(User $user)
+    public function usersList(User $user, PriceType $priceType)
     {
-
         return view('admin.usersList', [
             'users' => $user->with('manager')->get(),
+            'priceTypeList' => $priceType->get()
         ]);
     }
 
