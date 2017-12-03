@@ -93,7 +93,7 @@ class CartController extends Controller
 		if(Cart::count() > 0 && Cart::get($request->rowId)){
 			return $this->jsonResponse([
 				'item'=>Cart::get($request->rowId),
-				'total'=>Cart::total(),
+				'total'=>preg_replace('/,/', '', Cart::total()),
 			]);
 		}
 	}
@@ -118,7 +118,7 @@ class CartController extends Controller
             'productsInCart'=>Cart::content(),
             'cart' => $request->session()->get('cart'),
             'user'=>Auth::user(),
-            'totalSum'=>Cart::total()
+            'totalSum'=>preg_replace('/,/', '', Cart::total())
         ]);
     }
 
