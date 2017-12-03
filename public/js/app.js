@@ -18078,7 +18078,7 @@ var ChangeItemAmountModule = function (_ApiModule) {
                     var $row = $('#' + response.item.rowId);
                     $row.find('.products_quantity').val(response.item.qty);
                     $row.find('.js-item-total').html((response.item.price * response.item.qty).toFixed(2));
-                    $('#cartTotal').html(parseFloat(response.total).toFixed(2));
+                    $('#cartTotal').html(parseFloat(response.total).toFixed(2) + ' грн');
                     $('#cartTotal').data('total_sum', response.total);
                 }
             });
