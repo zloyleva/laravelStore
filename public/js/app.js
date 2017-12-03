@@ -18127,7 +18127,7 @@ var CreateOrderModule = function (_ApiModule) {
         key: 'isCartAmountLessThanMin',
         value: function isCartAmountLessThanMin() {
             var total_sum = $('#cartTotal').data('total_sum');
-            if (parseInt(total_sum) < this.minOrderAmount) {
+            if (parseInt(total_sum.replace(/,/, '')) < this.minOrderAmount) {
                 return true;
             } else {
                 return false;
