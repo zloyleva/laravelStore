@@ -46,6 +46,7 @@ class AdminDashboardController extends Controller
      */
     public function usersList(User $user, PriceType $priceType)
     {
+//        dd($priceType->get());
         return view('admin.usersList', [
             'users' => $user->with('manager')->get(),
             'priceTypeList' => $priceType->get()

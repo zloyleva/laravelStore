@@ -34,7 +34,7 @@ class CartController extends Controller
 		$getProduct = $product->find($request->productId);
         $getAllPriceTypes = $priceType->get();
 
-		$price_type = $getAllPriceTypes[Auth::user()->price_type]['type']??'price_user';
+		$price_type = $getAllPriceTypes[Auth::user()->price_type-1]['type']??'price_user';
 
 		Cart::restore(Auth::user()->id);
 		Cart::add($getProduct->sku, $getProduct->name, $request->qty, $getProduct->$price_type);
