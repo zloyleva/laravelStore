@@ -17553,7 +17553,6 @@ var PageModule = function (_ApiModule) {
         var _this = _possibleConstructorReturn(this, (PageModule.__proto__ || Object.getPrototypeOf(PageModule)).call(this));
 
         console.log('Page: PageModule');
-        _this.x = _this.requiredField;
 
         _this.category = new __WEBPACK_IMPORTED_MODULE_1__category__["a" /* CategoryModule */]();
         if ($('#js-searchProductForm').length > 0) {

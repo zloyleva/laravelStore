@@ -6,7 +6,6 @@ export class PageModule extends ApiModule {
     constructor() {
         super();
         console.log('Page: PageModule');
-        this.x = this.requiredField;
 
         this.category = new CategoryModule();
         if($('#js-searchProductForm').length > 0){
