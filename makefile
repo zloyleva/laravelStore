@@ -82,11 +82,12 @@ clear_cache: #clear laravel cache
 clear_log: #clear laravel log
 	@sudo echo > storage/logs/laravel.log
 
-chat: #start chat service
-	@sudo docker exec -it $(docker_name) bash -c 'php artisan chat:serve'
-
 connect: #connect to container bash
 	@sudo docker exec -it $(docker_name) bash
 
 queue_product: #run
     @sudo docker exec -it $(docker_name) bash -c 'php artisan queue:listen --tries=2'
+
+start_queue: #start queue worker
+	@sudo docker exec -it webapp_web_1 bash -c 'php artisan queue:work'
+

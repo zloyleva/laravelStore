@@ -17,34 +17,30 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        //
-        User::truncate();
+        //$priceTypeArray = PriceType::all()->toArray();
+        //User::truncate();
 
-        $faker = \Faker\Factory::create();
-        $password = Hash::make('0992550572oleh');
-        $priceTypeArray = PriceType::all()->toArray();
+        $users = [
+            ['name' => 'Admin', 'email' => 'admin@test.com', 'role' => 'admin'],
+            ['name' => 'zloyleva', 'email' => 'zloyleva@gmail.com', 'role' => 'user'],
 
-        User::create([
-            'name' => 'Admin',
-            'email' => 'admin@gmail.com',
-            'password' => $password,
-            'fname' => $faker->firstName,
-            'lname' => $faker->lastName,
-            'role' => 'admin',
-            'price_type' => $faker->randomElement($priceTypeArray)['id'],
-            'address' => $faker->streetAddress,
-        ]);
+            ['name'=>'vbook2016','fname'=>'Владимир Ильич','lname'=>'Синявский','email'=>'vbook2016@mail.ru','price_type'=>3,'manager_id'=>2],
+            ['name'=>'zagniy','fname'=>'Лариса Панасьевна','lname'=>'Загний','email'=>'zagniy.larisa@gmail.com','price_type'=>3,'manager_id' => 2],
+            ['name'=>'okuksa','fname'=>'Оксана Валерьевна','lname'=>'Кукса','email'=>'okuksa@yandex.ru','price_type'=>3,'manager_id' => 2],
+            ['name'=>'saigon-opb','fname'=>'Аделина Леонидовна','lname'=>'Парицкая','email'=>'saigon-opb@ukr.net','price_type'=>3,'manager_id' => 2],
+            ['name'=>'amel4enko2017','fname'=>'Елена Григорьевна','lname'=>'Амельченко','email'=>'amel4enko2017@gmail.com','price_type'=>3,'manager_id' => 2],
+            ['name'=>'dimchik4','fname'=>'Дмитрий Васильевич','lname'=>'Савчук','email'=>'dimchik4@yahoo.com','price_type'=>3,'manager_id' => 2],
+            ['name'=>'shkolenko','fname'=>'Ирина Александровна','lname'=>'Школенко','email'=>'ira.shkolenko@gmail.com','price_type'=>3,'manager_id' => 2],
+            ['name'=>'kniga_sklad','fname'=>'Криворожкнига','lname'=>'','email'=>'kniga_sklad@ukr.net','price_type'=>3,'manager_id' => 2],
+            ['name'=>'staslaser','fname'=>'Сергей Владимирович','lname'=>'Роговский','email'=>'staslaser@meta.ua','price_type'=>4,'manager_id' => 2],
+        ];
 
-        User::create([
-            'name' => 'userName',
-            'email' => 'zloyleva@gmail.com',
-            'password' => $password,
-            'fname' => $faker->firstName,
-            'lname' => $faker->lastName,
-            'role' => 'buyer',
-            'price_type' => $faker->randomElement($priceTypeArray)['id'],
-            'address' => $faker->streetAddress,
-        ]);
-
+        foreach ($users as $user){
+            try{
+                factory(User::class)->create($user);
+            }catch(Exception $e){
+                print_r($user);
+            }
+        }
     }
 }

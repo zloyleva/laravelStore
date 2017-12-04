@@ -25,7 +25,7 @@ class PagesController extends Controller
 	    return view('store.my_profile', [
 			    'pageName'=>'My profile',
 			    'user'=>Auth::user(),
-			    'price_type_desc'=>$price_type->where('type','=',Auth::user()->price_type)->first()
+			    'price_type_desc'=>$price_type->where('id','=',Auth::user()->price_type)->first()
 		    ]
 	    );
     }

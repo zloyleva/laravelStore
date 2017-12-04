@@ -12,10 +12,16 @@ class ManagersTableSeeder extends Seeder
      */
     public function run()
     {
-        Manager::truncate();
-        Manager::create([
-            'name' => 'Free',
-            'email' => 'zloyleva@gmail.com',
-        ]);
+        $managers = [
+            ['name' => 'Free','email' => 'zloyleva@gmail.com'],
+            ['name' => 'Минаева Анжела','email' => 'minaevaangela@gmail.com'],
+        ];
+        foreach ($managers as $manager){
+            try{
+                factory(Manager::class)->create($manager);
+            }catch(Exception $e){
+                print_r($manager);
+            }
+        }
     }
 }
