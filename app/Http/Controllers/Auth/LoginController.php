@@ -110,6 +110,7 @@ class LoginController extends Controller
 	protected function credentials(Request $request)
 	{
 		if(filter_var($request->name, FILTER_VALIDATE_EMAIL)){
+            $request->merge(['email' => $request->name]);
 			return $request->only('email', 'password');
 		}
 		return $request->only('name', 'password');
