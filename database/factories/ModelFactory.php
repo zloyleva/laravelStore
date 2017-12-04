@@ -6,7 +6,7 @@ $factory->define(App\Models\User::class, function (Faker $faker) {
     return [
         'name' => 'Test',
         'email' => $faker->unique()->safeEmail,
-        'password' => Hash::make('123456'),
+        'password' => bcrypt('123456'),
         'fname' => 'Unnamed',
         'lname' => 'Unnamed',
         'role' => 'user',
