@@ -89,5 +89,5 @@ queue_product: #run
     @sudo docker exec -it $(docker_name) bash -c 'php artisan queue:listen --tries=2'
 
 start_queue: #start queue worker
-	@sudo docker exec -it webapp_web_1 bash -c 'php artisan queue:work'
+	@sudo docker exec -it $(docker_name) bash -c 'php artisan queue:work'
 
