@@ -1,10 +1,10 @@
 <form action="" class="addProductToCart">
     <input type="hidden" name="productId" value="{{$product->id}}">
-    <div class=" {{(Auth::check() && Auth::user()->role != 'user')?'text-line-through ':'product_price'}}"
+    <div class=" {{(Auth::check() && Auth::user()->price_type != 1)?'text-line-through ':'product_price'}}"
          data-price_user="{{$product->price_user}}">
         {{$product->roundNumber($product->price_user)}} грн
     </div>
-    @if(Auth::check() && Auth::user()->role != 'user' )
+    @if(Auth::check() && Auth::user()->price_type != 1 )
         <div class="product_price"
              data-price_type="{{$price_type =   $priceTypeList[Auth::user()->price_type-1]['type']}}">
             {{$product->roundNumber($product->$price_type)}} грн
