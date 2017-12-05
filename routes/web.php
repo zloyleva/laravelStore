@@ -35,6 +35,8 @@ Route::group( [ 'middleware' => [ 'auth' ], 'prefix' => 'orders', 'as' => 'order
 
 Route::group( [ 'middleware' => [ 'auth', 'admin' ], 'prefix' => 'admin', 'as' => 'admin.' ], function () {
 	Route::get( '/orders', [ 'as' => 'ordersList', 'uses' => 'AdminDashboardController@listOrders' ] );
+	Route::get( '/orders/{id}', [ 'as' => 'ordersShow', 'uses' => 'OrdersController@showOrder' ] );
+
 	Route::get( '/products', [ 'as' => 'addProducts', 'uses' => 'AdminDashboardController@addProducts' ] );
 
 	Route::get( '/users', [ 'as' => 'users', 'uses' => 'AdminDashboardController@usersList' ] );
