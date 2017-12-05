@@ -18126,7 +18126,7 @@ var CreateOrderModule = function (_ApiModule) {
     _createClass(CreateOrderModule, [{
         key: 'isCartAmountLessThanMin',
         value: function isCartAmountLessThanMin() {
-            var total_sum = $('#cartTotal').data('total_sum');
+            var total_sum = $('#cartTotal').data('total_sum') + "";
             if (parseInt(total_sum.replace(/,/, '')) < this.minOrderAmount) {
                 return true;
             } else {
