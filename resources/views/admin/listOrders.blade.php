@@ -16,6 +16,7 @@
                         <th class="js-column-order" data-column="name">First and last name</th>
                         <th class="js-column-order" data-column="status">status</th>
                         <th class="js-column-order" data-column="total">total</th>
+                        <th class="js-column-order"></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -26,6 +27,7 @@
                             <td>{{$item->user->fname}} {{$item->user->lname}}</td>
                             <td data-status="{{$item->status}}">{{$item->status}}</td>
                             <td data-total="{{$item->total}}">{{$item->total}}</td>
+                            <td><a href="/admin/orders/{{$item->id}}">Details</a></td>
                         </tr>
                         @endforeach
                     </tbody>
