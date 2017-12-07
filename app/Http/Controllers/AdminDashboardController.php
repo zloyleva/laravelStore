@@ -16,6 +16,7 @@ use Mockery\Exception;
 use App\Jobs\UpdateProductsPrice;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Auth;
 
 class AdminDashboardController extends Controller
 {
@@ -62,6 +63,16 @@ class AdminDashboardController extends Controller
         return view('admin.managersList', [
             'managers' => $manager->get(),
         ]);
+    }
+
+    public function showOrder(Request $request, Order $order){
+        $data = $order->listOrderDataForUser($request);
+        if( Auth::user()->role == 'admin'){
+            return view('admin.showOrder',[
+                'order' => $data
+            ]);
+        }
+        return redirect('/');
     }
 
     public function getFile(UploadPrice $uploadPrice)
