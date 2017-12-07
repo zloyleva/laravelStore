@@ -1,9 +1,9 @@
 @extends('layouts.index')
 
 @section('content')
-        <div class="container page-name">
-            <h1>Корзина</h1>
-        </div>
+    <div class="container page-name js-cart-content">
+        <h1>Корзина</h1>
+    </div>
     @if(count($productsInCart) > 0)
         <div class="container js-cart-content">
             <table class="table table-striped">
@@ -27,8 +27,12 @@
                         <td>
                             <p><strong>{{$row->name}}</strong></p>
                         </td>
-                        <td id="products_qty"><button class="btn btn-danger js-sub-product">-</button><input class="products_quantity form-control" type="number" min="1" step="1"
-                                   value="{{$row->qty}}" data-qty="{{$row->qty}}"><buttton class="btn btn-success js-add-product">+</buttton></td>
+                        <td id="products_qty">
+                            <button class="btn btn-danger js-sub-product">-</button>
+                            <input class="products_quantity form-control" type="number" min="1" step="1"
+                                   value="{{$row->qty}}" data-qty="{{$row->qty}}">
+                            <buttton class="btn btn-success js-add-product">+</buttton>
+                        </td>
                         <td>{{round($row->price, 2)}}</td>
                         <td class="js-item-total">{{round($row->total, 2)}}</td>
                         <td><button title="Remove product from cart" class="btn btn-danger js-remove-product">&times;</button></td>
