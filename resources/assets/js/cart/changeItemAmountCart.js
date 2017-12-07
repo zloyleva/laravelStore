@@ -47,7 +47,6 @@ export class ChangeItemAmountModule extends ApiModule {
                 break;
         }
 
-        //todo check for sub method - if count = 1 return
 
         console.log($row.data('id'),action);
         this.changeAmountItemMethod($row.data('id'),urlAction,$currentAmount);
