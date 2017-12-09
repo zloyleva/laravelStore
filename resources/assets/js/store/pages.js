@@ -1,6 +1,6 @@
 import {ApiModule} from '../api';
 import {CategoryModule} from './category';
-import { SearchProductModule } from './searchProduct';
+import {SearchProductModule} from './searchProduct';
 
 export class PageModule extends ApiModule {
     constructor() {
@@ -8,7 +8,7 @@ export class PageModule extends ApiModule {
         console.log('Page: PageModule');
 
         this.category = new CategoryModule();
-        if($('#js-searchProductForm').length > 0){
+        if ($('#js-searchProductForm').length > 0) {
             console.log('Page: has search product');
             new SearchProductModule();
         }
@@ -19,9 +19,8 @@ export class PageModule extends ApiModule {
         this.checkForm();
     };
 
-    checkForm(){
-        $('form.addProductToCart').each((index, item)=>{
-            console.log(item);
+    checkForm() {
+        $('form.addProductToCart').each((index, item) => {
             $(item).validate({
                 rules: {
                     productId: {
@@ -67,7 +66,7 @@ export class PageModule extends ApiModule {
 
     addProductToCartBtnHandler() {
         $('.js-add_to_cart').off('click').on('click', e => {
-            if(this.apiToken == null){
+            if (this.apiToken == null) {
                 Alertify.dialog.alert("<p>Для того чтобы положить товар в корзину</p>Вам необходимо войти в магазин</p>" +
                     "<a href='/login'>Перейти к странице входа <i class='fa fa-sign-in' aria-hidden='true'></i></a>");
                 return;
@@ -79,9 +78,9 @@ export class PageModule extends ApiModule {
 
             console.log(this.data);
 
-            if($form.valid()){
+            if ($form.valid()) {
                 this.addProductToCart();
-            }else {
+            } else {
                 console.log('not valid');
             }
 

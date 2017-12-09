@@ -31,6 +31,8 @@ export class CreateOrderModule extends ApiModule {
             }
             if($('#create-order-form').valid()){
                 this.sendDataMethod();
+                console.log('spiner');
+                $('#loadToCreateOrder').addClass('create-order');
             }
         });
     }
@@ -40,6 +42,7 @@ export class CreateOrderModule extends ApiModule {
             data: $('#create-order-form').serialize(),
             url: this.apisendDataUrl,
             success: response => {
+                $('#loadToCreateOrder').remove();
                 window.location.replace(response.redirectUrl);
             },
         });
@@ -50,16 +53,28 @@ export class CreateOrderModule extends ApiModule {
         $('#create-order-form').validate({
             rules: {
                 address: {
-                    maxlength: 255,
+                    minlength: 5,
                     required: true
                 },
                 phone: {
-                    maxlength: 255,
+                    maxlength: 13,
+                    minlength: 10,
                     required: true
                 },
                 note:{
                     maxlength: 1000,
                 }
+            },
+            messages: {
+                address: {
+                    minlength: this.minlengthField,
+                    required: this.requiredField,
+                },
+                phone: {
+                    minlength: this.minlengthField,
+                    maxlength: this.maxlengthField,
+                    required: this.requiredField,
+                },
             }
         });
     };

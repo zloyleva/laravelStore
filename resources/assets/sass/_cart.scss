@@ -4,7 +4,7 @@
   .row{
     div{
       .table-content{
-        .table-header.table-row-cart, .table-row-cart form{
+        .table-header.table-row-cart, .table-row-cart form, .table-footer.table-row-cart{
           display: flex;
           margin-bottom: 5px;
           @media (max-width: 768px){
@@ -64,66 +64,78 @@
             .td-action{min-width: 27px;}
           }
         }
-        .table-row-cart form{
+        .table-row-cart.table-item{
           border-top: 1px solid #ccc;
           padding-top: 5px;
-          .td-qty, .td-action{
-            display: flex;
-            align-items: start;
-            span.controls-item{
-              width: 25px;
-              height: 25px;
+          form{
+            .td-qty, .td-action{
               display: flex;
-              justify-content: center;
-              align-items: center;
-              cursor: pointer;
-              border-radius: 50%;
-              &.js-sub-product{
-                border: 1px solid #f00;
-                background-color: #ff6a6a;
-                color: #fff;
-                &:hover{
-                  background-color: #f00;
+              align-items: start;
+              span.controls-item{
+                width: 25px;
+                height: 25px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                cursor: pointer;
+                border-radius: 50%;
+                &.js-sub-product{
+                  border: 1px solid #f00;
+                  background-color: #ff6a6a;
+                  color: #fff;
+                  &:hover{
+                    background-color: #f00;
+                  }
+                }
+                &.js-add-product{
+                  border: 1px solid #259d6d;
+                  background-color: #75c19b;
+                  color: #fff;
+                  &:hover{
+                    background-color: #259d6d;
+                  }
+                }
+                &.js-remove-product{
+                  border: 1px solid #777;
+                  background-color: #aaa;
+                  color: #fff;
+                  &:hover{
+                    background-color: #777;
+                  }
                 }
               }
-              &.js-add-product{
-                border: 1px solid #259d6d;
-                background-color: #75c19b;
-                color: #fff;
-                &:hover{
-                  background-color: #259d6d;
-                }
+              input.products_quantity{
+                padding: 2px;
+                margin-left: 5px;
+                margin-right: 5px;
               }
-              &.js-remove-product{
-                border: 1px solid #777;
-                background-color: #aaa;
-                color: #fff;
-                &:hover{
-                  background-color: #777;
-                }
-              }
-            }
-            input.products_quantity{
-              padding: 2px;
-              margin-left: 5px;
-              margin-right: 5px;
             }
           }
         }
-      }
-    }
-  }
-
-  table{
-    .js-row{
-      #products_qty{
-        display: flex;
-        input{
-          margin-left: 5px;
-          margin-right: 5px;
-          max-width: 75px;
+        .table-footer.table-row-cart{
+          border-top: 1px solid #ccc;
+          padding-top: 5px;
+          //display: flex;
+          //justify-content: flex-end;
         }
       }
     }
+    &.empty-cart{
+      margin-bottom: 20px;
+    }
+  }
+}
+#loadToCreateOrder{
+  background-color: rgba(0, 0, 0, 0.7);
+  justify-content: center;
+  align-items: center;
+  .content-block{
+    color: #fff;
+    display: flex;
+    align-items: center;
+  }
+  &.create-order{
+    opacity: 1;
+    display: flex;
   }
 }

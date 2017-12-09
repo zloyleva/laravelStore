@@ -1,64 +1,69 @@
 @extends('layouts.index')
 
 @section('content')
-    <div class="container page-name js-cart-content">
+    <div class="container page-name">
         <h1>Корзина</h1>
     </div>
+
     @if(count($productsInCart) > 0)
         <div class="container js-cart-content">
-            <table class="table table-striped">
-                <thead>
-                <tr>
-                    <th>Артикул</th>
-                    <th>Название</th>
-                    <th>Количество</th>
-                    <th>Цена</th>
-                    <th>Сумма</th>
-                    <th></th>
-                </tr>
-                </thead>
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 
-                <tbody>
+                    <div class="table-content">
+                        <div class="table-header table-row-cart">
+                            <div class="td-item">#</div>
+                            <div class="td-sku">Артикул</div>
+                            <div class="td-name">Название</div>
+                            <div class="td-qty">
+                                <span class="show-big">Количество</span>
+                                <span class="show-small hidden">Кол-во</span>
+                            </div>
+                            <div class="td-price">Цена</div>
+                            <div class="td-sum">Сумма</div>
+                            <div class="td-action"></div>
+                        </div>
+                        @foreach($productsInCart as $row)
+                            <div class="table-row-cart table-item">
+                                <form action="" class="js-item-form">
+                                    <input type="hidden" name="rowId" value="{{$row->rowId}}">
+                                    <div class="td-item">{{$loop->iteration}}</div>
+                                    <div class="td-sku">{{$row->id}}</div>
+                                    <div class="td-name">{{$row->name}}</div>
+                                    <div class="td-qty">
+                                        <span class="js-sub-product controls-item">-</span>
+                                        <input name="amount" class="products_quantity form-control" type="number" min="1" step="1"
+                                               value="{{$row->qty}}" data-qty="{{$row->qty}}">
+                                        <span class="js-add-product controls-item">+</span>
+                                    </div>
+                                    <div class="td-price">{{round($row->price, 2)}}</div>
+                                    <div class="td-sum">{{round($row->total, 2)}}</div>
+                                    <div class="td-action">
+                                        <span title="Remove product from cart" class="js-remove-product controls-item">&times;</span>
+                                    </div>
+                                </form>
+                            </div>
+                        @endforeach
+                        <div class="table-footer table-row-cart">
+                            <div class="td-item"></div>
+                            <div class="td-sku"></div>
+                            <div class="td-name"></div>
+                            <div class="td-qty"></div>
+                            <div class="td-price">Итого</div>
+                            <div class="td-sum" id="cartTotal" data-total_sum="{{$totalSum}}">{{$totalSum}} грн</div>
+                            <div class="td-action"></div>
+                        </div>
+                    </div>
 
-                @foreach($productsInCart as $row)
-
-                    <tr class="js-row" data-id="{{$row->rowId}}" id="{{$row->rowId}}">
-                        <td>{{$row->id}}</td>
-                        <td>
-                            <p><strong>{{$row->name}}</strong></p>
-                        </td>
-                        <td id="products_qty">
-                            <button class="btn btn-danger js-sub-product">-</button>
-                            <input class="products_quantity form-control" type="number" min="1" step="1"
-                                   value="{{$row->qty}}" data-qty="{{$row->qty}}">
-                            <buttton class="btn btn-success js-add-product">+</buttton>
-                        </td>
-                        <td>{{round($row->price, 2)}}</td>
-                        <td class="js-item-total">{{round($row->total, 2)}}</td>
-                        <td><button title="Remove product from cart" class="btn btn-danger js-remove-product">&times;</button></td>
-                    </tr>
-
-                @endforeach
-
-                </tbody>
-
-                <tfoot>
-                <tr>
-                    <td colspan="3">&nbsp;</td>
-                    <td>Итого</td>
-                    <td id="cartTotal" data-total_sum="{{$totalSum}}">{{$totalSum}} грн</td>
-                    <td></td>
-                </tr>
-                </tfoot>
-            </table>
-
+                </div>
+            </div>
             <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <form id="create-order-form" class="" action="{{route('orders.list')}}" method="get">
                         <input type="hidden" name="status" value="setOrder">
                         <div class="form-group">
                             <label>Введите адресс доставки <sup>*</sup></label>
-                            <input id="address" name="address" type="text" class="form-control" value="{{$user->address}}"/>
+                            <input id="address" name="address" type="text" class="form-control" value="{{$user->address}}" placeholder="Введите адресс доставки"/>
                             {{--https://developers.google.com/places/web-service/policies--}}
                             <img src="https://developers.google.com/places/documentation/images/powered-by-google-on-white.png">
                         </div>
@@ -80,9 +85,20 @@
                 </div>
             </div>
         </div>
+
+        <!-- Modal -->
+        <div class="fade modal" id="loadToCreateOrder">
+            <div class="content-block">
+                <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>Создаем заказ...
+            </div>
+        </div>
     @else
         <div class="container js-cart-content">
-            Ваша козина пуста
+            <div class="row empty-cart">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    Ваша козина пуста
+                </div>
+            </div>
         </div>
     @endif
 @stop
