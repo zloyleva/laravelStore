@@ -17995,7 +17995,7 @@ var DestroyCartModule = function (_ApiModule) {
                 data: {},
                 url: this.apiDeleteCartUrl,
                 success: function success(response) {
-                    $('.js-cart-content').html(response.html);
+                    $('.js-cart-content').html('<div class="row empty-cart"><div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">' + response.html + '</div></div>');
                 }
             });
         }
