@@ -85,6 +85,7 @@ var ApiModule = function () {
         // set Validation Messages
         this.requiredField = "Это поле обязательно для заполнения";
         this.minlengthField = "Вы ввели слишком мало символов";
+        this.maxlengthField = "Вы ввели слишком много символов";
         this.emailField = "Проверьте правильность Вашего Email";
         this.equalToField = 'Пароли не совпадают!';
         this.digitsField = 'Неверный формат данных. Должны быть только цыфры.';
@@ -17573,7 +17574,6 @@ var PageModule = function (_ApiModule) {
             var _this2 = this;
 
             $('form.addProductToCart').each(function (index, item) {
-                console.log(item);
                 $(item).validate({
                     rules: {
                         productId: {
@@ -17890,33 +17890,55 @@ var RemoveItemCartModule = function (_ApiModule) {
             var _this2 = this;
 
             $('.js-remove-product').off('click').on('click', function (e) {
-                console.log('removeProductHandler');
                 var $el = $(e.target),
-                    $row = $el.parents('.js-row');
+                    $form = $el.closest('.js-item-form');
 
-                console.log($row.data('id'));
-                if ($row.data('id').length > 1) {
-                    _this2.removeProductItemMethod($row.data('id'));
+                if ($form.valid()) {
+                    console.log('removeProductHandler');
+                    _this2.removeProductItemMethod($form);
                 }
             });
         }
     }, {
         key: 'removeProductItemMethod',
-        value: function removeProductItemMethod(rowId) {
+        value: function removeProductItemMethod($form) {
             this.delete({
-                data: { rowId: rowId },
+                data: $form.serialize(),
                 url: this.apiDeleteProductItemUrl,
                 success: function success(response) {
                     if (typeof response.deleteId != 'undefined') {
                         console.log(response.deleteId);
-                        $('#' + response.deleteId).hide();
-                        $('#cartTotal').html(response.total);
+                        $form.closest('.table-row-cart').remove();
+
+                        $('#cartTotal').html(response.total + " грн");
                         $('#cartTotal').data('total_sum', response.total);
                         alertify.log.error('Remove product form Cart');
                     } else if (typeof response.html != 'undefined') {
                         $('.js-cart-content').html(response.html);
                     }
                 }
+            });
+        }
+    }, {
+        key: 'checkForm',
+        value: function checkForm() {
+            $('.js-item-form').each(function (index, form) {
+
+                $(form).validate({
+                    rules: {
+                        rowId: {
+                            required: true,
+                            minlength: 10
+                        },
+                        amount: {
+                            required: true,
+                            digits: true,
+                            max: 10000,
+                            min: 1
+                        }
+                    },
+                    ignore: []
+                });
             });
         }
     }]);
@@ -18012,6 +18034,7 @@ var ChangeItemAmountModule = function (_ApiModule) {
         _this.apiAmountAddItemUrl = '/cart/add_item';
         _this.apiAmountSubItemUrl = '/cart/sub_item';
 
+        _this.checkForm();
         _this.changeAmountAddBtnHandler();
         _this.changeAmountSubBtnHandler();
         return _this;
@@ -18023,7 +18046,7 @@ var ChangeItemAmountModule = function (_ApiModule) {
             var _this2 = this;
 
             $('.js-add-product').off('click').on('click', function (e) {
-                console.log('changeAmountAddBtnHandler');
+                console.log('changeAmount - Add');
                 _this2.prepareDataHandler(e, _this2.apiAmountAddItemUrl, 'add');
             });
         }
@@ -18033,7 +18056,7 @@ var ChangeItemAmountModule = function (_ApiModule) {
             var _this3 = this;
 
             $('.js-sub-product').off('click').on('click', function (e) {
-                console.log('changeAmountSubBtnHandler');
+                console.log('changeAmount - Sub');
                 _this3.prepareDataHandler(e, _this3.apiAmountSubItemUrl, 'sub');
             });
         }
@@ -18041,44 +18064,70 @@ var ChangeItemAmountModule = function (_ApiModule) {
         key: 'prepareDataHandler',
         value: function prepareDataHandler(e, urlAction, action) {
             var $el = $(e.target),
-                $row = $el.parents('.js-row');
-            var $currentAmount = $row.find('.products_quantity').val();
+                $form = $el.closest('.js-item-form');
+
+            var $qtyInput = $form.find('input.products_quantity');
+            var $currentAmount = $qtyInput.val();
+            console.log($qtyInput);
 
             if ($currentAmount < 1 || $currentAmount == 1 && action == 'sub') {
-                console.log('You enter wrong data');
-                return; //todo You enter wrong data
+                alertify.log.error('Значение не может быть меньше 1');
+                return;
             }
 
             switch (action) {
                 case 'add':
-                    $currentAmount++;
+                    $qtyInput.val(++$currentAmount);
                     break;
                 case 'sub':
-                    $currentAmount--;
+                    $qtyInput.val(--$currentAmount);
                     break;
                 case 'set':
                     break;
             }
 
-            console.log($row.data('id'), action);
-            this.changeAmountItemMethod($row.data('id'), urlAction, $currentAmount);
+            this.changeAmountItemMethod($form, urlAction);
         }
     }, {
         key: 'changeAmountItemMethod',
-        value: function changeAmountItemMethod(rowId, urlAction, amount) {
-            this.post({
-                data: {
-                    rowId: rowId,
-                    amount: amount
-                },
-                url: urlAction,
-                success: function success(response) {
-                    var $row = $('#' + response.item.rowId);
-                    $row.find('.products_quantity').val(response.item.qty);
-                    $row.find('.js-item-total').html((response.item.price * response.item.qty).toFixed(2));
-                    $('#cartTotal').html(parseFloat(response.total).toFixed(2) + ' грн');
-                    $('#cartTotal').data('total_sum', response.total);
-                }
+        value: function changeAmountItemMethod($form, urlAction) {
+            if ($form.valid()) {
+                this.post({
+                    data: $form.serialize(),
+                    url: urlAction,
+                    success: function success(response) {
+                        alertify.log.success('Значение поля успешно обновилось');
+                        $form.find('.products_quantity').val(response.item.qty);
+                        $form.find('.td-sum').html((response.item.price * response.item.qty).toFixed(2));
+
+                        $('#cartTotal').html(parseFloat(response.total).toFixed(2) + ' грн');
+                        $('#cartTotal').data('total_sum', response.total);
+                    }
+                });
+            } else {
+                console.log('not valid');
+            }
+        }
+    }, {
+        key: 'checkForm',
+        value: function checkForm() {
+            $('.js-item-form').each(function (index, form) {
+
+                $(form).validate({
+                    rules: {
+                        rowId: {
+                            required: true,
+                            minlength: 10
+                        },
+                        amount: {
+                            required: true,
+                            digits: true,
+                            max: 10000,
+                            min: 1
+                        }
+                    },
+                    ignore: []
+                });
             });
         }
     }]);
@@ -18145,6 +18194,8 @@ var CreateOrderModule = function (_ApiModule) {
                 }
                 if ($('#create-order-form').valid()) {
                     _this2.sendDataMethod();
+                    console.log('spiner');
+                    $('#loadToCreateOrder').addClass('create-order');
                 }
             });
         }
@@ -18155,6 +18206,7 @@ var CreateOrderModule = function (_ApiModule) {
                 data: $('#create-order-form').serialize(),
                 url: this.apisendDataUrl,
                 success: function success(response) {
+                    $('#loadToCreateOrder').remove();
                     window.location.replace(response.redirectUrl);
                 }
             });
@@ -18165,15 +18217,27 @@ var CreateOrderModule = function (_ApiModule) {
             $('#create-order-form').validate({
                 rules: {
                     address: {
-                        maxlength: 255,
+                        minlength: 5,
                         required: true
                     },
                     phone: {
-                        maxlength: 255,
+                        maxlength: 13,
+                        minlength: 10,
                         required: true
                     },
                     note: {
                         maxlength: 1000
+                    }
+                },
+                messages: {
+                    address: {
+                        minlength: this.minlengthField,
+                        required: this.requiredField
+                    },
+                    phone: {
+                        minlength: this.minlengthField,
+                        maxlength: this.maxlengthField,
+                        required: this.requiredField
                     }
                 }
             });

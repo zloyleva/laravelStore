@@ -8,6 +8,7 @@ export class ApiModule {
         // set Validation Messages
         this.requiredField = "Это поле обязательно для заполнения";
         this.minlengthField = "Вы ввели слишком мало символов";
+        this.maxlengthField = "Вы ввели слишком много символов";
         this.emailField = "Проверьте правильность Вашего Email";
         this.equalToField = 'Пароли не совпадают!';
         this.digitsField = 'Неверный формат данных. Должны быть только цыфры.';
