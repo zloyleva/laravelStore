@@ -16,6 +16,7 @@ class ProductsController extends Controller
      * @param Request $request
      * @param Category $category
      * @param PriceType $priceType
+     * @param UploadPrice $uploadPrice
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
 	public function store(Product $product, Request $request, Category $category, PriceType $priceType, UploadPrice $uploadPrice){
