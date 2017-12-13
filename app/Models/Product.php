@@ -37,7 +37,7 @@ class Product extends Model
 	 *
 	 * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
 	 */
-    public function listProducts($request){
+    public function listProducts($request, $uploadPrice){
 		$query = $this->with(['category']);
 
 	    if(isset( ($request->searchData)['result'])){
@@ -46,10 +46,16 @@ class Product extends Model
 
         if( isset($request->inputData) && $request->inputData == 'name' && is_string($request->name) ){
 	        $query->where('name', 'like',"%{$request->name}%");
-//todo add custom url for search	        $query->withPath('custom/url');
+        //todo add custom url for search	        $query->withPath('custom/url');
         }elseif ( isset($request->inputData) && $request->inputData == 'sku' && is_numeric($request->sku) ){
 		    $query->where('sku', 'like',"%{$request->sku}%");
 	    }
+
+	    // Hide products who hasn't last update
+        $lastUpdateProducts = $uploadPrice->where('task_id',2)->latest('id')->first();
+        if($lastUpdateProducts){
+            $query->where('updated_at', '>',$lastUpdateProducts->created_at->subDay(1));
+        }
 
 		return $query->paginate(15);
     }
