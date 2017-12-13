@@ -38,7 +38,7 @@ class UploadPrice extends Model
 		ftp_pasv($connectionId, true);
 
 		if (ftp_get($connectionId, $local_file, $serverFile, FTP_BINARY)) {
-			$success = $this->successLoadPrice("Load price is done");
+			$success = $this->successLoadPrice("Load price is done", 'Load price', 1);
 		} else {
 			return $this->errorLoadPrice("Can't load price from server");
 		}
@@ -58,13 +58,15 @@ class UploadPrice extends Model
 		]);
     }
 
-	/**
-	 * @param $success
-	 */
-	private function successLoadPrice($success){
+    /**
+     * @param $success
+     * @param string $name
+     * @return mixed
+     */
+	public function successLoadPrice($success, $name, $task_id){
 		return $this->create([
-			'task_id'=>1,
-			'name'=>'Load price',
+			'task_id'=>$task_id,
+			'name'=>$name,
 			'message'=>$success,
 			'done'=>true
 		]);

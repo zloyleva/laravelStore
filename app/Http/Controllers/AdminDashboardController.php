@@ -86,7 +86,7 @@ class AdminDashboardController extends Controller
         return 'upload price ';
     }
 
-    public function queueMethod(Product $product, Category $category)
+    public function queueMethod(Product $product, Category $category, UploadPrice $uploadPrice)
     {
 
         $chunkSize = 250;
@@ -112,6 +112,10 @@ class AdminDashboardController extends Controller
                 //finish read price
                 //if data's array empty - write to DB - update price is done ->> Pass status last chunk for set it
                 //delete price file
+
+                //todo write to DB about finish upload price
+                $uploadPrice->successLoadPrice('Upload price is done', "upload products", 2);
+
                 return 'finish upload';
             }
 
