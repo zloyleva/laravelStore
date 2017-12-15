@@ -18763,18 +18763,31 @@ var LoginModule = function (_ApiModule) {
 
         _this.loginBtnHandler();
         _this.checkForm();
+        _this.submitLoginForEnter();
         return _this;
     }
 
     _createClass(LoginModule, [{
+        key: 'submitLoginForEnter',
+        value: function submitLoginForEnter() {
+            var _this2 = this;
+
+            $('#password').on('keypress', function (e) {
+                if (e.keyCode == 13) {
+                    console.log('enter');
+                    _this2.loginMethod();
+                }
+            });
+        }
+    }, {
         key: 'loginBtnHandler',
         value: function loginBtnHandler() {
-            var _this2 = this;
+            var _this3 = this;
 
             $('#loginBtn').off('click').on('click', function (e) {
                 e.preventDefault();
 
-                _this2.loginMethod();
+                _this3.loginMethod();
             });
         }
     }, {
