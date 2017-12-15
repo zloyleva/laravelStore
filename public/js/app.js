@@ -18206,8 +18206,11 @@ var CreateOrderModule = function (_ApiModule) {
                 data: $('#create-order-form').serialize(),
                 url: this.apisendDataUrl,
                 success: function success(response) {
-                    $('#loadToCreateOrder').remove();
-                    window.location.replace(response.redirectUrl);
+                    if (response.redirectUrl) {
+                        $('#loadToCreateOrder').remove();
+                        window.location.replace(response.redirectUrl);
+                    }
+                    //todo add broker order
                 }
             });
         }

@@ -45,6 +45,8 @@ class OrdersController extends Controller
 
             Log::info('send mail');
 
+            $order->createOrderFile(Auth::user(), $result);
+
 			return $this->jsonResponse([
 				'result'=>$result,
 				'message'=>'order Created',

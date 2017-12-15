@@ -14,3 +14,4 @@ composer.lock
 /storage/price/price.json
 /public/images/*.jpeg
 docker.log
+/storage/orders/*.json
