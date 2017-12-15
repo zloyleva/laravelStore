@@ -99,8 +99,13 @@ class Order extends Model
         $orderFileName = $result['orderInstance']['id'].'_order.json';
 
         // todo add queue for create files
-        Storage::disk('orders_dir')->put($orderFileName, $dataToJson);
+        try{
+            Storage::disk('orders_dir')->put($orderFileName, $dataToJson);
 
-        Storage::disk('ftp')->put('/orders/old/'.$orderFileName, $dataToJson);
+            Storage::disk('ftp')->put('/orders/old/'.$orderFileName, $dataToJson);
+        }catch (\Exception $e){
+
+        }
+
     }
 }
