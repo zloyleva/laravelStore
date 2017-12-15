@@ -7,7 +7,17 @@ export class LoginModule extends ApiModule {
 
         this.loginBtnHandler();
         this.checkForm();
+        this.submitLoginForEnter();
     };
+
+    submitLoginForEnter(){
+        $('#password').on('keypress', e=>{
+            if (e.keyCode == 13) {
+                console.log('enter');
+                this.loginMethod();
+            }
+        });
+    }
 
     loginBtnHandler(){
         $('#loginBtn').off('click').on('click', e => {
