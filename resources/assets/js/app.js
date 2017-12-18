@@ -12,7 +12,8 @@ const page = require('page');
 import {PageModule} from './store/pages';
 import {CartModule} from './cart/cart';
 import {MyProfileModule} from './users/my_profile';
-import {AdminModule} from './admin/admin';
+import {ManagersModule} from './admin/managers';
+import {AddUserModule} from './admin/add-user';
 import {LoginModule} from './auth/login';
 import {RegisterModule} from './auth/register';
 
@@ -25,7 +26,8 @@ $(document).ready(() => {
     page('/cart', () => new CartModule());
     page('/my_profile', () => new MyProfileModule());
 
-    page('/admin*', () => new AdminModule());
+    page('/admin/managers', () => new ManagersModule());
+    page('/admin/users/create', () => new AddUserModule());
 
     page();
     page.stop();

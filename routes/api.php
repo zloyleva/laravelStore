@@ -24,6 +24,8 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/my_profile/data', [ 'as'=>'my_profile.update_data', 'uses'=>'MyProfileController@updateMyProfileData']);
     Route::post('/my_profile/password', [ 'as'=>'my_profile.update_data', 'uses'=>'MyProfileController@updateMyProfilePassword']);
 
+    Route::post( '/users/{id}', [ 'as' => 'users.update', 'uses' => 'UsersController@updateUser' ] );
+
     Route::post( '/managers', [ 'as' => 'managers', 'uses' => 'ManagersController@store' ] ); // Add ADMIN middleware
     Route::post( '/users', [ 'as' => 'managers', 'uses' => 'UsersController@store' ] ); // Add ADMIN middleware
 

@@ -39,8 +39,9 @@ Route::group( [ 'middleware' => [ 'auth', 'admin' ], 'prefix' => 'admin', 'as' =
 
 	Route::get( '/products', [ 'as' => 'addProducts', 'uses' => 'AdminDashboardController@addProducts' ] );
 
-	Route::get( '/users', [ 'as' => 'users', 'uses' => 'AdminDashboardController@usersList' ] );
-	Route::get( '/users/new', [ 'as' => 'users.new', 'uses' => 'UsersController@newUser' ] );
+	Route::get( '/users', [ 'as' => 'users.index', 'uses' => 'AdminDashboardController@usersList' ] );
+	Route::get( '/users/create', [ 'as' => 'users.create', 'uses' => 'UsersController@createUser' ] );
+	Route::get( '/users/{id}/edit', [ 'as' => 'users.edit', 'uses' => 'UsersController@editUser' ] );
 
 	Route::get( '/managers', [ 'as' => 'managers', 'uses' => 'AdminDashboardController@managersList' ] );
 

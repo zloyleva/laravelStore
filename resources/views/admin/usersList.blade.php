@@ -4,7 +4,7 @@
 <div class="container usersList">
     <h1>Users list</h1>
     <div class="addUserSection">
-        <a href="/admin/users/new" class="btn btn-primary">Add new User</a>
+        <a href="{{ route('admin.users.create')  }}" class="btn btn-primary">Add new User</a>
     </div>
 </div>
 <div class="container">
@@ -18,11 +18,8 @@
                             <th class="js-column-order" data-column="flname">User first, last name</th>
                             <th class="js-column-order" data-column="name">Username</th>
                             <th class="js-column-order" data-column="email">Email</th>
-                            <th class="js-column-order" data-column="status">Role</th>
                             <th class="js-column-order" data-column="status">Price type</th>
                             <th class="js-column-order" data-column="status">Manager</th>
-                            <th class="js-column-order" data-column="status">Phone</th>
-                            <th class="js-column-order" data-column="status">Address</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -33,13 +30,10 @@
                                 data-row="{{$user->fname}} {{$user->lname}}">{{$user->fname}} {{$user->lname}}</td>
                             <td class="js-name" data-row="{{$user->name}}">{{$user->name}}</td>
                             <td class="js-email" data-row="{{$user->email}}">{{$user->email}}</td>
-                            <td class="js-role" data-row="{{$user->role}}">{{$user->role}}</td>
 
                             <td class="js-price_type" data-row="{{$user->price_type}}">{{$priceTypeList[$user->price_type-1]['description']}}</td>
 
                             <td class="js-phone" data-row="{{$user->manager->id}}">{{$user->manager->name}}</td>
-                            <td class="js-phone" data-row="{{$user->phone}}">{{$user->phone}}</td>
-                            <td class="js-address" data-row="{{$user->address}}">{{$user->address}}</td>
                         </tr>
                     @endforeach
                     </tbody>

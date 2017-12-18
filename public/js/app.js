@@ -10665,7 +10665,7 @@ function applyToTag(styleElement, obj) {
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(5);
-module.exports = __webpack_require__(47);
+module.exports = __webpack_require__(46);
 
 
 /***/ }),
@@ -10677,9 +10677,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__store_pages__ = __webpack_require__(31);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__cart_cart__ = __webpack_require__(34);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__users_my_profile__ = __webpack_require__(39);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__admin_admin__ = __webpack_require__(42);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__auth_login__ = __webpack_require__(45);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__auth_register__ = __webpack_require__(46);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__admin_managers__ = __webpack_require__(42);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__admin_add_user__ = __webpack_require__(43);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__auth_login__ = __webpack_require__(44);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__auth_register__ = __webpack_require__(45);
 window.$ = window.jQuery = __webpack_require__(1);
 console.log('App was loaded');
 
@@ -10698,13 +10699,14 @@ var page = __webpack_require__(27);
 
 
 
+
 $(document).ready(function () {
 
     page('/login', function () {
-        return new __WEBPACK_IMPORTED_MODULE_4__auth_login__["a" /* LoginModule */]();
+        return new __WEBPACK_IMPORTED_MODULE_5__auth_login__["a" /* LoginModule */]();
     });
     page('/register', function () {
-        return new __WEBPACK_IMPORTED_MODULE_5__auth_register__["a" /* RegisterModule */]();
+        return new __WEBPACK_IMPORTED_MODULE_6__auth_register__["a" /* RegisterModule */]();
     });
 
     page('/store*', function () {
@@ -10717,8 +10719,11 @@ $(document).ready(function () {
         return new __WEBPACK_IMPORTED_MODULE_2__users_my_profile__["a" /* MyProfileModule */]();
     });
 
-    page('/admin*', function () {
-        return new __WEBPACK_IMPORTED_MODULE_3__admin_admin__["a" /* AdminModule */]();
+    page('/admin/managers', function () {
+        return new __WEBPACK_IMPORTED_MODULE_3__admin_managers__["a" /* ManagersModule */]();
+    });
+    page('/admin/users/create', function () {
+        return new __WEBPACK_IMPORTED_MODULE_4__admin_add_user__["a" /* AddUserModule */]();
     });
 
     page();
@@ -18506,48 +18511,6 @@ var UserPasswordModule = function (_ApiModule) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AdminModule; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__managers__ = __webpack_require__(43);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__add_user__ = __webpack_require__(44);
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-
-
-
-
-var AdminModule = function (_ApiModule) {
-    _inherits(AdminModule, _ApiModule);
-
-    function AdminModule() {
-        _classCallCheck(this, AdminModule);
-
-        var _this = _possibleConstructorReturn(this, (AdminModule.__proto__ || Object.getPrototypeOf(AdminModule)).call(this));
-
-        console.log('Page: AdminModule');
-
-        if ($('h1').data('page') == 'admin_managers') {
-            new __WEBPACK_IMPORTED_MODULE_1__managers__["a" /* ManagersModule */]();
-        }
-        if ($('h1').data('page') == 'add_user') {
-            new __WEBPACK_IMPORTED_MODULE_2__add_user__["a" /* AddUserModule */]();
-        }
-
-        return _this;
-    }
-
-    return AdminModule;
-}(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
-
-/***/ }),
-/* 43 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ManagersModule; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -18600,7 +18563,7 @@ var ManagersModule = function (_ApiModule) {
 }(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
 
 /***/ }),
-/* 44 */
+/* 43 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -18655,6 +18618,10 @@ var AddUserModule = function (_ApiModule) {
                 url: this.apiUpdateUrl,
                 success: function success(response) {
                     console.log(response);
+                    if (typeof response.redirectUrl != 'undefined') {
+                        window.location.replace(response.redirectUrl);
+                        alertify.log.success('Успешно добавлен новый пользователь');
+                    }
                 }
             });
         }
@@ -18690,7 +18657,9 @@ var AddUserModule = function (_ApiModule) {
                         }
                     },
                     password: {
-                        required: true,
+                        required: function required(element) {
+                            return !$("#user_id").val();
+                        },
                         minlength: 3,
                         normalizer: function normalizer(value) {
                             return $.trim(value);
@@ -18735,7 +18704,7 @@ var AddUserModule = function (_ApiModule) {
 }(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
 
 /***/ }),
-/* 45 */
+/* 44 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -18840,7 +18809,7 @@ var LoginModule = function (_ApiModule) {
 }(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
 
 /***/ }),
-/* 46 */
+/* 45 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -18945,7 +18914,7 @@ var RegisterModule = function (_ApiModule) {
 }(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
 
 /***/ }),
-/* 47 */
+/* 46 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
