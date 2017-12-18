@@ -60,5 +60,6 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'api.token' => \App\Http\Middleware\ApiToken::class,
         'admin' => 'App\Http\Middleware\Admin',
+        'manager' => \App\Http\Middleware\Manager::class,
     ];
 }

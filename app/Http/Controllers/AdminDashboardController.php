@@ -49,7 +49,7 @@ class AdminDashboardController extends Controller
     {
         return view('admin.usersList', [
             'users' => $user->with('manager')->get(),
-            'priceTypeList' => $priceType->get()
+            'priceTypeList' => $priceType->get(),
         ]);
     }
 
@@ -67,12 +67,9 @@ class AdminDashboardController extends Controller
 
     public function showOrder(Request $request, Order $order){
         $data = $order->listOrderDataForUser($request);
-        if( Auth::user()->role == 'admin'){
-            return view('admin.showOrder',[
-                'order' => $data
-            ]);
-        }
-        return redirect('/');
+        return view('admin.showOrder',[
+            'order' => $data
+        ]);
     }
 
     public function getFile(UploadPrice $uploadPrice)

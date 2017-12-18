@@ -9,9 +9,7 @@
             Add new user
         @endif
     </h1>
-    @if(isset($user))
-        <a href="{{route('admin.users.index')}}" class="btn btn-success">Back</a>
-    @endif
+    <a href="{{route('admin.users.index')}}" class="btn btn-success">Back</a>
 </div>
 <div class="container">
     <div class="row">
@@ -31,35 +29,35 @@
                     <label for="InputLName">Last name</label>
                     <input name="lname" type="text" class="form-control" id="InputLName" placeholder="Enter last name" value="{{ $user->lname or ''  }}">
                 </div>
-                <div class="form-group">
+                <div class="form-group ">
                     <label for="InputEmail">Email</label>
-                    <input name="email" type="email" class="form-control
-                            @if(isset($user))
-                                hidden
-                            @endif
-                           " id="InputEmail" placeholder="Enter email"
-                           value="{{ $user->email or ''  }}">
+                    <input name="email" type="email" class="form-control {{ (isset($user) && Auth::user()->isManager() )?'hidden':'' }}"
+                           id="InputEmail" placeholder="Enter email" value="{{ $user->email or ''  }}">
+                    @if( isset($user) && Auth::user()->isManager() )
+                        <p>{{ $user->email or ''  }}</p>
+                    @endif
                 </div>
                 <div class="form-group">
                     <label for="InputPassword">Password</label>
                     <input name="password" type="text" class="form-control" id="InputPassword" placeholder="Enter password">
                 </div>
-                <div class="form-group">
+                <div class="form-group {{ ( Auth::user()->isManager() )?'hidden':'' }}">
                     <label for="InputRole">Role</label>
-                    <select name="role" class="form-control" id="InputRole" disabled>
-                        <option value="buyer" selected>buyer</option>
-                        <option value="manager">manager</option>
+                    <select name="role" class="form-control" id="InputRole" >
+                        @foreach($roles as $role)
+                            <option value="{{$role}}" {{ (isset($user) && $user->role == $role)?'selected':'' }}>
+                                {{$role}}
+                            </option>
+                        @endforeach
                     </select>
                 </div>
                 <div class="form-group">
                     <label for="InputPrice">Price type</label>
                     <select name="price_type" class="form-control" id="InputPrice">
                         @foreach($priceTypeList as $item)
-                            <option value="{{$item->id}}"
-                            @if(isset($user) && $user->price_type == $item->id)
-                                selected
-                            @endif
-                            >{{$item->description}}</option>
+                            <option value="{{$item->id}}" {{ (isset($user) && $user->price_type == $item->id)?'selected':'' }}>
+                                {{$item->description}}
+                            </option>
                         @endforeach
                     </select>
                 </div>
@@ -77,21 +75,15 @@
                     <label for="InputPrice">Manager</label>
                     <select name="manager_id" class="form-control" id="InputPrice">
                         @foreach($managerList as $manager)
-                            <option value="{{$manager->id}}"
-                            @if(isset($user) && $user->manager_id == $manager->id)
-                            selected
-                            @endif
-                            >{{$manager->name}}</option>
+                            <option value="{{$manager->id}}" {{ (isset($user) && $user->manager_id == $manager->id)?'selected':'' }}>
+                                {{$manager->name}}
+                            </option>
                         @endforeach
                     </select>
                 </div>
                 <div class="form-group">
                     <button id="addUser" class="btn btn-primary">
-                        @if(isset($user))
-                            Update user
-                        @else
-                            Add user
-                        @endif
+                        {{ (isset($user))?'Update user':'Add user' }}
                     </button>
                 </div>
             </form>

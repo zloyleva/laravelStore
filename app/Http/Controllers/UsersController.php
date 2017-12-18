@@ -16,6 +16,7 @@ class UsersController extends Controller
         return view('admin.usersNew', [
             'priceTypeList'=>$priceTypeList,
             'managerList'=>$managerList,
+            'roles'=>['user','manager','admin']
         ]);
     }
 
@@ -45,6 +46,7 @@ class UsersController extends Controller
             'user'=>$userEdit,
             'priceTypeList'=>$priceTypeList,
             'managerList'=>$managerList,
+            'roles'=>['user','manager','admin']
         ]);
     }
 

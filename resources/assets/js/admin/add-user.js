@@ -74,12 +74,12 @@ export class AddUserModule extends ApiModule {
                         return $.trim(value);
                     }
                 },
-                role: {
-                    minlength: 3,
-                    normalizer: function (value) {
-                        return $.trim(value);
-                    }
-                },
+                // role: {
+                //     minlength: 3,
+                //     normalizer: function (value) {
+                //         return $.trim(value);
+                //     }
+                // },
                 price_type: {
                     required: true,
                     digits: true,

@@ -53,9 +53,9 @@
                                     Привет, {{ Auth::user()->name }} <span class="caret"></span>
                                 </a>
 
-                                @if(Auth::user()->role == 'buyer' || Auth::user()->role == 'user')
+                                @if( Auth::user()->role == 'user')
                                     @include('layouts.menus.users-right-menu')
-                                @elseif(Auth::user()->role == 'admin')
+                                @elseif(Auth::user()->role == 'admin' || Auth::user()->role == 'manager')
                                     @include('layouts.menus.admins-right-menu')
                                 @endif
                             </li>

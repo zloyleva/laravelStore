@@ -26,7 +26,7 @@
                     <tbody>
                     @foreach($users as $user)
                         {{-- Hide admins --}}
-                        @if($user->role == 'admin')
+                        @if( ($user->role == 'admin' || $user->role == 'manager') && Auth::user()->role != 'admin' )
                             @continue
                         @endif
                         <tr class="js-row user-item" data-id="{{$user->id}}">
