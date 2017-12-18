@@ -31,9 +31,9 @@
                 </div>
                 <div class="form-group ">
                     <label for="InputEmail">Email</label>
-                    <input name="email" type="email" class="form-control {{ isset($user)?'hidden':'' }}"
+                    <input name="email" type="email" class="form-control {{ (isset($user) && Auth::user()->isManager() )?'hidden':'' }}"
                            id="InputEmail" placeholder="Enter email" value="{{ $user->email or ''  }}">
-                    @if( isset($user) )
+                    @if( isset($user) && Auth::user()->isManager() )
                         <p>{{ $user->email or ''  }}</p>
                     @endif
                 </div>
@@ -41,11 +41,14 @@
                     <label for="InputPassword">Password</label>
                     <input name="password" type="text" class="form-control" id="InputPassword" placeholder="Enter password">
                 </div>
-                <div class="form-group {{ isset($user)?'hidden':'' }}">
+                <div class="form-group {{ ( Auth::user()->isManager() )?'hidden':'' }}">
                     <label for="InputRole">Role</label>
-                    <select name="role" class="form-control" id="InputRole" disabled>
-                        <option value="buyer" selected>buyer</option>
-                        <option value="manager">manager</option>
+                    <select name="role" class="form-control" id="InputRole" >
+                        @foreach($roles as $role)
+                            <option value="{{$role}}" {{ (isset($user) && $user->role == $role)?'selected':'' }}>
+                                {{$role}}
+                            </option>
+                        @endforeach
                     </select>
                 </div>
                 <div class="form-group">

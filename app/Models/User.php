@@ -54,6 +54,11 @@ class User extends Authenticatable
         return $this->role === 'admin';
     }
 
+    public function isManager()
+    {
+        return $this->role === 'manager';
+    }
+
     public function addNewUser($data)
     {
         return User::create([
@@ -84,6 +89,11 @@ class User extends Authenticatable
             'phone' => $data['phone'] ?? '',
             'manager_id' => $data['manager_id'],
         ];
+
+        if($data['role']){
+            $args['role'] = $data['role'];
+        }
+
         $user->fill($args);
 
         return $user->save();
