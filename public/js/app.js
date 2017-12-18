@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 4);
+/******/ 	return __webpack_require__(__webpack_require__.s = 5);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -10662,35 +10662,180 @@ function applyToTag(styleElement, obj) {
 
 /***/ }),
 /* 4 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-__webpack_require__(5);
-module.exports = __webpack_require__(46);
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AddUserModule; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+
+
+var AddUserModule = function (_ApiModule) {
+    _inherits(AddUserModule, _ApiModule);
+
+    function AddUserModule() {
+        _classCallCheck(this, AddUserModule);
+
+        var _this = _possibleConstructorReturn(this, (AddUserModule.__proto__ || Object.getPrototypeOf(AddUserModule)).call(this));
+
+        console.log('Page: AddUserModule');
+
+        _this.apiUpdateUrl = '/api/users';
+        _this.createUserHandler();
+        _this.checkForm();
+        return _this;
+    }
+
+    _createClass(AddUserModule, [{
+        key: 'createUserHandler',
+        value: function createUserHandler() {
+            var _this2 = this;
+
+            $('#addUser').off('click').on('click', function (e) {
+                e.preventDefault();
+                console.log('createUserHandler');
+                if ($('#addUserForm').valid()) {
+                    _this2.createUserMethod();
+                } else {
+                    console.log('not valid');
+                }
+            });
+        }
+    }, {
+        key: 'createUserMethod',
+        value: function createUserMethod() {
+            this.post({
+                data: $('#addUserForm').serialize(),
+                url: this.apiUpdateUrl,
+                success: function success(response) {
+                    console.log(response);
+                    if (typeof response.redirectUrl != 'undefined') {
+                        window.location.replace(response.redirectUrl);
+                        alertify.log.success(response.message);
+                    }
+                }
+            });
+        }
+    }, {
+        key: 'checkForm',
+        value: function checkForm() {
+            $('#addUserForm').validate({
+                rules: {
+                    name: {
+                        required: true,
+                        minlength: 3,
+                        normalizer: function normalizer(value) {
+                            return $.trim(value);
+                        }
+                    },
+                    fname: {
+                        minlength: 3,
+                        normalizer: function normalizer(value) {
+                            return $.trim(value);
+                        }
+                    },
+                    lname: {
+                        minlength: 3,
+                        normalizer: function normalizer(value) {
+                            return $.trim(value);
+                        }
+                    },
+                    email: {
+                        required: true,
+                        email: true,
+                        normalizer: function normalizer(value) {
+                            return $.trim(value);
+                        }
+                    },
+                    password: {
+                        required: function required(element) {
+                            return !$("#user_id").val();
+                        },
+                        minlength: 3,
+                        normalizer: function normalizer(value) {
+                            return $.trim(value);
+                        }
+                    },
+                    role: {
+                        minlength: 3,
+                        normalizer: function normalizer(value) {
+                            return $.trim(value);
+                        }
+                    },
+                    price_type: {
+                        required: true,
+                        digits: true,
+                        max: 10,
+                        min: 1
+                    },
+                    address: {
+                        minlength: 5,
+                        normalizer: function normalizer(value) {
+                            return $.trim(value);
+                        }
+                    },
+                    phone: {
+                        minlength: 5,
+                        normalizer: function normalizer(value) {
+                            return $.trim(value);
+                        }
+                    },
+                    manager_id: {
+                        required: true,
+                        digits: true,
+                        max: 20,
+                        min: 1
+                    }
+                }
+            });
+        }
+    }]);
+
+    return AddUserModule;
+}(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
 
 /***/ }),
 /* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(6);
+module.exports = __webpack_require__(48);
+
+
+/***/ }),
+/* 6 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__store_pages__ = __webpack_require__(31);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__cart_cart__ = __webpack_require__(34);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__users_my_profile__ = __webpack_require__(39);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__admin_managers__ = __webpack_require__(42);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__admin_add_user__ = __webpack_require__(43);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__auth_login__ = __webpack_require__(44);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__auth_register__ = __webpack_require__(45);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__store_pages__ = __webpack_require__(32);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__cart_cart__ = __webpack_require__(35);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__users_my_profile__ = __webpack_require__(40);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__admin_managers__ = __webpack_require__(43);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__admin_users_list__ = __webpack_require__(44);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__admin_add_user__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__admin_edit_user__ = __webpack_require__(45);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__auth_login__ = __webpack_require__(46);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__auth_register__ = __webpack_require__(47);
 window.$ = window.jQuery = __webpack_require__(1);
 console.log('App was loaded');
 
-__webpack_require__(6);
 __webpack_require__(7);
-__webpack_require__(20);
+__webpack_require__(8);
+__webpack_require__(21);
 
-window.alertify = __webpack_require__(21);
+window.alertify = __webpack_require__(22);
 
-var page = __webpack_require__(27);
+var page = __webpack_require__(28);
+
+
 
 
 
@@ -10703,10 +10848,10 @@ var page = __webpack_require__(27);
 $(document).ready(function () {
 
     page('/login', function () {
-        return new __WEBPACK_IMPORTED_MODULE_5__auth_login__["a" /* LoginModule */]();
+        return new __WEBPACK_IMPORTED_MODULE_7__auth_login__["a" /* LoginModule */]();
     });
     page('/register', function () {
-        return new __WEBPACK_IMPORTED_MODULE_6__auth_register__["a" /* RegisterModule */]();
+        return new __WEBPACK_IMPORTED_MODULE_8__auth_register__["a" /* RegisterModule */]();
     });
 
     page('/store*', function () {
@@ -10722,8 +10867,14 @@ $(document).ready(function () {
     page('/admin/managers', function () {
         return new __WEBPACK_IMPORTED_MODULE_3__admin_managers__["a" /* ManagersModule */]();
     });
+    page('/admin/users', function () {
+        return new __WEBPACK_IMPORTED_MODULE_4__admin_users_list__["a" /* UserListModule */]();
+    });
+    page('/admin/users/:id/edit', function () {
+        return new __WEBPACK_IMPORTED_MODULE_6__admin_edit_user__["a" /* EditUserModule */]();
+    });
     page('/admin/users/create', function () {
-        return new __WEBPACK_IMPORTED_MODULE_4__admin_add_user__["a" /* AddUserModule */]();
+        return new __WEBPACK_IMPORTED_MODULE_5__admin_add_user__["a" /* AddUserModule */]();
     });
 
     page();
@@ -10731,7 +10882,7 @@ $(document).ready(function () {
 });
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -12340,11 +12491,10 @@ return $;
 }));
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // This file is autogenerated via the `commonjs` Grunt task. You can require() this file in a CommonJS environment.
-__webpack_require__(8)
 __webpack_require__(9)
 __webpack_require__(10)
 __webpack_require__(11)
@@ -12356,9 +12506,10 @@ __webpack_require__(16)
 __webpack_require__(17)
 __webpack_require__(18)
 __webpack_require__(19)
+__webpack_require__(20)
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports) {
 
 /* ========================================================================
@@ -12423,7 +12574,7 @@ __webpack_require__(19)
 
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports) {
 
 /* ========================================================================
@@ -12523,7 +12674,7 @@ __webpack_require__(19)
 
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports) {
 
 /* ========================================================================
@@ -12654,7 +12805,7 @@ __webpack_require__(19)
 
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports) {
 
 /* ========================================================================
@@ -12897,7 +13048,7 @@ __webpack_require__(19)
 
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports) {
 
 /* ========================================================================
@@ -13115,7 +13266,7 @@ __webpack_require__(19)
 
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports) {
 
 /* ========================================================================
@@ -13286,7 +13437,7 @@ __webpack_require__(19)
 
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports) {
 
 /* ========================================================================
@@ -13631,7 +13782,7 @@ __webpack_require__(19)
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports) {
 
 /* ========================================================================
@@ -14157,7 +14308,7 @@ __webpack_require__(19)
 
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports) {
 
 /* ========================================================================
@@ -14271,7 +14422,7 @@ __webpack_require__(19)
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports) {
 
 /* ========================================================================
@@ -14449,7 +14600,7 @@ __webpack_require__(19)
 
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports) {
 
 /* ========================================================================
@@ -14610,7 +14761,7 @@ __webpack_require__(19)
 
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports) {
 
 /* ========================================================================
@@ -14778,7 +14929,7 @@ __webpack_require__(19)
 
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports) {
 
 /**
@@ -15377,26 +15528,26 @@ __webpack_require__(19)
 
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
-__webpack_require__(22);
-__webpack_require__(24);
-__webpack_require__(26);
+__webpack_require__(23);
+__webpack_require__(25);
+__webpack_require__(27);
 
 // With no changes to the original source we must export from the global object
 module.exports = window.Alertify;
 
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(23);
+var content = __webpack_require__(24);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(3)(content, {});
@@ -15413,20 +15564,20 @@ if(false) {
 }
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)();
 exports.push([module.i, ".alertify-cover {\n  position: fixed;\n  z-index: 9999;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  right: 0; }\n\n.alertify-dialog {\n  position: fixed;\n  z-index: 99999;\n  top: 50px;\n  left: 50%;\n  opacity: 1;\n  -webkit-transition: all 500ms cubic-bezier(0.175, 0.885, 0.32, 1.275);\n  -moz-transition: all 500ms cubic-bezier(0.175, 0.885, 0.32, 1.275);\n  -ms-transition: all 500ms cubic-bezier(0.175, 0.885, 0.32, 1.275);\n  -o-transition: all 500ms cubic-bezier(0.175, 0.885, 0.32, 1.275);\n  transition: all 500ms cubic-bezier(0.175, 0.885, 0.32, 1.275); }\n\n.alertify-resetFocus {\n  border: 0;\n  clip: rect(0 0 0 0);\n  height: 1px;\n  width: 1px;\n  margin: -1px;\n  padding: 0;\n  overflow: hidden;\n  position: absolute; }\n\n.alertify-text {\n  margin-bottom: 15px;\n  width: 100%;\n  font-size: 100%;\n  -webkit-box-sizing: border-box;\n  -moz-box-sizing: border-box;\n  box-sizing: border-box; }\n\n.alertify-button,\n.alertify-button:hover,\n.alertify-button:active,\n.alertify-button:visited {\n  background: none;\n  text-decoration: none;\n  border: none;\n  line-height: 1.5;\n  font-size: 100%;\n  display: inline-block;\n  cursor: pointer;\n  margin-left: 5px; }\n\n.is-alertify-cover-hidden {\n  display: none; }\n\n.is-alertify-dialog-hidden {\n  opacity: 0;\n  display: none;\n  -webkit-transform: translate(0, -150px);\n  -moz-transform: translate(0, -150px);\n  -ms-transform: translate(0, -150px);\n  -o-transform: translate(0, -150px);\n  transform: translate(0, -150px); }\n\n:root * > .is-alertify-dialog-hidden {\n  display: block; }\n\n.alertify-logs {\n  position: fixed;\n  z-index: 9999; }\n\n.alertify-log {\n  position: relative;\n  display: block;\n  opacity: 0;\n  -webkit-transition: all 500ms cubic-bezier(0.175, 0.885, 0.32, 1.275);\n  -moz-transition: all 500ms cubic-bezier(0.175, 0.885, 0.32, 1.275);\n  -ms-transition: all 500ms cubic-bezier(0.175, 0.885, 0.32, 1.275);\n  -o-transition: all 500ms cubic-bezier(0.175, 0.885, 0.32, 1.275);\n  transition: all 500ms cubic-bezier(0.175, 0.885, 0.32, 1.275); }\n\n.is-alertify-log-showing {\n  opacity: 1; }\n\n.is-alertify-log-hidden {\n  opacity: 0; }\n", ""]);
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(25);
+var content = __webpack_require__(26);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(3)(content, {});
@@ -15443,14 +15594,14 @@ if(false) {
 }
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)();
 exports.push([module.i, ".alertify-dialog {\n  width: 550px;\n  margin-left: -275px;\n  background: #FFF;\n  border: 10px solid #333333;\n  border: 10px solid rgba(0, 0, 0, 0.7);\n  border-radius: 8px;\n  box-shadow: 0 3px 3px rgba(0, 0, 0, 0.3);\n  -webkit-background-clip: padding;\n  -moz-background-clip: padding;\n  background-clip: padding-box; }\n\n.alertify-dialog-inner {\n  padding: 25px; }\n\n.alertify-inner {\n  text-align: center; }\n\n.alertify-text {\n  border: 1px solid #cccccc;\n  padding: 10px;\n  border-radius: 4px; }\n\n.alertify-button {\n  border-radius: 4px;\n  color: #FFF;\n  font-weight: bold;\n  padding: 6px 15px;\n  text-decoration: none;\n  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);\n  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.5);\n  background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0));\n  background-image:    -moz-linear-gradient(top, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0));\n  background-image:     -ms-linear-gradient(top, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0));\n  background-image:      -o-linear-gradient(top, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0));\n  background-image:         linear-gradient(top, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0)); }\n\n.alertify-button:hover,\n.alertify-button:focus {\n  outline: none;\n  background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0));\n  background-image:    -moz-linear-gradient(top, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0));\n  background-image:     -ms-linear-gradient(top, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0));\n  background-image:      -o-linear-gradient(top, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0));\n  background-image:         linear-gradient(top, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0)); }\n\n.alertify-button:focus {\n  box-shadow: 0 0 10px #2b72d5; }\n\n.alertify-button:active {\n  position: relative;\n  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05); }\n\n.alertify-button-cancel,\n.alertify-button-cancel:hover,\n.alertify-button-cancel:focus {\n  background-color: #fe1a00;\n  border: 1px solid #cb1500; }\n\n.alertify-button-ok,\n.alertify-button-ok:hover,\n.alertify-button-ok:focus {\n  background-color: #5cb811;\n  border: 1px solid #45890d; }\n\n@media only screen and (max-width: 680px) {\n  .alertify-dialog {\n    width: 90%;\n    left: 5%;\n    margin: 0;\n    -webkit-box-sizing: border-box;\n    -moz-box-sizing: border-box;\n    box-sizing: border-box; } }\n.alertify-logs {\n  position: fixed;\n  z-index: 9999;\n  bottom: 8px;\n  right: 8px;\n  width: 300px; }\n\n.alertify-log {\n  margin-top: 8px;\n  right: -300px;\n  padding: 16px 16px;\n  border-radius: 4px; }\n\n.alertify-log-info {\n  color: #3A8ABF;\n  background: #D9EDF7;\n}\n\n.alertify-log-error {\n  color: #B94A48;\n  background: #F2DEDE;\n}\n\n.alertify-log-success {\n  color: #468847;\n  background: #DFF0D8;\n}\n\n.is-alertify-log-showing {\n  right: 0; }\n\n.is-alertify-log-hidden {\n  right: -300px; }\n", ""]);
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports) {
 
 /*!
@@ -16305,7 +16456,7 @@ var logs = (function () {
 })(this, document);
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16317,7 +16468,7 @@ var logs = (function () {
    * Module dependencies.
    */
 
-  var pathtoRegexp = __webpack_require__(29);
+  var pathtoRegexp = __webpack_require__(30);
 
   /**
    * Module exports.
@@ -16932,10 +17083,10 @@ var logs = (function () {
 
   page.sameOrigin = sameOrigin;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(28)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(29)))
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -17125,10 +17276,10 @@ process.umask = function() { return 0; };
 
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var isarray = __webpack_require__(30)
+var isarray = __webpack_require__(31)
 
 /**
  * Expose `pathToRegexp`.
@@ -17521,7 +17672,7 @@ function pathToRegexp (path, keys, options) {
 
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports) {
 
 module.exports = Array.isArray || function (arr) {
@@ -17530,14 +17681,14 @@ module.exports = Array.isArray || function (arr) {
 
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return PageModule; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__category__ = __webpack_require__(32);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__searchProduct__ = __webpack_require__(33);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__category__ = __webpack_require__(33);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__searchProduct__ = __webpack_require__(34);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -17652,7 +17803,7 @@ var PageModule = function (_ApiModule) {
 }(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -17695,7 +17846,7 @@ var CategoryModule = function (_ApiModule) {
 }(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -17813,16 +17964,16 @@ var SearchProductModule = function (_ApiModule) {
 }(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
 
 /***/ }),
-/* 34 */
+/* 35 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return CartModule; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__removeItemCart__ = __webpack_require__(35);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__destroyCart__ = __webpack_require__(36);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__changeItemAmountCart__ = __webpack_require__(37);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__createOrder__ = __webpack_require__(38);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__removeItemCart__ = __webpack_require__(36);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__destroyCart__ = __webpack_require__(37);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__changeItemAmountCart__ = __webpack_require__(38);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__createOrder__ = __webpack_require__(39);
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -17858,7 +18009,7 @@ var CartModule = function (_ApiModule) {
 }(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
 
 /***/ }),
-/* 35 */
+/* 36 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -17952,7 +18103,7 @@ var RemoveItemCartModule = function (_ApiModule) {
 }(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
 
 /***/ }),
-/* 36 */
+/* 37 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -18010,7 +18161,7 @@ var DestroyCartModule = function (_ApiModule) {
 }(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
 
 /***/ }),
-/* 37 */
+/* 38 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -18141,7 +18292,7 @@ var ChangeItemAmountModule = function (_ApiModule) {
 }(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
 
 /***/ }),
-/* 38 */
+/* 39 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -18256,14 +18407,14 @@ var CreateOrderModule = function (_ApiModule) {
 }(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
 
 /***/ }),
-/* 39 */
+/* 40 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MyProfileModule; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__user_data__ = __webpack_require__(40);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__user_password__ = __webpack_require__(41);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__user_data__ = __webpack_require__(41);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__user_password__ = __webpack_require__(42);
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -18295,7 +18446,7 @@ var MyProfileModule = function (_ApiModule) {
 }(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
 
 /***/ }),
-/* 40 */
+/* 41 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -18412,7 +18563,7 @@ var UserDataModule = function (_ApiModule) {
 }(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
 
 /***/ }),
-/* 41 */
+/* 42 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -18507,7 +18658,7 @@ var UserPasswordModule = function (_ApiModule) {
 }(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
 
 /***/ }),
-/* 42 */
+/* 43 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -18563,11 +18714,11 @@ var ManagersModule = function (_ApiModule) {
 }(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
 
 /***/ }),
-/* 43 */
+/* 44 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AddUserModule; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return UserListModule; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -18579,30 +18730,86 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 
 
-var AddUserModule = function (_ApiModule) {
-    _inherits(AddUserModule, _ApiModule);
+var UserListModule = function (_ApiModule) {
+    _inherits(UserListModule, _ApiModule);
 
-    function AddUserModule() {
-        _classCallCheck(this, AddUserModule);
+    function UserListModule() {
+        _classCallCheck(this, UserListModule);
 
-        var _this = _possibleConstructorReturn(this, (AddUserModule.__proto__ || Object.getPrototypeOf(AddUserModule)).call(this));
+        var _this = _possibleConstructorReturn(this, (UserListModule.__proto__ || Object.getPrototypeOf(UserListModule)).call(this));
 
-        console.log('Page: AddUserModule');
+        console.log('Page: UserListModule');
 
-        _this.apiUpdateUrl = '/api/users';
-        _this.createUserHandler();
-        _this.checkForm();
+        _this.selectUserHandle();
         return _this;
     }
 
-    _createClass(AddUserModule, [{
+    _createClass(UserListModule, [{
+        key: 'selectUserHandle',
+        value: function selectUserHandle() {
+            $('.js-row.user-item').off('click').on('click', function (e) {
+                // e.preventDefault();
+                // const el = e.target;
+                // const $row = $(el).closest('tr');
+
+            });
+        }
+    }]);
+
+    return UserListModule;
+}(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
+
+/***/ }),
+/* 45 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return EditUserModule; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__add_user__ = __webpack_require__(4);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+
+
+var EditUserModule = function (_AddUserModule) {
+    _inherits(EditUserModule, _AddUserModule);
+
+    function EditUserModule() {
+        _classCallCheck(this, EditUserModule);
+
+        var _this = _possibleConstructorReturn(this, (EditUserModule.__proto__ || Object.getPrototypeOf(EditUserModule)).call(this));
+
+        console.log('Page: EditUserModule');
+
+        _this.apiUpdateUserUrl = '/api/users';
+        return _this;
+    }
+
+    _createClass(EditUserModule, [{
         key: 'createUserHandler',
         value: function createUserHandler() {
             var _this2 = this;
 
             $('#addUser').off('click').on('click', function (e) {
                 e.preventDefault();
-                console.log('createUserHandler');
+                console.log('updateUserHandler');
+
+                var user_id = $('#user_id').val();
+                if (user_id > 0) {
+                    _this2.apiUpdateUrl = '';
+                    _this2.apiUpdateUrl = _this2.apiUpdateUserUrl + '/' + user_id;
+                } else {
+                    alertify.log.error('Ошибочные данные пользователя');
+                    return;
+                }
+
+                console.log(_this2.apiUpdateUrl);
+
                 if ($('#addUserForm').valid()) {
                     _this2.createUserMethod();
                 } else {
@@ -18610,101 +18817,13 @@ var AddUserModule = function (_ApiModule) {
                 }
             });
         }
-    }, {
-        key: 'createUserMethod',
-        value: function createUserMethod() {
-            this.post({
-                data: $('#addUserForm').serialize(),
-                url: this.apiUpdateUrl,
-                success: function success(response) {
-                    console.log(response);
-                    if (typeof response.redirectUrl != 'undefined') {
-                        window.location.replace(response.redirectUrl);
-                        alertify.log.success('Успешно добавлен новый пользователь');
-                    }
-                }
-            });
-        }
-    }, {
-        key: 'checkForm',
-        value: function checkForm() {
-            $('#addUserForm').validate({
-                rules: {
-                    name: {
-                        required: true,
-                        minlength: 3,
-                        normalizer: function normalizer(value) {
-                            return $.trim(value);
-                        }
-                    },
-                    fname: {
-                        minlength: 3,
-                        normalizer: function normalizer(value) {
-                            return $.trim(value);
-                        }
-                    },
-                    lname: {
-                        minlength: 3,
-                        normalizer: function normalizer(value) {
-                            return $.trim(value);
-                        }
-                    },
-                    email: {
-                        required: true,
-                        email: true,
-                        normalizer: function normalizer(value) {
-                            return $.trim(value);
-                        }
-                    },
-                    password: {
-                        required: function required(element) {
-                            return !$("#user_id").val();
-                        },
-                        minlength: 3,
-                        normalizer: function normalizer(value) {
-                            return $.trim(value);
-                        }
-                    },
-                    role: {
-                        minlength: 3,
-                        normalizer: function normalizer(value) {
-                            return $.trim(value);
-                        }
-                    },
-                    price_type: {
-                        required: true,
-                        digits: true,
-                        max: 10,
-                        min: 1
-                    },
-                    address: {
-                        minlength: 5,
-                        normalizer: function normalizer(value) {
-                            return $.trim(value);
-                        }
-                    },
-                    phone: {
-                        minlength: 5,
-                        normalizer: function normalizer(value) {
-                            return $.trim(value);
-                        }
-                    },
-                    manager_id: {
-                        required: true,
-                        digits: true,
-                        max: 20,
-                        min: 1
-                    }
-                }
-            });
-        }
     }]);
 
-    return AddUserModule;
-}(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
+    return EditUserModule;
+}(__WEBPACK_IMPORTED_MODULE_0__add_user__["a" /* AddUserModule */]);
 
 /***/ }),
-/* 44 */
+/* 46 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -18809,7 +18928,7 @@ var LoginModule = function (_ApiModule) {
 }(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
 
 /***/ }),
-/* 45 */
+/* 47 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -18914,7 +19033,7 @@ var RegisterModule = function (_ApiModule) {
 }(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
 
 /***/ }),
-/* 46 */
+/* 48 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin

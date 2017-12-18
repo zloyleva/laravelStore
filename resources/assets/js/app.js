@@ -13,7 +13,9 @@ import {PageModule} from './store/pages';
 import {CartModule} from './cart/cart';
 import {MyProfileModule} from './users/my_profile';
 import {ManagersModule} from './admin/managers';
+import {UserListModule} from './admin/users-list';
 import {AddUserModule} from './admin/add-user';
+import {EditUserModule} from './admin/edit-user';
 import {LoginModule} from './auth/login';
 import {RegisterModule} from './auth/register';
 
@@ -27,6 +29,8 @@ $(document).ready(() => {
     page('/my_profile', () => new MyProfileModule());
 
     page('/admin/managers', () => new ManagersModule());
+    page('/admin/users', () => new UserListModule());
+    page('/admin/users/:id/edit', () => new EditUserModule());
     page('/admin/users/create', () => new AddUserModule());
 
     page();

@@ -22,7 +22,8 @@ class UsersController extends Controller
     public function store(AddNewUserRequest $request, User $user){
         return $this->jsonResponse( [
             'user'=>$user->addNewUser($request->all()),
-            'redirectUrl'=>route('admin.users.index')
+            'redirectUrl'=>route('admin.users.index'),
+            'message'=>'Успешно добавлен новый пользователь',
         ]);
     }
 
@@ -47,8 +48,13 @@ class UsersController extends Controller
         ]);
     }
 
-    public function updateUser(Request $request){
-        print_r($request);
-        dd();
+
+    public function updateUser(Request $request, User $user){
+
+        return $this->jsonResponse( [
+            'user'=>$user->updateUser($request->all()),
+            'redirectUrl'=>route('admin.users.index'),
+            'message'=>'Успешно обновили данные пользователя',
+        ]);
     }
 }

@@ -69,4 +69,23 @@ class User extends Authenticatable
             'manager_id' => $data['manager_id'],
         ]);
     }
+
+    public function updateUser($data){
+
+        $user = $this->where('id', $data['user_id'])->firstOrFail();
+
+        $args = [
+            'name' => $data['name'],
+            'fname' => $data['fname'] ?? 'Unnamed',
+            'lname' => $data['lname'] ?? 'Unnamed',
+            'email' => $data['email'],
+            'price_type' => $data['price_type'] ?? 'price_user',
+            'address' => $data['address'] ?? '',
+            'phone' => $data['phone'] ?? '',
+            'manager_id' => $data['manager_id'],
+        ];
+        $user->fill($args);
+
+        return $user->save();
+    }
 }

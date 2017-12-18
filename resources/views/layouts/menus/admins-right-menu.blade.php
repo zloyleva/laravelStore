@@ -2,8 +2,7 @@
 
     <li><a href="{{ route('admin.ordersList') }}">Orders list</a></li>
     <li><a href="{{ route('admin.users.index') }}">Users list</a></li>
-    <li><a href="{{ route('admin.managers') }}">Managers list</a></li>
-    <li><a href="{{ route('admin.addProducts') }}">Add products</a></li>
+    {{--<li><a href="{{ route('admin.managers') }}">Managers list</a></li>--}}
     <li>
         <a href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();">Logout</a>
 

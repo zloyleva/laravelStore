@@ -9,6 +9,9 @@
             Add new user
         @endif
     </h1>
+    @if(isset($user))
+        <a href="{{route('admin.users.index')}}" class="btn btn-success">Back</a>
+    @endif
 </div>
 <div class="container">
     <div class="row">
@@ -30,7 +33,12 @@
                 </div>
                 <div class="form-group">
                     <label for="InputEmail">Email</label>
-                    <input name="email" type="email" class="form-control" id="InputEmail" placeholder="Enter email" value="{{ $user->email or ''  }}">
+                    <input name="email" type="email" class="form-control
+                            @if(isset($user))
+                                hidden
+                            @endif
+                           " id="InputEmail" placeholder="Enter email"
+                           value="{{ $user->email or ''  }}">
                 </div>
                 <div class="form-group">
                     <label for="InputPassword">Password</label>

@@ -30,7 +30,7 @@ export class AddUserModule extends ApiModule {
                 console.log(response);
                 if(typeof (response.redirectUrl) != 'undefined'){
                     window.location.replace(response.redirectUrl);
-                    alertify.log.success('Успешно добавлен новый пользователь');
+                    alertify.log.success(response.message);
                 }
             },
         });

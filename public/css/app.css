@@ -8672,6 +8672,14 @@ button.close {
   background-color: rgba(0, 0, 0, 0.7);
 }
 
+.js-row.user-item {
+  cursor: pointer;
+}
+
+.js-row.user-item:hover {
+  background-color: #adadad;
+}
+
 input.error {
   border-color: #f00;
 }
