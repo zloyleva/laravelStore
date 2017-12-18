@@ -28,6 +28,10 @@ export class AddUserModule extends ApiModule {
             url: this.apiUpdateUrl,
             success: response => {
                 console.log(response);
+                if(typeof (response.redirectUrl) != 'undefined'){
+                    window.location.replace(response.redirectUrl);
+                    alertify.log.success(response.message);
+                }
             },
         });
     }
@@ -62,7 +66,9 @@ export class AddUserModule extends ApiModule {
                     }
                 },
                 password: {
-                    required: true,
+                    required: function(element) {
+                        return !$("#user_id").val();
+                    },
                     minlength: 3,
                     normalizer: function (value) {
                         return $.trim(value);
