@@ -102,7 +102,7 @@ class Order extends Model
         try{
             Storage::disk('orders_dir')->put($orderFileName, $dataToJson);
 
-            Storage::disk('ftp')->put('/orders/old/'.$orderFileName, $dataToJson);
+            Storage::disk('ftp')->put('/orders/'.$orderFileName, $dataToJson);
         }catch (\Exception $e){
 
         }
