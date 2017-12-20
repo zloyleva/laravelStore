@@ -17,6 +17,9 @@
 // Import User List styles
 @import "user-list";
 
+// Import Footer styles
+@import "footer";
+
 //Validation
 input.error{
     border-color: #f00;
@@ -260,34 +263,5 @@ ul.pagination{
     align-items: center;
     h1{
         flex: 1;
-    }
-}
-
-
-footer{
-    background-color: #fff;
-    //color: #fff;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    border-top: 1px solid #d3e0e9;
-    .container{
-        .row{
-            .section_logo{
-                display: flex;
-                flex-direction: column;
-                a.navbar-brand{
-                    height: auto;
-                    padding-bottom: 0;
-                    padding-left: 0;
-                    img{
-                        height: 100px;
-                    }
-                }
-                h3{
-                    margin-top: 10px;
-                    font-size: 18px;
-                }
-            }
-        }
     }
 }

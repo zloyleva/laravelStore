@@ -10,6 +10,15 @@
                 </div>
                 <div class="col-sm-3 col-md-3 col-lg-3 section_info">
                     <h4>Информация</h4>
+                    <hr>
+                    <div class="social-block">
+                        <h4>Мы в соц сетях</h4>
+                        <div class="social-links">
+                            <a href="https://www.youtube.com/channel/UCOOea210zpznMtVYYwjn-DA"><i class="fa fa-youtube" aria-hidden="true"></i></a>
+                            <a href=""><i class="fa fa-vk" aria-hidden="true"></i></a>
+                            <a href="https://www.facebook.com/dom.kancelyarii/"><i class="fa fa-facebook-official" aria-hidden="true"></i></a>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-sm-3 col-md-3 col-lg-3 section_contacts">
                     <h4>Контакты</h4>
