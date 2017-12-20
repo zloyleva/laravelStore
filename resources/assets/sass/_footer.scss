@@ -1,0 +1,44 @@
+footer{
+  background-color: #fff;
+  //color: #fff;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-top: 1px solid #d3e0e9;
+  .container{
+    .row{
+      .section_logo{
+        display: flex;
+        flex-direction: column;
+        a.navbar-brand{
+          height: auto;
+          padding-bottom: 0;
+          padding-left: 0;
+          img{
+            height: 100px;
+          }
+        }
+        h3{
+          margin-top: 10px;
+          font-size: 18px;
+        }
+      }
+      .section_info{
+        .social-block{
+          .social-links{
+            display: flex;
+            align-items: center;
+            a{
+              font-size: 26px;
+              display: flex;
+              height: 34px;
+              width: 34px;
+              text-decoration: none;
+              align-items: center;
+              justify-content: center;
+            }
+          }
+        }
+      }
+    }
+  }
+}
