@@ -95,7 +95,7 @@ class Order extends Model
             ];
         }
 
-        $dataToJson = json_encode($jsonOrder);
+        $dataToJson = json_encode($jsonOrder, JSON_UNESCAPED_UNICODE);
         $orderFileName = $result['orderInstance']['id'].'_order.json';
 
         // todo add queue for create files
