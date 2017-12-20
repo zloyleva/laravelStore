@@ -18,7 +18,7 @@
                 </ul>
             </div>
             <div class="col-sm-12 col-md-8 col-lg-8">
-                @foreach( $products as $product)
+                @forelse( $products as $product)
                     <div id="{{$product->id}}" class="js-row product_item ">
                         <div class="row">
                             <div class="col-sm-3 col-md-3 col-lg-3 section_thumbnail">
@@ -36,7 +36,13 @@
                             </div>
                         </div>
                     </div>
-                @endforeach
+                @empty
+                    <div>
+                        <div class="row">
+                            <p>Нет товаров для отображения</p>
+                        </div>
+                    </div>
+                @endforelse
                 <div id="pagination_link" class="col-sm-12 col-md-12 col-lg-12">{{$products->appends($searchParams)->links()}}</div>
             </div>
         </div>
