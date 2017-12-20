@@ -26,7 +26,13 @@ class SearchProductsController extends Controller
 	    $categories = $category->categoryHandler($collection,$parent_id,$slug);
 	    $request->searchData = $category->getSearchCategory()??null;
 
-	    $pageName =  'Страница поиска. Вы искали "' . $request->input($request->input('inputData')) . '"';
+	    // Check input data for exist
+	    if( $request->input('inputData') != null ){
+            $pageName =  'Страница поиска. Вы искали "' . $request->input($request->input('inputData')) . '"';
+        }else{
+            $pageName = 'Магазин';
+        }
+
 
 	    return view('store.index', [
 			    'pageName'=>$pageName,

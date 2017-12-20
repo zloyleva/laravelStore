@@ -76,7 +76,7 @@ class OrdersController extends Controller
      */
     public function showOrder(Request $request, Order $order){
         $data = $order->listOrderDataForUser($request);
-        if( Auth::user()->id == $data->user_id || Auth::user()->role == 'admin'){
+        if( $data && (Auth::user()->id == $data->user_id || Auth::user()->role == 'admin') ){
             return view('orders.show',[
                 'order' => $data
             ]);

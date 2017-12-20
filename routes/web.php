@@ -29,8 +29,8 @@ Route::group( [ 'middleware' => [ 'auth' ] ], function () {
 
 Route::group( [ 'middleware' => [ 'auth' ], 'prefix' => 'orders', 'as' => 'orders.' ], function () {
 	Route::post( '/create', [ 'as' => 'create', 'uses' => 'OrdersController@createOrder' ] );
-	Route::get( '/list', [ 'as' => 'list', 'uses' => 'OrdersController@listOrders' ] );
-	Route::get( '/show/{id}', [ 'as' => 'show', 'uses' => 'OrdersController@showOrder' ] );
+	Route::get( '/', [ 'as' => 'list', 'uses' => 'OrdersController@listOrders' ] );
+	Route::get( '/{id}', [ 'as' => 'show', 'uses' => 'OrdersController@showOrder' ] );
 } );
 
 Route::group( [ 'middleware' => [ 'auth', 'manager' ], 'prefix' => 'admin', 'as' => 'admin.' ], function () {

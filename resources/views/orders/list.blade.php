@@ -25,7 +25,7 @@
                 <td>{{$order->created_at}}</td>
                 <td>{{$order->status}}</td>
                 <td>{{$order->total}}</td>
-                <td><a href="/orders/show/{{$order->id}}"><i class="fa fa-files-o" aria-hidden="true"></i> Показать детали заказа</a></td>
+                <td><a href="/orders/{{$order->id}}"><i class="fa fa-files-o" aria-hidden="true"></i> Показать детали заказа</a></td>
             </tr>
           @endforeach
 
