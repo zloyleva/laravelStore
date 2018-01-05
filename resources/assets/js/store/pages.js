@@ -62,6 +62,7 @@ export class PageModule extends ApiModule {
                 alertify.log.success('Продукт ' + response.name + ' добавлен в корзину');
             },
         });
+
     };
 
     addProductToCartBtnHandler() {

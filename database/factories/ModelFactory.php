@@ -7,14 +7,14 @@ use App\Models\Order;
 
 $factory->define(User::class, function (Faker $faker) {
     return [
-        'name' => 'Test',
+        'name' => $faker->name,
         'email' => $faker->unique()->safeEmail,
         'password' => Hash::make('123456'),
         'fname' => 'Unnamed',
         'lname' => 'Unnamed',
         'role' => 'user',
         'price_type' => 1,
-        'address' => '',
+        'address' => $faker->address,
         'manager_id' => 1,
     ];
 });
