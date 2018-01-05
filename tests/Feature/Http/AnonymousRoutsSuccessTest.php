@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Http;
 
 use Tests\TestCase;
 use Tests\ApiEnv;
@@ -86,6 +86,11 @@ class AnonymousRoutsSuccessTest extends TestCase
     public function testAdminOrdersPage()
     {
         $this->get('/admin/orders')->assertStatus(302);
+    }
+
+    public function testAdminProductsPage()
+    {
+        $this->get('/admin/products')->assertStatus(302);
     }
 
     public function testAdminUsersPage()

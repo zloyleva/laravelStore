@@ -13,10 +13,6 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
 Route::group(['middleware' => ['auth:api']], function () {
     Route::post('store/addtocart', [ 'as'=>'store.addtocart', 'uses'=>'CartController@addToCart']);
     Route::post('order', [ 'as'=>'store.order', 'uses'=>'OrdersController@createOrder']);
@@ -24,9 +20,8 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('/my_profile/data', [ 'as'=>'my_profile.update_data', 'uses'=>'MyProfileController@updateMyProfileData']);
     Route::post('/my_profile/password', [ 'as'=>'my_profile.update_data', 'uses'=>'MyProfileController@updateMyProfilePassword']);
 
+    Route::post( '/managers', [ 'as' => 'managers.store', 'uses' => 'ManagersController@store' ] ); // Add ADMIN middleware
+    Route::post( '/users', [ 'as' => 'user.store', 'uses' => 'UsersController@store' ] ); // Add ADMIN middleware
     Route::post( '/users/{id}', [ 'as' => 'users.update', 'uses' => 'UsersController@updateUser' ] );
-
-    Route::post( '/managers', [ 'as' => 'managers', 'uses' => 'ManagersController@store' ] ); // Add ADMIN middleware
-    Route::post( '/users', [ 'as' => 'managers', 'uses' => 'UsersController@store' ] ); // Add ADMIN middleware
 
 });
