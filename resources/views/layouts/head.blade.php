@@ -10,6 +10,16 @@
 
     <title>Дом канцелярии | {{$product->name or ''}}</title>
 
+    @isset($og)
+    <!-- Start Open Graph Meta data -->
+    <meta property="og:title" content="{{$og['title']}}" />
+    <meta property="og:type" content="article" />
+    <meta property="og:description" content="{{$og['description']}}"/>
+    <meta property="og:url" content="{{ url()->current() }}" />
+    <meta property="og:image" content="{{$og['image']}}" />
+    <!-- End Open Graph Meta data -->
+    @endisset
+
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/font-awesome.min.css') }}" rel="stylesheet">
