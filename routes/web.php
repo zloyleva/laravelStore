@@ -45,6 +45,10 @@ Route::group( [ 'middleware' => [ 'auth', 'manager' ], 'prefix' => 'admin', 'as'
 
 	Route::get( '/managers', [ 'as' => 'managers', 'uses' => 'AdminDashboardController@managersList' ] );
 
+	Route::get( '/notes', [ 'as' => 'notes.index', 'uses' => 'NotesController@notesIndex' ] );
+	Route::get( '/notes/create', [ 'as' => 'notes.create', 'uses' => 'NotesController@notesCreate' ] );
+	Route::post( '/notes', [ 'as' => 'notes.store', 'uses' => 'NotesController@notesStore' ] );
+
 	Route::get( '/get_file', [ 'as' => 'get_file', 'uses' => 'AdminDashboardController@getFile' ] );
 	Route::get( '/queue_method', [ 'as' => 'get_file', 'uses' => 'AdminDashboardController@queueMethod' ] );
 	Route::get( '/send_email', [ 'as' => 'send_email', 'uses' => 'AdminDashboardController@sendEmail' ] );
