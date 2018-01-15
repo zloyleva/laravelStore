@@ -17,6 +17,7 @@
                             <a href="https://www.youtube.com/channel/UCOOea210zpznMtVYYwjn-DA"><i class="fa fa-youtube" aria-hidden="true"></i></a>
                             <a href=""><i class="fa fa-vk" aria-hidden="true"></i></a>
                             <a href="https://www.facebook.com/dom.kancelyarii/"><i class="fa fa-facebook-official" aria-hidden="true"></i></a>
+                            <a href="https://www.instagram.com/dom.kancelyarii/"><i class="fa fa-instagram" aria-hidden="true"></i></a>
                         </div>
                     </div>
                 </div>
