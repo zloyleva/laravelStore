@@ -18,7 +18,7 @@ class PagesController extends Controller
     public function home(){
 //        return view('welcome');
         //todo: new year redirect
-        return redirect('store/category/novogodnie-tovary');
+        return redirect('store');
     }
 
     public function myProfile(PriceType $price_type){
