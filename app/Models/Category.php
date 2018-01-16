@@ -75,7 +75,7 @@ class Category extends Model
 		    $category = 'unCategory';
 		    $parent_id = 0;
 	    }
-      $categoryInstance = $this->firstOrCreate(['name' => $category, 'parent_id' => $parent_id, 'slug' => str_slug($category,'-')]);
+      $categoryInstance = $this->firstOrCreate(['name' => $category, 'parent_id' => $parent_id, 'slug' => str_slug($category . " " . $parent_id,'-')]);
       return $categoryInstance->id;
     }
 
