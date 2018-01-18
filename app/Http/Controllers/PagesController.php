@@ -29,4 +29,40 @@ class PagesController extends Controller
 		    ]
 	    );
     }
+
+    public function load_price(){
+
+        $title = "Розничная";
+        $link = "http://localhost/1";
+        if(Auth::check()){
+            switch (Auth::user()->price_type) {
+                case 1:
+                    $title = "Розничная";
+                    $link = "";
+                    break;
+                case 2:
+                    $title = "Оптовая #3";
+                    $link = "";
+                    break;
+                case 3:
+                    $title = "Оптовая #8";
+                    $link = "";
+                    break;
+                case 4:
+                    $title = "Диллерская";
+                    $link = "";
+                    break;
+                case 5:
+                    $title = "VIP";
+                    $link = "";
+                    break;
+            }
+        }
+
+        return view('pages.load_price', ['title'=>$title, 'link'=>$link]);
+    }
+
+    public function contacts(){
+        return view('pages.contacts');
+    }
 }
