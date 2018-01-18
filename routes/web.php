@@ -9,6 +9,8 @@
 Route::get( '/', [ 'as' => 'home', 'uses' => 'PagesController@home' ] );
 Route::get( '/how_to_buy', [ 'as' => 'how_to_buy', 'uses' => 'PagesController@howToBuy' ] );
 Route::get( '/delivery', [ 'as' => 'delivery', 'uses' => 'PagesController@delivery' ] );
+Route::get( '/load_price', [ 'as' => 'load_price', 'uses' => 'PagesController@load_price' ] );
+Route::get( '/contacts', [ 'as' => 'contacts', 'uses' => 'PagesController@contacts' ] );
 
 Route::get( '/store', [ 'as' => 'store', 'uses' => 'ProductsController@store' ] );
 Route::get( '/store/category/{slug}', [ 'as' => 'category', 'uses' => 'ProductsController@store' ] );
