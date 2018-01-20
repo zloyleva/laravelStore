@@ -33,28 +33,28 @@ class PagesController extends Controller
     public function load_price(){
 
         $title = "Розничная";
-        $link = "http://localhost/1";
+        $link = "https://drive.google.com/file/d/1eLJn9gyqMXpCUPSUZ2kHXvn6KOjEqMeE/view";
         if(Auth::check()){
             switch (Auth::user()->price_type) {
                 case 1:
                     $title = "Розничная";
-                    $link = "";
+                    $link = "https://drive.google.com/file/d/1eLJn9gyqMXpCUPSUZ2kHXvn6KOjEqMeE/view";
                     break;
                 case 2:
                     $title = "Оптовая #3";
-                    $link = "";
+                    $link = "https://drive.google.com/file/d/1BVPwl71lTGVH3mBQpz1XQLv1sjRparbH/view";
                     break;
                 case 3:
                     $title = "Оптовая #8";
-                    $link = "";
+                    $link = "https://drive.google.com/file/d/1HDjzEaJ2EaOuejUhI0BGtni1xFHmWUyf/view";
                     break;
                 case 4:
                     $title = "Диллерская";
-                    $link = "";
+                    $link = "https://drive.google.com/file/d/1XZ6ERlKPx8r7B7G4FGQOu_BkCGCshiII/view";
                     break;
                 case 5:
                     $title = "VIP";
-                    $link = "";
+                    $link = "https://drive.google.com/file/d/1DmPlQRhnrhddFdR_0QKDv3XotktQPmX_/view";
                     break;
             }
         }
