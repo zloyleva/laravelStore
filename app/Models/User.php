@@ -79,6 +79,8 @@ class User extends Authenticatable
 
         $user = $this->where('id', $data['user_id'])->firstOrFail();
 
+
+
         $args = [
             'name' => $data['name'],
             'fname' => $data['fname'] ?? 'Unnamed',
@@ -92,6 +94,9 @@ class User extends Authenticatable
 
         if($data['role']){
             $args['role'] = $data['role'];
+        }
+        if(isset($data['password']) && strlen($data['password'])>6){
+            $args['password'] = bcrypt($data['password']);
         }
 
         $user->fill($args);
