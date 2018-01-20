@@ -29,8 +29,8 @@ export class AddUserModule extends ApiModule {
             success: response => {
                 console.log(response);
                 if(typeof (response.redirectUrl) != 'undefined'){
-                    window.location.replace(response.redirectUrl);
                     alertify.log.success(response.message);
+                    window.location.replace(response.redirectUrl);
                 }
             },
         });
