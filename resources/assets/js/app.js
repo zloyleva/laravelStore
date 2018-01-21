@@ -18,6 +18,8 @@ import {AddUserModule} from './admin/add-user';
 import {EditUserModule} from './admin/edit-user';
 import {LoginModule} from './auth/login';
 import {RegisterModule} from './auth/register';
+import {AddNoteModule} from './admin/add-note';
+import {ContactsModule} from './pages/contacts';
 
 $(document).ready(() => {
 
@@ -27,11 +29,13 @@ $(document).ready(() => {
     page('/store*', () => new PageModule());
     page('/cart', () => new CartModule());
     page('/my_profile', () => new MyProfileModule());
+    page('/contacts', () => new ContactsModule());
 
     page('/admin/managers', () => new ManagersModule());
     page('/admin/users', () => new UserListModule());
     page('/admin/users/:id/edit', () => new EditUserModule());
     page('/admin/users/create', () => new AddUserModule());
+    page('/admin/notes/create', () => new AddNoteModule());
 
     page();
     page.stop();

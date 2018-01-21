@@ -10806,7 +10806,7 @@ var AddUserModule = function (_ApiModule) {
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(6);
-module.exports = __webpack_require__(48);
+module.exports = __webpack_require__(49);
 
 
 /***/ }),
@@ -10824,6 +10824,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__admin_edit_user__ = __webpack_require__(45);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__auth_login__ = __webpack_require__(46);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__auth_register__ = __webpack_require__(47);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__admin_add_note__ = __webpack_require__(48);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__pages_contacts__ = __webpack_require__(59);
 window.$ = window.jQuery = __webpack_require__(1);
 console.log('App was loaded');
 
@@ -10834,6 +10836,8 @@ __webpack_require__(21);
 window.alertify = __webpack_require__(22);
 
 var page = __webpack_require__(28);
+
+
 
 
 
@@ -10863,6 +10867,9 @@ $(document).ready(function () {
     page('/my_profile', function () {
         return new __WEBPACK_IMPORTED_MODULE_2__users_my_profile__["a" /* MyProfileModule */]();
     });
+    page('/contacts', function () {
+        return new __WEBPACK_IMPORTED_MODULE_10__pages_contacts__["a" /* ContactsModule */]();
+    });
 
     page('/admin/managers', function () {
         return new __WEBPACK_IMPORTED_MODULE_3__admin_managers__["a" /* ManagersModule */]();
@@ -10875,6 +10882,9 @@ $(document).ready(function () {
     });
     page('/admin/users/create', function () {
         return new __WEBPACK_IMPORTED_MODULE_5__admin_add_user__["a" /* AddUserModule */]();
+    });
+    page('/admin/notes/create', function () {
+        return new __WEBPACK_IMPORTED_MODULE_9__admin_add_note__["a" /* AddNoteModule */]();
     });
 
     page();
@@ -19034,9 +19044,188 @@ var RegisterModule = function (_ApiModule) {
 
 /***/ }),
 /* 48 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AddNoteModule; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+
+
+var AddNoteModule = function (_ApiModule) {
+    _inherits(AddNoteModule, _ApiModule);
+
+    function AddNoteModule() {
+        _classCallCheck(this, AddNoteModule);
+
+        var _this = _possibleConstructorReturn(this, (AddNoteModule.__proto__ || Object.getPrototypeOf(AddNoteModule)).call(this));
+
+        console.log('Page: AddNoteModule');
+
+        _this.init();
+        _this.addNewNoteHandler();
+        _this.checkForm();
+        // this.uploadImage();
+        return _this;
+    }
+
+    _createClass(AddNoteModule, [{
+        key: 'init',
+        value: function init() {
+            var _this2 = this;
+
+            tinymce.init({
+                selector: '#inputContent',
+                plugins: [' ', 'image code link lists  textcolor colorpicker', 'table hr charmap emoticons fullscreen visualchars visualblocks nonbreaking pagebreak preview', "autolink "],
+                menubar: false,
+                theme: 'modern',
+
+                toolbar1: "undo redo | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | styleselect formatselect fontselect fontsizeselect",
+                toolbar2: "bullist numlist | outdent indent blockquote |  link unlink anchor image media | forecolor backcolor colorpicker",
+                toolbar3: "table | hr removeformat | subscript superscript | charmap emoticons | fullscreen | visualchars visualblocks nonbreaking pagebreak | preview code",
+
+                image_title: true,
+
+                automatic_uploads: true,
+
+                images_upload_url: 'upload_img',
+
+                file_picker_types: 'image',
+
+                file_picker_callback: function file_picker_callback(callback, value, meta) {
+                    var input = document.createElement('input');
+                    input.setAttribute('type', 'file');
+                    input.setAttribute('accept', 'image/*');
+
+                    input.onchange = function (e) {
+                        var file = e.target.files[0];
+                        var formData = new FormData();
+                        formData.append("image_upload", file);
+                        _this2.uploadImage(formData, callback);
+
+                        // var reader = new FileReader();
+                        // reader.readAsDataURL(file);
+                        // reader.onload = ()=>{
+                        //     this.uploadImage({'image_64': reader.result});
+                        // };
+
+                    };
+
+                    input.click();
+                }
+            });
+        }
+    }, {
+        key: 'apiHeaders',
+        value: function apiHeaders() {
+            return {
+                'authorization': 'Bearer ' + this.apiToken,
+                'accept': 'application/json',
+                // 'content-type': 'multipart/form-data',//'application/x-www-form-urlencoded',
+                'cache-control': 'no-cache',
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            };
+        }
+    }, {
+        key: 'uploadImage',
+        value: function uploadImage(formData, callback) {
+            this.post({
+                url: '/admin/notes/upload_img',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function success(response) {
+                    console.log(response);
+                    callback(response.location, {
+                        title: response.title,
+                        width: response.width,
+                        height: response.height
+                    });
+                }
+            });
+        }
+    }, {
+        key: 'addNewNoteHandler',
+        value: function addNewNoteHandler() {
+            $('#add_new_note').off('submit').on('submit', function (e) {
+                e.preventDefault();
+                console.log('addNewNoteHandler');
+
+                if ($('#add_new_note').valid()) {
+                    e.target.submit();
+                } else {
+                    console.log('not valid');
+                }
+            });
+        }
+    }, {
+        key: 'checkForm',
+        value: function checkForm() {
+            $('#add_new_note').validate({
+                rules: {
+                    title: {
+                        required: true,
+                        minlength: 3,
+                        normalizer: function normalizer(value) {
+                            return $.trim(value);
+                        }
+                    }
+                }
+            });
+        }
+    }]);
+
+    return AddNoteModule;
+}(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
+
+/***/ }),
+/* 49 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 50 */,
+/* 51 */,
+/* 52 */,
+/* 53 */,
+/* 54 */,
+/* 55 */,
+/* 56 */,
+/* 57 */,
+/* 58 */,
+/* 59 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ContactsModule; });
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var ContactsModule = function () {
+    function ContactsModule() {
+        _classCallCheck(this, ContactsModule);
+
+        console.log('Page: ContactsModule');
+
+        this.init();
+    }
+
+    _createClass(ContactsModule, [{
+        key: 'init',
+        value: function init() {}
+    }]);
+
+    return ContactsModule;
+}();
 
 /***/ })
 /******/ ]);
