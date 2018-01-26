@@ -25,9 +25,8 @@ class AdminDashboardController extends Controller
      */
     public function listOrders(Order $order)
     {
-        $orderList = $order->showOrdersAdmin();
         return view('admin.listOrders', [
-            'orderList' => $orderList
+            'orderList' => $order->showOrdersAdmin()
         ]);
     }
 

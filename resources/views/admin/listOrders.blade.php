@@ -17,8 +17,10 @@
                         <th class="js-column-order" data-column="name">First and last name</th>
                         <th class="js-column-order" data-column="created_at">Created</th>
                         <th class="js-column-order" data-column="status">status</th>
+                        <th class="js-column-order" data-column="manager">Manager</th>
+                        <th class="js-column-order" data-column="price_type">Price type</th>
                         <th class="js-column-order" data-column="total">total</th>
-                        <th class="js-column-order"></th>
+                        <th class="js-column-order">Action</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -26,10 +28,12 @@
                         <tr>
                             <td data-count="{{$loop->iteration}}">{{$loop->iteration}}</td>
                             <td data-id="{{$item->id}}">{{$item->id}}</td>
-                            <td data-user="{{$item->user->name}}">{{$item->user->name}}</td>
-                            <td>{{$item->user->fname}} {{$item->user->lname}}</td>
+                            <td data-user="{{$item->name}}">{{$item->name}}</td>
+                            <td>{{$item->fname}} {{$item->lname}}</td>
                             <td data-created_at="{{$item->created_at}}">{{$item->created_at}}</td>
                             <td data-status="{{$item->status}}">{{$item->status}}</td>
+                            <td data-manager="{{$item->manager}}">{{$item->manager}}</td>
+                            <td data-price_type="{{$item->price_type}}">{{$item->description}}</td>
                             <td data-total="{{$item->total}}">{{$item->total}}</td>
                             <td><a href="/admin/orders/{{$item->id}}">Details</a></td>
                         </tr>
