@@ -59,7 +59,12 @@ class Order extends Model
 
     public function showOrdersAdmin()
     {
-        return $this->with('user')->paginate(20);
+        return $this
+            ->select('orders.id','users.name','users.fname','users.lname','orders.created_at','orders.status','orders.total','managers.name as manager','users.price_type','price_types.description')
+            ->leftJoin('users', 'user_id', '=', 'users.id')
+            ->leftJoin('managers', 'users.manager_id', '=', 'managers.id')
+            ->leftJoin('price_types', 'users.price_type', '=', 'price_types.id')
+            ->paginate(20);
     }
 
     public function listOrderDataForUser($request)
