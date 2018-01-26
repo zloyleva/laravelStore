@@ -64,6 +64,7 @@ class Order extends Model
             ->leftJoin('users', 'user_id', '=', 'users.id')
             ->leftJoin('managers', 'users.manager_id', '=', 'managers.id')
             ->leftJoin('price_types', 'users.price_type', '=', 'price_types.id')
+            ->latest()
             ->paginate(20);
     }
 
