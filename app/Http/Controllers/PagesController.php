@@ -33,28 +33,28 @@ class PagesController extends Controller
     public function load_price(){
 
         $title = "Розничная";
-        $link = "https://drive.google.com/file/d/1eLJn9gyqMXpCUPSUZ2kHXvn6KOjEqMeE/view";
+        $link = "https://drive.google.com/file/d/1Os0K1gutfWN1ZhIhf9GH-d0FBFWe8GVV/view";
         if(Auth::check()){
             switch (Auth::user()->price_type) {
                 case 1:
                     $title = "Розничная";
-                    $link = "https://drive.google.com/file/d/1eLJn9gyqMXpCUPSUZ2kHXvn6KOjEqMeE/view";
+                    $link = "https://drive.google.com/file/d/1Os0K1gutfWN1ZhIhf9GH-d0FBFWe8GVV/view";
                     break;
                 case 2:
                     $title = "Оптовая #3";
-                    $link = "https://drive.google.com/file/d/1BVPwl71lTGVH3mBQpz1XQLv1sjRparbH/view";
+                    $link = "https://drive.google.com/file/d/18rnfAK5jVSL2FN3yIhgbyFkI5tcRypXr/view";
                     break;
                 case 3:
                     $title = "Оптовая #8";
-                    $link = "https://drive.google.com/file/d/1HDjzEaJ2EaOuejUhI0BGtni1xFHmWUyf/view";
+                    $link = "https://drive.google.com/file/d/1wqzFY6mhMAwUHCGzlDLWK7koRBxL-rbt/view";
                     break;
                 case 4:
                     $title = "Диллерская";
-                    $link = "https://drive.google.com/file/d/1XZ6ERlKPx8r7B7G4FGQOu_BkCGCshiII/view";
+                    $link = "https://drive.google.com/file/d/18rnfAK5jVSL2FN3yIhgbyFkI5tcRypXr/view";
                     break;
                 case 5:
                     $title = "VIP";
-                    $link = "https://drive.google.com/file/d/1DmPlQRhnrhddFdR_0QKDv3XotktQPmX_/view";
+                    $link = "https://drive.google.com/file/d/1IJ6H33ku_1F2ABljlMiqO_0s0D9SGY3Z/view";
                     break;
             }
         }
