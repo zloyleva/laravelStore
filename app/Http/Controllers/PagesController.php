@@ -42,7 +42,7 @@ class PagesController extends Controller
                     break;
                 case 2:
                     $title = "Оптовая #3";
-                    $link = "https://drive.google.com/file/d/18rnfAK5jVSL2FN3yIhgbyFkI5tcRypXr/view";
+                    $link = "https://drive.google.com/file/d/1eY3Qr2V9T1cCQ2Np8l29NB8YaGzLJ6Yc/view";
                     break;
                 case 3:
                     $title = "Оптовая #8";
