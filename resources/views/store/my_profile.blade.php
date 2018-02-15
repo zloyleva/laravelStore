@@ -42,7 +42,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="userAddress" class="col-sm-2 control-label">Адресс доставки</label>
+                        <label for="userAddress" class="col-sm-2 control-label">Адрес доставки</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" id="address" name="address" value="{{ old('address')??$user->address }}">
                             {{--https://developers.google.com/places/web-service/policies--}}

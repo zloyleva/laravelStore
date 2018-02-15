@@ -8,7 +8,7 @@
                     </div>
                     <div class="info-phones">
                         <a href="tel:0617699545"><i class="fa fa-phone" aria-hidden="true"></i> (061) 769 95 45</a>,
-                        <a href="tel:0676180545"><i class="fa fa-mobile" aria-hidden="true"></i> (067) 618 05 45</a>
+                        <a href="tel:0676180545"><i class="fa fa-mobile" aria-hidden="true"></i> (067) 618 05 46</a>
                     </div>
                 </div>
             </div>
