@@ -26,8 +26,8 @@
                     <div>г. Запорожье,</div>
                     <div>ул. Деповская 72</div>
                     <hr>
-                    <div><a href="tel:0617699545"><i class="fa fa-phone" aria-hidden="true"></i> (061) 769 95 45 /c 8:30 до 19:00/</a></div>
-                    <div><a href="tel:0676180545"><i class="fa fa-mobile" aria-hidden="true"></i> (067) 618 05 46 /без выходных/</a></div>
+                    <div><a href="tel:0617699546"><i class="fa fa-phone" aria-hidden="true"></i> (061) 769 95 46 /c 8:30 до 19:00/</a></div>
+                    <div><a href="tel:0676180545"><i class="fa fa-mobile" aria-hidden="true"></i> (067) 618 05 45 /без выходных/</a></div>
                 </div>
             </div>
         </div>
