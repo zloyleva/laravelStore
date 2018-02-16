@@ -16,7 +16,7 @@
         <div class="container logo-bar">
             <!-- Branding Image -->
             <a class="navbar-brand" href="{{ url('/') }}">
-                <img src="/images_service/logo.png" alt="">
+                <img src="{{ url('/') }}/images_service/logo.png" alt="">
             </a>
             <h3 class="logo-description">Самый крупный в Запорожье супермаркет-склад канцелярии, школьной продукции, детских игрушек и новогодних товаров</h3>
         </div>
