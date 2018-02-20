@@ -18,7 +18,7 @@ import {AddUserModule} from './admin/add-user';
 import {EditUserModule} from './admin/edit-user';
 import {LoginModule} from './auth/login';
 import {RegisterModule} from './auth/register';
-import {AddNoteModule} from './admin/add-note';
+// import {AddNoteModule} from './admin/add-note';
 import {ContactsModule} from './pages/contacts';
 
 $(document).ready(() => {

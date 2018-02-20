@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
+use Telegram\Bot\Laravel\Facades\Telegram;
 
 class RegisterController extends Controller
 {
@@ -50,8 +51,8 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
+            'name' => 'required|string|max:255|unique:users',
+            'email' => 'email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
         ]);
     }
@@ -68,6 +69,10 @@ class RegisterController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
+
+            'fname' => $data['fname'],
+            'phone' => $data['phone'],
+            'address' => $data['address'],
         ]);
     }
 
@@ -82,6 +87,24 @@ class RegisterController extends Controller
         $this->validator($request->all())->validate();
 
         event(new Registered($user = $this->create($request->all())));
+
+        if($user){
+
+            $message =  "На сайте зарегистрировался новый пользователь.\n";
+            $message .= "Тип покупателя <b>{$request->userType}</b>\n";
+            $message .= "ФИО <b>{$user->fname}</b>\n";
+            $message .= "Логин <b>{$user->name}</b>\n";
+            $message .= "Пароль <b>{$request->password}</b>\n";
+            $message .= "Телефон <b>{$user->phone}</b>\n";
+            $message .= "Город <b>{$user->address}</b>\n";
+            $message .= "Email <b>{$user->email}</b>\n";
+
+            Telegram::sendMessage([
+                'chat_id' => env('GROUP_ID2'),
+                'text' => $message,
+                'parse_mode'=>'HTML'
+            ]);
+        }
 
         $this->guard()->login($user);
         $this->guard()->user()->generateToken();
