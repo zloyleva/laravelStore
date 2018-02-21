@@ -10936,6 +10936,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__auth_login__ = __webpack_require__(46);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__auth_register__ = __webpack_require__(47);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__pages_contacts__ = __webpack_require__(48);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__facebook__ = __webpack_require__(60);
 window.$ = window.jQuery = __webpack_require__(1);
 console.log('App was loaded');
 
@@ -10957,6 +10958,7 @@ var page = __webpack_require__(28);
 
 
 // import {AddNoteModule} from './admin/add-note';
+
 
 
 $(document).ready(function () {
@@ -10999,6 +11001,8 @@ $(document).ready(function () {
 
     page();
     page.stop();
+
+    new __WEBPACK_IMPORTED_MODULE_10__facebook__["a" /* Facebook */]();
 });
 
 /***/ }),
@@ -19192,6 +19196,7 @@ var RegisterModule = function (_ApiModule) {
 
             $('#registerBtn').off('click').on('click', function (e) {
                 e.preventDefault();
+                FB.AppEvents.logEvent("Register New user");
                 _this2.registerMethod();
             });
         }
@@ -19325,6 +19330,49 @@ var ContactsModule = function () {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 50 */,
+/* 51 */,
+/* 52 */,
+/* 53 */,
+/* 54 */,
+/* 55 */,
+/* 56 */,
+/* 57 */,
+/* 58 */,
+/* 59 */,
+/* 60 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Facebook; });
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Facebook = function Facebook() {
+    _classCallCheck(this, Facebook);
+
+    window.fbAsyncInit = function () {
+        FB.init({
+            appId: '386151865185880',
+            xfbml: true,
+            version: 'v2.10'
+        });
+
+        FB.AppEvents.logPageView();
+    };
+
+    (function (d, s, id) {
+        var js,
+            fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) {
+            return;
+        }
+        js = d.createElement(s);js.id = id;
+        js.src = "https://connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+    })(document, 'script', 'facebook-jssdk');
+};
 
 /***/ })
 /******/ ]);

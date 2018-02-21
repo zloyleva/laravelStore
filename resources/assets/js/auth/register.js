@@ -12,6 +12,7 @@ export class RegisterModule extends ApiModule {
     registerBtnHandler(){
         $('#registerBtn').off('click').on('click', e => {
            e.preventDefault();
+            FB.AppEvents.logEvent("Register New user");
            this.registerMethod();
         });
     }

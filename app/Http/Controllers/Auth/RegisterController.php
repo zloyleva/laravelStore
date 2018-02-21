@@ -98,6 +98,7 @@ class RegisterController extends Controller
             $message .= "Телефон <b>{$user->phone}</b>\n";
             $message .= "Город <b>{$user->address}</b>\n";
             $message .= "Email <b>{$user->email}</b>\n";
+            $message .= "Коментарий <b>{$request->comment}</b>\n";
 
             Telegram::sendMessage([
                 'chat_id' => env('GROUP_ID2'),
