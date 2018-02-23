@@ -8663,6 +8663,18 @@ button.close {
   display: flex;
 }
 
+.row .panel-body form .form-group .select_user_type input[type="radio"]:checked + label {
+  font-weight: bold;
+}
+
+.row .panel-body form .form-group .select_user_type label {
+  font-weight: normal;
+}
+
+.row .panel-body form .form-group .select_user_type label.error {
+  font-weight: bold;
+}
+
 .alertify-dialog {
   border: 1px solid rgba(0, 0, 0, 0.7) !important;
   border-radius: 0px !important;

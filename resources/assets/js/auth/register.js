@@ -1,9 +1,12 @@
 import {ApiModule} from '../api';
+import {Facebook} from '../facebook';
 
 export class RegisterModule extends ApiModule {
     constructor() {
         super();
         console.log('Page: RegisterModule');
+
+        new Facebook();
 
         this.registerBtnHandler();
         this.checkForm();
@@ -22,12 +25,16 @@ export class RegisterModule extends ApiModule {
             $('#registerForm').submit();
         }else {
             console.log('not valid Form');
+            alertify.log.error('Ошибка! Проверть данные, которые Вы ввели!');
         }
     }
 
     checkForm() {
         $('#registerForm').validate({
             rules: {
+                userType: {
+                    required: true,
+                },
                 fname: {
                     required: true,
                     minlength: 5,
@@ -44,7 +51,13 @@ export class RegisterModule extends ApiModule {
                 },
                 email: {
                     // required: true,
-                    email: true,
+                    // email: true,
+                    email: {
+                        depends: function(element) {
+                            console.log($(element).val().length);
+                            return $(element).val().length > 0;
+                        }
+                    },
                     normalizer: function (value) {
                         return $.trim(value);
                     }
@@ -73,7 +86,18 @@ export class RegisterModule extends ApiModule {
                     }
                 },
             },
+            errorPlacement: function(error, element) {
+                console.log(element.attr("name"));
+                if (element.attr("name") == "userType") {
+                    $("#insertErrorMessage").html(error);
+                } else {
+                    error.insertAfter(element);
+                }
+            },
             messages: {
+                userType: {
+                    required: "Выберите тип покупателя",
+                },
                 fname: {
                     required: this.requiredField,
                     minlength: this.minlengthField

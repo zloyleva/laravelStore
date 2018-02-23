@@ -12,25 +12,20 @@
                             {{ csrf_field() }}
 
                             <div class="form-group">
-                                <div class="col-md-6 col-md-offset-4">
-                                    <div class="radio">
-                                        <label>
-                                            <input type="radio" name="userType" value="Покупки для себя" checked>
-                                            Покупки для себя
-                                        </label>
+                                <div class="col-md-6 col-md-offset-4 select_user_type">
+                                    <div class="radio_item">
+                                        <input id="salesForSelf" type="radio" name="userType" value="Покупки для себя">
+                                        <label for="salesForSelf">Покупки для себя</label>
                                     </div>
-                                    <div class="radio">
-                                        <label>
-                                            <input type="radio" name="userType" value="Юридическое лицо">
-                                            Юридическое лицо
-                                        </label>
+                                    <div class="radio_item">
+                                        <input id="salesForUr" type="radio" name="userType" value="Юридическое лицо">
+                                        <label for="salesForUr">Юридическое лицо</label>
                                     </div>
-                                    <div class="radio">
-                                        <label>
-                                            <input type="radio" name="userType" value="Оптовый покупатель">
-                                            Оптовый покупатель
-                                        </label>
+                                    <div class="radio_item">
+                                        <input id="salesForOpt" type="radio" name="userType" value="Оптовый покупатель">
+                                        <label for="salesForOpt">Оптовый покупатель</label>
                                     </div>
+                                    <div id="insertErrorMessage"></div>
                                 </div>
                             </div>
 
