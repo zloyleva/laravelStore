@@ -1,0 +1,30 @@
+
+nav{
+  box-shadow: 0px 5px 11px 0px rgba(198, 80, 92, 0.27);
+  &.navbar{
+    min-height: unset;
+    border-color: #ffd1d1;
+  }
+  &.navbar-static-top {
+    border-width: 1px 0 1px;
+  }
+  .container{
+    .navbar-header{
+      display: flex;
+      justify-content: center;
+      button.navbar-toggle{
+        //float: none;
+        //display: flex;
+        //align-items: center;
+        //justify-content: center;
+        margin: 0;
+        border: none;
+        background-color: transparent;
+        width: 100%;
+        .menu-text{
+          margin-left: 10px;
+        }
+      }
+    }
+  }
+}

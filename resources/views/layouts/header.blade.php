@@ -1,11 +1,18 @@
 <body>
-    <div id="app">
+    <div id="app" class="header_container">
+        <div class="container-fluid">
+            <div class="row info-bar">
+                <div class="container">
+                    <b>г. Запорожье, ул. Деповская 72</b>
+                </div>
+            </div>
+        </div>
         <div class="container header_info">
             <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5 logo_section">
                     <!-- Branding Image -->
                     <a class="navbar-brand-link" href="{{ url('/') }}">
-                        <img src="{{ url('/') }}/images_service/logo-1.png" alt="">
+                        <img src="{{ url('/') }}/images_service/logo-shadow.png" alt="">
                     </a>
                 </div>
                 <div class="col-xs-12 col-sm-7 col-md-4 col-lg-4 contact_section">
