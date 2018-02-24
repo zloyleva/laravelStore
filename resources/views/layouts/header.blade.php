@@ -1,24 +1,40 @@
 <body>
     <div id="app">
-        <div class="container-fluid info-bar">
+        <div class="container header_info">
             <div class="row">
-                <div class="container top-bar">
-                    <div class="info-address">
-                        г. Запорожье, ул. Деповская 72
-                    </div>
+                <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5 logo_section">
+                    <!-- Branding Image -->
+                    <a class="navbar-brand-link" href="{{ url('/') }}">
+                        <img src="{{ url('/') }}/images_service/logo-1.png" alt="">
+                    </a>
+                </div>
+                <div class="col-xs-12 col-sm-7 col-md-4 col-lg-4 contact_section">
                     <div class="info-phones">
-                        <a href="tel:0617699546"><i class="fa fa-phone" aria-hidden="true"></i> (061) 769 95 46</a>,
-                        <a href="tel:0676180545"><i class="fa fa-mobile" aria-hidden="true"></i> (067) 618 05 45</a>
+                        <a href="tel:0617699546"><i class="fa fa-phone" aria-hidden="true"></i> (061) 769 95 46</a>
+                        <a href="tel:0676180545"><img src="{{ url('/') }}/images_service/kyivstar.png" alt=""></i> (067) 618 05 45</a>
+                    </div>
+                    <div class="cta">
+                        <button class="btn btn-cta">Заказать обратный звонок</button>
                     </div>
                 </div>
+                <div class="col-xs-12 col-sm-5 col-md-3 col-lg-3 login_cart">
+                    @guest
+                        <div class="login_menu">
+                            <div><a href="{{ route('login') }}"><i class="fa fa-sign-in" aria-hidden="true"></i> Вход</a></div>
+                            <div><a href="{{ route('register') }}"><i class="fa fa-user-plus" aria-hidden="true"></i> Регистрация</a></div>
+                        </div>
+                    @else
+                        <a href="{{route('cart')}}" class="header_cart"><i class="fa fa-shopping-cart" aria-hidden="true"></i><span class="cart_title">Корзина</span></a>
+                    @endguest
+                </div>
             </div>
-        </div>
-        <div class="container logo-bar">
-            <!-- Branding Image -->
-            <a class="navbar-brand" href="{{ url('/') }}">
-                <img src="{{ url('/') }}/images_service/logo.png" alt="">
-            </a>
-            <h3 class="logo-description">Самый крупный в Запорожье супермаркет-склад канцелярии, школьной продукции, детских игрушек и новогодних товаров</h3>
+            <hr>
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 logo_description_section">
+                    <h3 class="logo-description">Самый крупный в Запорожье супермаркет-склад канцелярии, школьной продукции, детских игрушек и новогодних товаров</h3>
+                </div>
+            </div>
+
         </div>
         <nav class="navbar navbar-default navbar-static-top">
             <div class="container">

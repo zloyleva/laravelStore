@@ -1,0 +1,134 @@
+.container-fluid.info-bar{
+  background-color: #636b6f;
+  color: #fff;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #000000;
+  .row{
+    .container.top-bar{
+      display: flex;
+      justify-content: space-between;
+      .info-phones{
+        a{
+          color: #fff;
+        }
+      }
+    }
+  }
+}
+
+.container.header_info{
+  .row{
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    .logo_section{
+      a.navbar-brand-link{
+        display: block;
+        text-align: center;
+        img{
+          max-width: 387px;
+          width: 100%;
+          height: auto;
+        }
+      }
+    }
+    .contact_section{
+      .info-phones{
+        display: flex;
+        flex-direction: column;
+        a{
+          font-size: 24px;
+          text-decoration: none;
+          img, i{
+            width: 30px;
+          }
+        }
+        @media (max-width: 768px){
+          flex-direction: row;
+          justify-content: space-around;
+          a{
+            font-size: 14px;
+            img, i{
+              width: 15px;
+            }
+          }
+        }
+      }
+      .cta{
+        margin-top: 10px;
+        .btn-cta{
+          width: 100%;
+          background-color: #f00;
+          border: 1px solid #f00;
+          color: #fff;
+          &:hover{
+            background-color: transparent;
+            color: #f00;
+          }
+        }
+      }
+    }
+    .login_cart{
+      login_menu{
+
+      }
+      .header_cart{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        color: #777;
+        text-decoration: none;
+        &:hover{
+          color: #f00;
+        }
+        i.fa-shopping-cart{
+          font-size: 30px;
+          color: #f00;
+        }
+      }
+    }
+  }
+  hr{
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  .row{
+    @media (max-width: 768px){
+      h3.logo-description{font-size: 16px;}
+    }
+    h3.logo-description{
+      margin-top: 0;
+      text-align: center;
+    }
+  }
+}
+
+nav{
+  &.navbar{
+    min-height: unset;
+  }
+  &.navbar-static-top {
+    border-width: 1px 0 1px;
+  }
+  .container{
+    .navbar-header{
+      display: flex;
+      justify-content: center;
+      button.navbar-toggle{
+        //float: none;
+        //display: flex;
+        //align-items: center;
+        //justify-content: center;
+        margin: 0;
+        border: none;
+        background-color: transparent;
+        width: 100%;
+        .menu-text{
+          margin-left: 10px;
+        }
+      }
+    }
+  }
+}

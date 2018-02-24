@@ -1,0 +1,19 @@
+.row{
+  .panel-body{
+    form{
+      .form-group{
+        .select_user_type{
+          input[type="radio"]:checked + label{
+            font-weight: bold;
+          }
+          label{
+            font-weight: normal;
+            &.error{
+              font-weight: bold;
+            }
+          }
+        }
+      }
+    }
+  }
+}
