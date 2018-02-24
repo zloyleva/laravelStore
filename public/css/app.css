@@ -8762,6 +8762,7 @@ button.close {
 .header_container .container.header_info .row .contact_section .info-phones a {
   font-size: 24px;
   text-decoration: none;
+  font-weight: bold;
 }
 
 .header_container .container.header_info .row .contact_section .info-phones a img,
@@ -8798,11 +8799,28 @@ button.close {
   background-color: #f00;
   border: 1px solid #f00;
   color: #fff;
+  margin-bottom: 10px;
 }
 
 .header_container .container.header_info .row .contact_section .cta .btn-cta:hover {
   background-color: transparent;
   color: #f00;
+}
+
+.header_container .container.header_info .row .login_cart .login_menu a {
+  width: 100%;
+  background-color: #4e4e4e;
+  border: 1px solid #4e4e4e;
+  color: #fff;
+}
+
+.header_container .container.header_info .row .login_cart .login_menu a:hover {
+  background-color: transparent;
+  color: #4e4e4e;
+}
+
+.header_container .container.header_info .row .login_cart .login_menu a:nth-child(2) {
+  margin-top: 10px;
 }
 
 .header_container .container.header_info .row .login_cart .header_cart {
@@ -8843,6 +8861,7 @@ button.close {
 .header_container .container.header_info .row h3.logo-description {
   margin-top: 0;
   text-align: center;
+  color: #2b0000;
 }
 
 nav {
@@ -9023,6 +9042,7 @@ a:hover {
   padding-left: 0;
   padding-right: 0;
   background-color: transparent;
+  font-size: 16px;
 }
 
 .container .text-line-through {
@@ -9086,7 +9106,8 @@ a:hover {
 }
 
 #category_menu ul li a.active {
-  background-color: #cbcbcb;
+  background-color: #f00;
+  color: #fff;
 }
 
 #category_menu ul li a.active ~ ul.sub_menu {

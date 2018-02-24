@@ -1,3 +1,16 @@
+
+
+@mixin set_button($button_color){
+  width: 100%;
+  background-color: $button_color;
+  border: 1px solid $button_color;
+  color: #fff;
+  &:hover{
+    background-color: transparent;
+    color: $button_color;
+  }
+}
+
 .header_container{
   background-image: url('/images_service/header_bg.jpg');
   background-size: cover;
@@ -48,6 +61,7 @@
           a{
             font-size: 24px;
             text-decoration: none;
+            font-weight: bold;
             img, i{
               width: 30px;
             }
@@ -66,20 +80,19 @@
         .cta{
           margin-top: 10px;
           .btn-cta{
-            width: 100%;
-            background-color: #f00;
-            border: 1px solid #f00;
-            color: #fff;
-            &:hover{
-              background-color: transparent;
-              color: #f00;
-            }
+            @include set_button(#f00);
+            margin-bottom: 10px;
           }
         }
       }
       .login_cart{
-        login_menu{
-
+        .login_menu{
+          a{
+            @include set_button(#4e4e4e);
+            &:nth-child(2){
+              margin-top: 10px;
+            }
+          }
         }
         .header_cart{
           display: flex;
@@ -108,6 +121,7 @@
       h3.logo-description{
         margin-top: 0;
         text-align: center;
+        color: #2b0000;
       }
     }
   }

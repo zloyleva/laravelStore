@@ -9,7 +9,7 @@
         </div>
         <div class="container header_info">
             <div class="row">
-                <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5 logo_section">
+                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 logo_section">
                     <!-- Branding Image -->
                     <a class="navbar-brand-link" href="{{ url('/') }}">
                         <img src="{{ url('/') }}/images_service/logo-shadow.png" alt="">
@@ -24,18 +24,17 @@
                         <button class="btn btn-cta">Заказать обратный звонок</button>
                     </div>
                 </div>
-                <div class="col-xs-12 col-sm-5 col-md-3 col-lg-3 login_cart">
+                <div class="col-xs-12 col-sm-5 col-md-4 col-lg-4 login_cart">
                     @guest
                         <div class="login_menu">
-                            <div><a href="{{ route('login') }}"><i class="fa fa-sign-in" aria-hidden="true"></i> Вход</a></div>
-                            <div><a href="{{ route('register') }}"><i class="fa fa-user-plus" aria-hidden="true"></i> Регистрация</a></div>
+                            <a class="btn" href="{{ route('login') }}"><i class="fa fa-sign-in" aria-hidden="true"></i> Вход</a>
+                            <a class="btn" href="{{ route('register') }}"><i class="fa fa-user-plus" aria-hidden="true"></i> Регистрация</a>
                         </div>
                     @else
                         <a href="{{route('cart')}}" class="header_cart"><i class="fa fa-shopping-cart" aria-hidden="true"></i><span class="cart_title">Корзина</span></a>
                     @endguest
                 </div>
             </div>
-            <hr>
             <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 logo_description_section">
                     <h3 class="logo-description">Самый крупный в Запорожье супермаркет-склад канцелярии, школьной продукции, детских игрушек и новогодних товаров</h3>
