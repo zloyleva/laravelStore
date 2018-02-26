@@ -88,7 +88,7 @@ var ApiModule = function () {
         this.maxlengthField = "Вы ввели слишком много символов";
         this.emailField = "Проверьте правильность Вашего Email";
         this.equalToField = 'Пароли не совпадают!';
-        this.digitsField = 'Неверный формат данных. Должны быть только цыфры.';
+        this.digitsField = 'Неверный формат данных. Должны быть только цифры.';
         this.maxValueField = 'Вы ввели слишком большое число';
         this.minValueField = 'Вы ввели слишком маленькое число';
     }
@@ -10917,7 +10917,7 @@ var AddUserModule = function (_ApiModule) {
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(6);
-module.exports = __webpack_require__(50);
+module.exports = __webpack_require__(51);
 
 
 /***/ }),
@@ -10936,6 +10936,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__auth_login__ = __webpack_require__(46);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__auth_register__ = __webpack_require__(47);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__pages_contacts__ = __webpack_require__(49);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__pages_CtaModule__ = __webpack_require__(62);
 window.$ = window.jQuery = __webpack_require__(1);
 console.log('App was loaded');
 
@@ -10958,7 +10959,7 @@ var page = __webpack_require__(28);
 
 // import {AddNoteModule} from './admin/add-note';
 
-// import {Facebook} from './facebook';
+
 
 $(document).ready(function () {
 
@@ -11001,6 +11002,7 @@ $(document).ready(function () {
     page();
     page.stop();
 
+    new __WEBPACK_IMPORTED_MODULE_10__pages_CtaModule__["a" /* CtaModule */]();
     // new Facebook();
 });
 
@@ -19383,10 +19385,170 @@ var ContactsModule = function () {
 }();
 
 /***/ }),
-/* 50 */
+/* 50 */,
+/* 51 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 52 */,
+/* 53 */,
+/* 54 */,
+/* 55 */,
+/* 56 */,
+/* 57 */,
+/* 58 */,
+/* 59 */,
+/* 60 */,
+/* 61 */,
+/* 62 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return CtaModule; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+
+
+var CtaModule = function (_ApiModule) {
+    _inherits(CtaModule, _ApiModule);
+
+    function CtaModule() {
+        _classCallCheck(this, CtaModule);
+
+        var _this = _possibleConstructorReturn(this, (CtaModule.__proto__ || Object.getPrototypeOf(CtaModule)).call(this));
+
+        console.log('Page: CtaModule');
+
+        _this.openCtaModalHandler();
+        _this.closeCtaModalHandler();
+        _this.hideCtaModalHandler();
+        _this.sendBtnHandler();
+        _this.checkForm();
+        return _this;
+    }
+
+    _createClass(CtaModule, [{
+        key: 'openCtaModalHandler',
+        value: function openCtaModalHandler() {
+            $('#cta_modal_open').off('click').on('click', function (e) {
+                e.preventDefault();
+                console.log('Click: CtaModule');
+
+                $('#modal_cta').addClass('open_modal');
+            });
+        }
+    }, {
+        key: 'closeCtaModalHandler',
+        value: function closeCtaModalHandler() {
+            var _this2 = this;
+
+            $('#close_modal').off('click').on('click', function (e) {
+                e.preventDefault();
+                console.log('Click: CtaModule Close');
+
+                _this2.cleanAndHideCtaModalHandler();
+            });
+        }
+    }, {
+        key: 'hideCtaModalHandler',
+        value: function hideCtaModalHandler() {
+            var _this3 = this;
+
+            $('#modal_cta').off('click').on('click', function (e) {
+                e.preventDefault();
+                if (event.target == event.currentTarget) {
+                    console.log('Click: CtaModule Close');
+
+                    _this3.cleanAndHideCtaModalHandler();
+                }
+            });
+        }
+    }, {
+        key: 'sendBtnHandler',
+        value: function sendBtnHandler() {
+            var _this4 = this;
+
+            $('#sendCta').off('click').on('click', function (e) {
+                e.preventDefault();
+                console.log('sendBtnHandler');
+                _this4.sendCtaMethod();
+            });
+        }
+    }, {
+        key: 'sendCtaMethod',
+        value: function sendCtaMethod() {
+
+            if ($('#ctaForm').valid()) {
+                console.log('valid Form');
+                // $('#ctaForm').submit();
+                this.post({
+                    data: $('#ctaForm').serialize(),
+                    url: 'api/send_cta',
+                    success: function success(response) {
+                        alertify.log.success('Значение поля успешно обновилось');
+                    }
+                });
+                this.cleanAndHideCtaModalHandler();
+            } else {
+                console.log('not valid Form');
+            }
+        }
+    }, {
+        key: 'cleanAndHideCtaModalHandler',
+        value: function cleanAndHideCtaModalHandler() {
+
+            $('#modal_cta').removeClass('open_modal');
+            $('#ctaForm input[name="name"]').val('');
+            $('#ctaForm input[name="phone"]').val('');
+        }
+    }, {
+        key: 'checkForm',
+        value: function checkForm() {
+            $('#ctaForm').validate({
+                rules: {
+                    name: {
+                        required: true,
+                        minlength: 3,
+                        normalizer: function normalizer(value) {
+                            return $.trim(value);
+                        }
+                    },
+                    phone: {
+                        required: true,
+                        number: true,
+                        rangelength: [10, 12],
+                        normalizer: function normalizer(value) {
+                            return $.trim(value);
+                        }
+                    }
+                },
+                messages: {
+                    name: {
+                        required: this.requiredField,
+                        minlength: this.minlengthField
+                    },
+                    phone: {
+                        rangelength: "Не верное количество символов в номере телефона",
+                        number: "Вводите только цифры!",
+                        required: this.requiredField,
+                        minlength: this.minlengthField
+                    }
+                }
+            });
+        }
+    }]);
+
+    return CtaModule;
+}(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
 
 /***/ })
 /******/ ]);

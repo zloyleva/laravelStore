@@ -42,7 +42,9 @@
       margin-top: 5px;
       display: flex;
       align-items: center;
-      flex-wrap: wrap;
+      @media (max-width: 991px){
+        flex-wrap: wrap;
+      }
       .logo_section{
         a.navbar-brand-link{
           display: block;

@@ -32,6 +32,28 @@
             </div>
         </div>
     </footer>
+
+    <div class="modal_cta" id="modal_cta">
+        <div class="modal_content">
+            <div class="control"><span id="close_modal">&times;</span></div>
+            <header>
+                <h4>Для заказа обратного звонка введите свое имя и телефон</h4>
+            </header>
+            <form action="" id="ctaForm">
+                <div class="form-group">
+                    <label for="inputName">Введите имя</label>
+                    <input name="name" type="text" class="form-control" id="inputName" placeholder="Имя">
+                </div>
+                <div class="form-group">
+                    <label for="inputPhone">Введите телефон</label>
+                    <input name="phone" type="tel" class="form-control" id="inputPhone" placeholder="Телефон">
+                </div>
+                <div class="form-group">
+                    <button id="sendCta" type="button" class="btn btn-cta">Отправить заявку</button>
+                </div>
+            </form>
+        </div>
+    </div>
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
 

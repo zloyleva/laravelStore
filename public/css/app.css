@@ -8734,8 +8734,13 @@ button.close {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  -ms-flex-wrap: wrap;
-      flex-wrap: wrap;
+}
+
+@media (max-width: 991px) {
+  .header_container .container.header_info .row {
+    -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+  }
 }
 
 .header_container .container.header_info .row .logo_section a.navbar-brand-link {
@@ -8953,6 +8958,66 @@ footer .container .row .section_info .social-block .social-links a {
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
+}
+
+.modal_cta {
+  display: none;
+  position: fixed;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 99999;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.modal_cta.open_modal {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.modal_cta .modal_content {
+  padding: 15px;
+  background-color: #f5f5f5;
+  width: 280px;
+  min-height: 300px;
+}
+
+.modal_cta .modal_content .control {
+  text-align: right;
+}
+
+.modal_cta .modal_content .control span {
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+  text-align: center;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.modal_cta .modal_content h4 {
+  margin-top: 0;
+}
+
+.modal_cta .modal_content .btn-cta {
+  width: 100%;
+  background-color: #f00;
+  border-color: #f00;
+  color: #fff;
+}
+
+.modal_cta .modal_content .btn-cta:hover {
+  background-color: transparent;
+  color: #f00;
 }
 
 input.error {

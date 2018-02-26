@@ -21,7 +21,7 @@
                         <a href="tel:0676180545"><img src="{{ url('/') }}/images_service/kyivstar.png" alt=""></i> (067) 618 05 45</a>
                     </div>
                     <div class="cta">
-                        <button class="btn btn-cta">Заказать обратный звонок</button>
+                        <button id="cta_modal_open" class="btn btn-cta">Заказать обратный звонок</button>
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-5 col-md-4 col-lg-4 login_cart">

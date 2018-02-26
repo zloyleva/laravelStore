@@ -25,3 +25,5 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post( '/users/{id}', [ 'as' => 'users.update', 'uses' => 'UsersController@updateUser' ] );
 
 });
+
+Route::post('send_cta', [ 'as'=>'notification.send_cta', 'uses'=>'NotificationController@send_cta']);

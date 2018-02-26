@@ -11,7 +11,7 @@ export class ApiModule {
         this.maxlengthField = "Вы ввели слишком много символов";
         this.emailField = "Проверьте правильность Вашего Email";
         this.equalToField = 'Пароли не совпадают!';
-        this.digitsField = 'Неверный формат данных. Должны быть только цыфры.';
+        this.digitsField = 'Неверный формат данных. Должны быть только цифры.';
         this.maxValueField = 'Вы ввели слишком большое число';
         this.minValueField = 'Вы ввели слишком маленькое число';
 

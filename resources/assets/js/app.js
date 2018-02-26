@@ -20,7 +20,7 @@ import {LoginModule} from './auth/login';
 import {RegisterModule} from './auth/register';
 // import {AddNoteModule} from './admin/add-note';
 import {ContactsModule} from './pages/contacts';
-// import {Facebook} from './facebook';
+import {CtaModule} from './pages/CtaModule';
 
 $(document).ready(() => {
 
@@ -41,5 +41,6 @@ $(document).ready(() => {
     page();
     page.stop();
 
+    new CtaModule();
     // new Facebook();
 });
