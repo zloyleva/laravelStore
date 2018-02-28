@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\PriceType;
+use App\Models\Slider;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Order;
@@ -15,10 +16,16 @@ use App\Http\Requests\Product\ProductSearchRequest;
 
 class PagesController extends Controller
 {
-    public function home(){
-//        return view('welcome');
-        //todo: new year redirect
-        return redirect('store');
+    public function home(Category $category, Slider $slider){
+        $collection = $collection1 = $category->collectCategories();
+        $parent_id = 0;
+        $categories = $category->categoryHandler($collection,$parent_id);
+
+
+        return view('pages.home',[
+            'categories'=>$categories,
+            'sliders' => $slider->getAllPublishedSlides()
+        ]);
     }
 
     public function myProfile(PriceType $price_type){

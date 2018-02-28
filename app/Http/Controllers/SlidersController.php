@@ -9,7 +9,6 @@ class SlidersController extends Controller
 {
     public function index(Slider $slider){
 
-//        dd($slider->all()->toArray());
         return view('admin.listSliders', [
                 'pageName'=>'Slides list',
                 'slidersList'=>$slider->all(),

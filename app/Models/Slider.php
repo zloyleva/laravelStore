@@ -32,4 +32,8 @@ class Slider extends Model
             'position' => $data['manager_id']??0,
         ]);
     }
+
+    public function getAllPublishedSlides(){
+        return $this->where('show_status', 1)->get();
+    }
 }

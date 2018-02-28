@@ -8903,6 +8903,17 @@ nav .container .navbar-header button.navbar-toggle .menu-text {
   margin-left: 10px;
 }
 
+.main_slider ul.main_slider_container {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.main_slider ul.main_slider_container li img {
+  width: 100%;
+  height: auto;
+}
+
 footer {
   background-color: #fff;
   padding-top: 5px;
