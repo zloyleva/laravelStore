@@ -29,7 +29,6 @@
                                     <a class="" href="/store/product/{{$product->slug}}">{{$product->name}}</a>
                                 </h3>
                                 @include('product.section.product-info', ['product'=>$product])
-                                <div class="product_show"><a class="" href="/store/product/{{$product->slug}}">Подробнее о продукте</a></div>
                             </div>
                             <div class="col-sm-3 col-md-3 col-lg-3 section_buy">
                                 @include('product.section.section_buy', ['product'=>$product])
