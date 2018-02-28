@@ -65,4 +65,15 @@ class PagesController extends Controller
     public function contacts(){
         return view('pages.contacts');
     }
+
+    public function site_map(Category $category){
+        $collection = $collection1 = $category->collectCategories();
+        $parent_id = 0;
+
+        $categories = $category->categoryHandler($collection,$parent_id);
+        return view('pages.site_map',[
+            'pageName'=>'Карта сайта',
+            'categories'=>$categories,
+        ]);
+    }
 }

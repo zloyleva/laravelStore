@@ -11,6 +11,7 @@
             </div>
             <div class="col-sm-3 col-md-3 col-lg-3 section_info">
                 <h4>Информация</h4>
+                <a href="{{ route('site_map') }}">Карта сайта</a>
                 <hr>
                 <div class="social-block">
                     <h4>Мы в соц сетях</h4>
