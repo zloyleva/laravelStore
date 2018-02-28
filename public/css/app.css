@@ -8960,6 +8960,22 @@ footer .container .row .section_info .social-block .social-links a {
           justify-content: center;
 }
 
+footer .container .row .section_contacts .info-phones {
+  margin-top: 5px;
+}
+
+footer .container .row .section_contacts .info-phones a {
+  display: block;
+}
+
+footer .container .row .section_contacts .info-phones a img {
+  width: 20px;
+}
+
+footer .container .row .section_contacts .works {
+  margin-top: 5px;
+}
+
 .modal_cta {
   display: none;
   position: fixed;
