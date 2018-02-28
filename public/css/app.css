@@ -8909,9 +8909,37 @@ nav .container .navbar-header button.navbar-toggle .menu-text {
   list-style: none;
 }
 
+.main_slider ul.main_slider_container li {
+  position: relative;
+}
+
 .main_slider ul.main_slider_container li img {
   width: 100%;
   height: auto;
+}
+
+.main_slider ul.main_slider_container li .text_section {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.main_slider ul.main_slider_container li .text_section h4 {
+  font-size: 36px;
+  font-weight: bold;
+  color: #fff;
+  text-shadow: 0px 2px 15px black;
 }
 
 footer {

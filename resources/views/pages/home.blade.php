@@ -13,7 +13,12 @@
                 <div class="row main_slider">
                     <ul class="main_slider_container">
                         @foreach($sliders as $slider)
-                            <li class="slider_item"><img src="{{$slider->img_url}}" alt=""></li>
+                            <li class="slider_item">
+                                <img src="{{$slider->img_url}}" alt="">
+                                <div class="text_section">
+                                    <h4>{{$slider->text_title}}</h4>
+                                </div>
+                            </li>
                         @endforeach
                     </ul>
                 </div>
