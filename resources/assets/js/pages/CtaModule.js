@@ -56,7 +56,7 @@ export class CtaModule extends ApiModule {
             // $('#ctaForm').submit();
             this.post({
                 data: $('#ctaForm').serialize(),
-                url: 'api/send_cta',
+                url: '/api/send_cta',
                 success: response => {
                     alertify.log.success('Значение поля успешно обновилось');
                 }

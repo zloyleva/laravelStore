@@ -19475,7 +19475,7 @@ var CtaModule = function (_ApiModule) {
                 // $('#ctaForm').submit();
                 this.post({
                     data: $('#ctaForm').serialize(),
-                    url: 'api/send_cta',
+                    url: '/api/send_cta',
                     success: function success(response) {
                         alertify.log.success('Значение поля успешно обновилось');
                     }
