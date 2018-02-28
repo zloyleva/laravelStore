@@ -28,9 +28,20 @@ class SearchProductsController extends Controller
 
 	    // Check input data for exist
 	    if( $request->input('inputData') != null ){
-            $pageName =  'Страница поиска. Вы искали "' . $request->input($request->input('inputData')) . '"';
+            $pageName =  'Страница поиска. Вы искали "' . $request->input('name') . '"';
         }else{
             $pageName = 'Магазин';
+        }
+
+        $sku_checked = false;
+        $name_checked = false;
+        switch (true){
+            case ($request->input('inputData') == 'sku'):
+                $sku_checked = true;
+                break;
+            case ($request->input('inputData') == 'name'):
+                $name_checked = true;
+                break;
         }
 
 
@@ -41,9 +52,11 @@ class SearchProductsController extends Controller
 			    'breadcrumbs'=>$category->getCategoryBreadCrumbs($collection1, $request->searchData),
                 'searchParams'=>[
                     'inputData'=>$request->input('inputData'),
-                    $request->input('inputData')=>$request->input($request->input('inputData'))
+                    $request->input('inputData')=>$request->input('name')
                 ],
-                'priceTypeList' => $priceType->get()
+                'priceTypeList' => $priceType->get(),
+                'sku_checked'=>$sku_checked,
+                'name_checked'=>$name_checked,
 		    ]
 	    );
     }

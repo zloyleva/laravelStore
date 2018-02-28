@@ -47,8 +47,8 @@ class Product extends Model
         if( isset($request->inputData) && $request->inputData == 'name' && is_string($request->name) ){
 	        $query->where('name', 'like',"%{$request->name}%");
         //todo add custom url for search	        $query->withPath('custom/url');
-        }elseif ( isset($request->inputData) && $request->inputData == 'sku' && is_numeric($request->sku) ){
-		    $query->where('sku', 'like',"%{$request->sku}%");
+        }elseif ( isset($request->inputData) && $request->inputData == 'sku' && is_numeric($request->name) ){
+		    $query->where('sku', 'like',"%{$request->name}%");
 	    }
 
 	    // Hide products who hasn't last update
@@ -56,8 +56,6 @@ class Product extends Model
         if($lastUpdateProducts){
             $query->where('updated_at', '>',$lastUpdateProducts->created_at->subDay(1));
         }
-$x = $query->paginate(15);
-//        dd($x);
 		return $query->paginate(15);
     }
 

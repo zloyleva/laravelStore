@@ -34,7 +34,9 @@ class ProductsController extends Controller
 				'products'=>$product->listProducts($request, $uploadPrice),
 				'breadcrumbs'=>$category->getCategoryBreadCrumbs($collection1, $request->searchData),
                 'searchParams'=>[],
-                'priceTypeList' => $priceType->get()
+                'priceTypeList' => $priceType->get(),
+                'sku_checked'=>false,
+                'name_checked'=>true,
 			]
 		);
 	}
