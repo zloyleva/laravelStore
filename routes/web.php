@@ -11,6 +11,7 @@ Route::get( '/how_to_buy', [ 'as' => 'how_to_buy', 'uses' => 'PagesController@ho
 Route::get( '/delivery', [ 'as' => 'delivery', 'uses' => 'PagesController@delivery' ] );
 Route::get( '/load_price', [ 'as' => 'load_price', 'uses' => 'PagesController@load_price' ] );
 Route::get( '/contacts', [ 'as' => 'contacts', 'uses' => 'PagesController@contacts' ] );
+Route::get( '/site_map', [ 'as' => 'site_map', 'uses' => 'PagesController@site_map' ] );
 
 Route::get( '/store', [ 'as' => 'store', 'uses' => 'ProductsController@store' ] );
 Route::get( '/store/category/{slug}', [ 'as' => 'category', 'uses' => 'ProductsController@store' ] );
@@ -56,7 +57,13 @@ Route::group( [ 'middleware' => [ 'auth', 'manager' ], 'prefix' => 'admin', 'as'
 	Route::get( '/send_email', [ 'as' => 'send_email', 'uses' => 'AdminDashboardController@sendEmail' ] );
 
 	Route::post( '/products', [ 'as' => 'updateProducts', 'uses' => 'AddProductsController@updateProducts' ] );
+
+    Route::get( '/sliders', [ 'as' => 'sliders.index', 'uses' => 'SlidersController@index' ] );
+    Route::get( '/sliders/create', [ 'as' => 'sliders.create', 'uses' => 'SlidersController@create' ] );
 } );
 
 Auth::routes();
 Route::get('/logout', 'Auth\LoginController@logout');
+
+Route::get('/get_updates', 'TelegramController@getUpdates');
+Route::get('/postSendMessage', 'TelegramController@postSendMessage');
