@@ -33,7 +33,7 @@
         <meta property="og:type" content="article" />
         <meta property="og:description" content="Самый крупный в Запорожье супермаркет-склад канцелярии, школьной продукции, детских игрушек и новогодних товаров"/>
         <meta property="og:url" content="{{ url()->current() }}" />
-        <meta property="og:image" content="/images_service/logo.png" />
+        <meta property="og:image" content="{{url('/')}}/images_service/logo.png" />
         <!-- End Open Graph Meta data -->
     @endempty
 
