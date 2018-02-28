@@ -39,6 +39,20 @@ footer{
           }
         }
       }
+      .section_contacts{
+        .info-phones{
+          margin-top: 5px;
+          a{
+            display: block;
+            img{
+              width: 20px;
+            }
+          }
+        }
+        .works{
+          margin-top: 5px;
+        }
+      }
     }
   }
 }

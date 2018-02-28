@@ -18,7 +18,7 @@
                 <div class="col-xs-12 col-sm-7 col-md-4 col-lg-4 contact_section">
                     <div class="info-phones">
                         <a href="tel:0617699546"><i class="fa fa-phone" aria-hidden="true"></i> (061) 769 95 46</a>
-                        <a href="tel:0676180545"><img src="{{ url('/') }}/images_service/kyivstar.png" alt=""></i> (067) 618 05 45</a>
+                        <a href="tel:0676180545"><img src="{{ url('/') }}/images_service/kyivstar.png" alt=""> (067) 618 05 45</a>
                     </div>
                     <div class="cta">
                         <button id="cta_modal_open" class="btn btn-cta">Заказать обратный звонок</button>
