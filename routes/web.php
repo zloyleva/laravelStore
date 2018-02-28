@@ -59,6 +59,7 @@ Route::group( [ 'middleware' => [ 'auth', 'manager' ], 'prefix' => 'admin', 'as'
 	Route::post( '/products', [ 'as' => 'updateProducts', 'uses' => 'AddProductsController@updateProducts' ] );
 
     Route::get( '/sliders', [ 'as' => 'sliders.index', 'uses' => 'SlidersController@index' ] );
+    Route::post( '/sliders', [ 'as' => 'sliders.store', 'uses' => 'SlidersController@store' ] );
     Route::get( '/sliders/create', [ 'as' => 'sliders.create', 'uses' => 'SlidersController@create' ] );
 } );
 
