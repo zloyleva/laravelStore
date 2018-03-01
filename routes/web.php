@@ -52,8 +52,6 @@ Route::group( [ 'middleware' => [ 'auth', 'manager' ], 'prefix' => 'admin', 'as'
 	Route::get( '/notes/create', [ 'as' => 'notes.create', 'uses' => 'NotesController@notesCreate' ] );
 	Route::post( '/notes', [ 'as' => 'notes.store', 'uses' => 'NotesController@notesStore' ] );
 
-	Route::get( '/get_file', [ 'as' => 'get_file', 'uses' => 'AdminDashboardController@getFile' ] );
-	Route::get( '/queue_method', [ 'as' => 'get_file', 'uses' => 'AdminDashboardController@queueMethod' ] );
 	Route::get( '/send_email', [ 'as' => 'send_email', 'uses' => 'AdminDashboardController@sendEmail' ] );
 
 	Route::post( '/products', [ 'as' => 'updateProducts', 'uses' => 'AddProductsController@updateProducts' ] );
@@ -68,3 +66,7 @@ Route::get('/logout', 'Auth\LoginController@logout');
 
 Route::get('/get_updates', 'TelegramController@getUpdates');
 Route::get('/postSendMessage', 'TelegramController@postSendMessage');
+
+Route::get( '/get_file', [ 'as' => 'get_file', 'uses' => 'AdminDashboardController@getFile' ] );
+Route::get( '/queue_method', [ 'as' => 'get_file', 'uses' => 'AdminDashboardController@queueMethod' ] );
+
