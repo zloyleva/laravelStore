@@ -56,7 +56,7 @@ class Product extends Model
         if($lastUpdateProducts){
             $query->where('updated_at', '>',$lastUpdateProducts->created_at->subDay(1));
         }
-		return $query->paginate(15);
+		return $query->orderBy('name', 'asc')->paginate(15);
     }
 
 	/**
