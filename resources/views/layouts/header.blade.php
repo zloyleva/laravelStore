@@ -1,4 +1,11 @@
 <body>
+    @guest
+        <div class="container-fluid guest_msg">
+            <div class="row">
+                <p>Вы видите розничную цену на товары. Для сотрудничества позвоните нашим менеджерам или нажмите "заказать звонок"</p>
+            </div>
+        </div>
+    @endguest
     <div id="app" class="header_container">
         <div class="container-fluid">
             <div class="row info-bar">

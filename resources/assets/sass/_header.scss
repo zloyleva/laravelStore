@@ -11,6 +11,19 @@
   }
 }
 
+.container-fluid.guest_msg{
+  .row{
+    background-color: #353535;
+    p{
+      margin: 15px 20px;
+      text-align: center;
+      color: #fff;
+      font-weight: bold;
+      font-size: 14px;
+    }
+  }
+}
+
 .header_container{
   background-image: url('/images_service/header_bg.jpg');
   background-size: cover;
