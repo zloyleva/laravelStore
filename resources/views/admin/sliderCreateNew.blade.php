@@ -62,7 +62,7 @@
 
                     <div class="form-group">
                         <button id="addSlider" class="btn btn-primary">
-                            {{ (isset($user))?'Update':'Add' }} slide
+                            {{ (isset($slider))?'Update':'Add' }} slide
                         </button>
                     </div>
                 </form>
