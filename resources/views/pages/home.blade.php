@@ -10,8 +10,8 @@
                 </ul>
             </div>
             <div class="col-sm-12 col-md-8 col-lg-8">
-                <div class="row main_slider">
-                    <ul class="main_slider_container">
+                <div class="row main_slider flexslider">
+                    <ul class="main_slider_container slides">
                         @foreach($sliders as $slider)
                             <li class="slider_item">
                                 <img src="{{$slider->img_url}}" alt="">

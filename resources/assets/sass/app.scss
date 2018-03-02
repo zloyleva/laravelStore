@@ -36,6 +36,9 @@
 // Import Footer styles
 @import "footer";
 
+// Import Admin pages styles
+@import "admin_pages";
+
 //Validation
 input.error{
     border-color: #f00;
@@ -214,16 +217,3 @@ ul.pagination{
     }
 }
 
-//Admin section
-
-.container.usersList{
-    display: flex;
-    align-items: center;
-    h1{
-        flex: 1;
-    }
-}
-
-.m-b-10{
-    margin-bottom:10px;
-}

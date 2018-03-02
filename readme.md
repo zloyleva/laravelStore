@@ -11,16 +11,16 @@
 
  >install dependencies
 
-###Install Docker
+### Install Docker
 *see here:*
 [Docker install link](https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/#install-from-a-package)
 
-###Install Docker Compose
+### Install Docker Compose
 *see here:*
 [Docker-Compose link](https://docs.docker.com/compose/install/#install-compose)
 
 =====================
-###Make environment
+### Make environment
 *Install and run Docker container*
 
 ```
@@ -46,6 +46,9 @@ $ php artisan key:generate
 
 ### Product's images
 path to images: 'app/public/images'
+
+### JS
+npm install flexslider
 
 ### Errors
 =============

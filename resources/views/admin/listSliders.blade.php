@@ -1,7 +1,7 @@
 @extends('layouts.index')
 
 @section('content')
-<div class="container">
+<div class="container header_section">
     <h1>{{$pageName}}</h1>
     <div class="addUserSection">
         <a href="{{route('admin.sliders.create')}}" class="btn btn-primary">Add new Slide</a>

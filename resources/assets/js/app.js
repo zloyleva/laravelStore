@@ -4,6 +4,7 @@ console.log('App was loaded');
 require('jquery-validation');
 require('bootstrap');
 require('geocomplete');
+require('flexslider');
 
 window.alertify = require('alertify-webpack');
 
@@ -21,8 +22,11 @@ import {RegisterModule} from './auth/register';
 // import {AddNoteModule} from './admin/add-note';
 import {ContactsModule} from './pages/contacts';
 import {CtaModule} from './pages/CtaModule';
+import {SliderModule} from './pages/slider';
 
 $(document).ready(() => {
+
+    page('/', () => new SliderModule());
 
     page('/login', () => new LoginModule());
     page('/register', () => new RegisterModule());

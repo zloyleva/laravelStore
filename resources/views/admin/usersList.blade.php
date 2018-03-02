@@ -1,7 +1,7 @@
 @extends('layouts.index')
 
 @section('content')
-<div class="container usersList">
+<div class="container usersList header_section">
     <h1>Users list</h1>
     <div class="addUserSection">
         <a href="{{ route('admin.users.create')  }}" class="btn btn-primary">Add new User</a>
