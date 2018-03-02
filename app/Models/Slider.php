@@ -23,7 +23,7 @@ class Slider extends Model
         return Slider::create([
             'name' => $data['name'],
             'img_url' => $path,
-            'show_status' => $data['lname'] ?? false,
+            'show_status' => $data['show_status'] ?? false,
             'link_url' => $data['link_url']?? null,
             'light_theme' => $data['light_theme'] ?? false,
             'text_title' => $data['text_title'] ?? '',
