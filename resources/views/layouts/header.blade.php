@@ -31,7 +31,7 @@
                             <a class="btn" href="{{ route('register') }}"><i class="fa fa-user-plus" aria-hidden="true"></i> Регистрация</a>
                         </div>
                     @else
-                        <a href="{{route('cart')}}" class="header_cart"><i class="fa fa-shopping-cart" aria-hidden="true"></i><span class="cart_title">Корзина</span></a>
+                        <a href="{{route('cart')}}" class="header_cart"><img src="{{ url('/') }}/images_service/cart.png" alt=""><span class="cart_title">Корзина</span></a>
                     @endguest
                 </div>
             </div>
