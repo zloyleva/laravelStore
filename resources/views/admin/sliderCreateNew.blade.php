@@ -31,7 +31,7 @@
                     </div>
                     <div class="form-group">
                         <label><input name="show_status" type="checkbox" value="1"
-                                      @if($slider->show_status) checked @endif> Show slider status</label>
+                                      @if(isset($slider) && $slider->show_status) checked @endif> Show slider status</label>
                     </div>
 
 
@@ -57,7 +57,7 @@
                                placeholder="Enter button link URL" value="{{ $slider->link_url or '' }}">
                     </div>
                     <div class="form-group">
-                        <label><input name="light_theme" type="checkbox" value="1" @if($slider->light_theme) checked @endif> Select light theme</label>
+                        <label><input name="light_theme" type="checkbox" value="1" @if(isset($slider) && $slider->light_theme) checked @endif> Select light theme</label>
                     </div>
 
                     <div class="form-group">
