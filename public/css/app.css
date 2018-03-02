@@ -9398,6 +9398,15 @@ footer .container .row .section_contacts .works {
   margin-bottom: 10px;
 }
 
+.form_container form .form-group .preview_image {
+  margin-top: 5px;
+}
+
+.form_container form .form-group .preview_image img {
+  width: 390px;
+  height: auto;
+}
+
 input.error {
   border-color: #f00;
 }

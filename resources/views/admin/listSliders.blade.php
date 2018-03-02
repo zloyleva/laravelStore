@@ -33,7 +33,7 @@
                             <td data-status="{{$item->text_title}}">{{$item->text_title}}</td>
                             <td data-created_at="{{$item->created_at}}">{{$item->created_at}}</td>
 
-                            <td><a href="">Edit</a></td>
+                            <td><a href="{{route('admin.sliders.index')}}/{{$item->id}}/edit">Edit</a></td>
                         </tr>
                         @empty
                             <td colspan="7">No slides yet</td>

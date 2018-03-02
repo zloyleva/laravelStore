@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 5);
+/******/ 	return __webpack_require__(__webpack_require__.s = 7);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -10558,6 +10558,223 @@ return jQuery;
 /* 2 */
 /***/ (function(module, exports) {
 
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || Function("return this")() || (1,eval)("this");
+} catch(e) {
+	// This works if the window reference is available
+	if(typeof window === "object")
+		g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports) {
+
+// shim for using process in browser
+var process = module.exports = {};
+
+// cached from whatever global is present so that test runners that stub it
+// don't break things.  But we need to wrap it in a try catch in case it is
+// wrapped in strict mode code which doesn't define any globals.  It's inside a
+// function because try/catches deoptimize in certain engines.
+
+var cachedSetTimeout;
+var cachedClearTimeout;
+
+function defaultSetTimout() {
+    throw new Error('setTimeout has not been defined');
+}
+function defaultClearTimeout () {
+    throw new Error('clearTimeout has not been defined');
+}
+(function () {
+    try {
+        if (typeof setTimeout === 'function') {
+            cachedSetTimeout = setTimeout;
+        } else {
+            cachedSetTimeout = defaultSetTimout;
+        }
+    } catch (e) {
+        cachedSetTimeout = defaultSetTimout;
+    }
+    try {
+        if (typeof clearTimeout === 'function') {
+            cachedClearTimeout = clearTimeout;
+        } else {
+            cachedClearTimeout = defaultClearTimeout;
+        }
+    } catch (e) {
+        cachedClearTimeout = defaultClearTimeout;
+    }
+} ())
+function runTimeout(fun) {
+    if (cachedSetTimeout === setTimeout) {
+        //normal enviroments in sane situations
+        return setTimeout(fun, 0);
+    }
+    // if setTimeout wasn't available but was latter defined
+    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+        cachedSetTimeout = setTimeout;
+        return setTimeout(fun, 0);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedSetTimeout(fun, 0);
+    } catch(e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+            return cachedSetTimeout.call(null, fun, 0);
+        } catch(e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+            return cachedSetTimeout.call(this, fun, 0);
+        }
+    }
+
+
+}
+function runClearTimeout(marker) {
+    if (cachedClearTimeout === clearTimeout) {
+        //normal enviroments in sane situations
+        return clearTimeout(marker);
+    }
+    // if clearTimeout wasn't available but was latter defined
+    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+        cachedClearTimeout = clearTimeout;
+        return clearTimeout(marker);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedClearTimeout(marker);
+    } catch (e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+            return cachedClearTimeout.call(null, marker);
+        } catch (e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+            return cachedClearTimeout.call(this, marker);
+        }
+    }
+
+
+
+}
+var queue = [];
+var draining = false;
+var currentQueue;
+var queueIndex = -1;
+
+function cleanUpNextTick() {
+    if (!draining || !currentQueue) {
+        return;
+    }
+    draining = false;
+    if (currentQueue.length) {
+        queue = currentQueue.concat(queue);
+    } else {
+        queueIndex = -1;
+    }
+    if (queue.length) {
+        drainQueue();
+    }
+}
+
+function drainQueue() {
+    if (draining) {
+        return;
+    }
+    var timeout = runTimeout(cleanUpNextTick);
+    draining = true;
+
+    var len = queue.length;
+    while(len) {
+        currentQueue = queue;
+        queue = [];
+        while (++queueIndex < len) {
+            if (currentQueue) {
+                currentQueue[queueIndex].run();
+            }
+        }
+        queueIndex = -1;
+        len = queue.length;
+    }
+    currentQueue = null;
+    draining = false;
+    runClearTimeout(timeout);
+}
+
+process.nextTick = function (fun) {
+    var args = new Array(arguments.length - 1);
+    if (arguments.length > 1) {
+        for (var i = 1; i < arguments.length; i++) {
+            args[i - 1] = arguments[i];
+        }
+    }
+    queue.push(new Item(fun, args));
+    if (queue.length === 1 && !draining) {
+        runTimeout(drainQueue);
+    }
+};
+
+// v8 likes predictible objects
+function Item(fun, array) {
+    this.fun = fun;
+    this.array = array;
+}
+Item.prototype.run = function () {
+    this.fun.apply(null, this.array);
+};
+process.title = 'browser';
+process.browser = true;
+process.env = {};
+process.argv = [];
+process.version = ''; // empty string to avoid regexp issues
+process.versions = {};
+
+function noop() {}
+
+process.on = noop;
+process.addListener = noop;
+process.once = noop;
+process.off = noop;
+process.removeListener = noop;
+process.removeAllListeners = noop;
+process.emit = noop;
+process.prependListener = noop;
+process.prependOnceListener = noop;
+
+process.listeners = function (name) { return [] }
+
+process.binding = function (name) {
+    throw new Error('process.binding is not supported');
+};
+
+process.cwd = function () { return '/' };
+process.chdir = function (dir) {
+    throw new Error('process.chdir is not supported');
+};
+process.umask = function() { return 0; };
+
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports) {
+
 module.exports = function() {
 	var list = [];
 	list.toString = function toString() {
@@ -10576,7 +10793,7 @@ module.exports = function() {
 }
 
 /***/ }),
-/* 3 */
+/* 5 */
 /***/ (function(module, exports) {
 
 /*
@@ -10772,7 +10989,7 @@ function applyToTag(styleElement, obj) {
 
 
 /***/ }),
-/* 4 */
+/* 6 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -10913,42 +11130,42 @@ var AddUserModule = function (_ApiModule) {
 }(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
 
 /***/ }),
-/* 5 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(6);
-module.exports = __webpack_require__(51);
+__webpack_require__(8);
+module.exports = __webpack_require__(56);
 
 
 /***/ }),
-/* 6 */
+/* 8 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__store_pages__ = __webpack_require__(32);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__cart_cart__ = __webpack_require__(35);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__users_my_profile__ = __webpack_require__(40);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__admin_managers__ = __webpack_require__(43);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__admin_users_list__ = __webpack_require__(44);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__admin_add_user__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__admin_edit_user__ = __webpack_require__(45);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__auth_login__ = __webpack_require__(46);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__auth_register__ = __webpack_require__(47);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__pages_contacts__ = __webpack_require__(49);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__pages_CtaModule__ = __webpack_require__(50);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__pages_slider__ = __webpack_require__(62);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__store_pages__ = __webpack_require__(36);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__cart_cart__ = __webpack_require__(39);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__users_my_profile__ = __webpack_require__(44);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__admin_managers__ = __webpack_require__(47);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__admin_users_list__ = __webpack_require__(48);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__admin_add_user__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__admin_edit_user__ = __webpack_require__(49);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__auth_login__ = __webpack_require__(50);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__auth_register__ = __webpack_require__(51);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__pages_contacts__ = __webpack_require__(53);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__pages_CtaModule__ = __webpack_require__(54);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__pages_slider__ = __webpack_require__(55);
 window.$ = window.jQuery = __webpack_require__(1);
 console.log('App was loaded');
 
-__webpack_require__(7);
-__webpack_require__(8);
-__webpack_require__(21);
-__webpack_require__(64);
+__webpack_require__(9);
+__webpack_require__(10);
+__webpack_require__(23);
+__webpack_require__(24);
 
-window.alertify = __webpack_require__(22);
+window.alertify = __webpack_require__(27);
 
-var page = __webpack_require__(28);
+var page = __webpack_require__(33);
 
 
 
@@ -11014,7 +11231,7 @@ $(document).ready(function () {
 });
 
 /***/ }),
-/* 7 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -12623,12 +12840,10 @@ return $;
 }));
 
 /***/ }),
-/* 8 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // This file is autogenerated via the `commonjs` Grunt task. You can require() this file in a CommonJS environment.
-__webpack_require__(9)
-__webpack_require__(10)
 __webpack_require__(11)
 __webpack_require__(12)
 __webpack_require__(13)
@@ -12639,9 +12854,11 @@ __webpack_require__(17)
 __webpack_require__(18)
 __webpack_require__(19)
 __webpack_require__(20)
+__webpack_require__(21)
+__webpack_require__(22)
 
 /***/ }),
-/* 9 */
+/* 11 */
 /***/ (function(module, exports) {
 
 /* ========================================================================
@@ -12706,7 +12923,7 @@ __webpack_require__(20)
 
 
 /***/ }),
-/* 10 */
+/* 12 */
 /***/ (function(module, exports) {
 
 /* ========================================================================
@@ -12806,7 +13023,7 @@ __webpack_require__(20)
 
 
 /***/ }),
-/* 11 */
+/* 13 */
 /***/ (function(module, exports) {
 
 /* ========================================================================
@@ -12937,7 +13154,7 @@ __webpack_require__(20)
 
 
 /***/ }),
-/* 12 */
+/* 14 */
 /***/ (function(module, exports) {
 
 /* ========================================================================
@@ -13180,7 +13397,7 @@ __webpack_require__(20)
 
 
 /***/ }),
-/* 13 */
+/* 15 */
 /***/ (function(module, exports) {
 
 /* ========================================================================
@@ -13398,7 +13615,7 @@ __webpack_require__(20)
 
 
 /***/ }),
-/* 14 */
+/* 16 */
 /***/ (function(module, exports) {
 
 /* ========================================================================
@@ -13569,7 +13786,7 @@ __webpack_require__(20)
 
 
 /***/ }),
-/* 15 */
+/* 17 */
 /***/ (function(module, exports) {
 
 /* ========================================================================
@@ -13914,7 +14131,7 @@ __webpack_require__(20)
 
 
 /***/ }),
-/* 16 */
+/* 18 */
 /***/ (function(module, exports) {
 
 /* ========================================================================
@@ -14440,7 +14657,7 @@ __webpack_require__(20)
 
 
 /***/ }),
-/* 17 */
+/* 19 */
 /***/ (function(module, exports) {
 
 /* ========================================================================
@@ -14554,7 +14771,7 @@ __webpack_require__(20)
 
 
 /***/ }),
-/* 18 */
+/* 20 */
 /***/ (function(module, exports) {
 
 /* ========================================================================
@@ -14732,7 +14949,7 @@ __webpack_require__(20)
 
 
 /***/ }),
-/* 19 */
+/* 21 */
 /***/ (function(module, exports) {
 
 /* ========================================================================
@@ -14893,7 +15110,7 @@ __webpack_require__(20)
 
 
 /***/ }),
-/* 20 */
+/* 22 */
 /***/ (function(module, exports) {
 
 /* ========================================================================
@@ -15061,7 +15278,7 @@ __webpack_require__(20)
 
 
 /***/ }),
-/* 21 */
+/* 23 */
 /***/ (function(module, exports) {
 
 /**
@@ -15660,3962 +15877,7 @@ __webpack_require__(20)
 
 
 /***/ }),
-/* 22 */
-/***/ (function(module, exports, __webpack_require__) {
-
-
-__webpack_require__(23);
-__webpack_require__(25);
-__webpack_require__(27);
-
-// With no changes to the original source we must export from the global object
-module.exports = window.Alertify;
-
-
-/***/ }),
-/* 23 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(24);
-if(typeof content === 'string') content = [[module.i, content, '']];
-// add the styles to the DOM
-var update = __webpack_require__(3)(content, {});
-// Hot Module Replacement
-if(false) {
-	// When the styles change, update the <style> tags
-	module.hot.accept("!!/node_modules/css-loader/index.js!/node_modules/alertify-webpack/dist/themes/alertify.css", function() {
-		var newContent = require("!!/node_modules/css-loader/index.js!/node_modules/alertify-webpack/dist/themes/alertify.css");
-		if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-		update(newContent);
-	});
-	// When the module is disposed, remove the <style> tags
-	module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
 /* 24 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(2)();
-exports.push([module.i, ".alertify-cover {\n  position: fixed;\n  z-index: 9999;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  right: 0; }\n\n.alertify-dialog {\n  position: fixed;\n  z-index: 99999;\n  top: 50px;\n  left: 50%;\n  opacity: 1;\n  -webkit-transition: all 500ms cubic-bezier(0.175, 0.885, 0.32, 1.275);\n  -moz-transition: all 500ms cubic-bezier(0.175, 0.885, 0.32, 1.275);\n  -ms-transition: all 500ms cubic-bezier(0.175, 0.885, 0.32, 1.275);\n  -o-transition: all 500ms cubic-bezier(0.175, 0.885, 0.32, 1.275);\n  transition: all 500ms cubic-bezier(0.175, 0.885, 0.32, 1.275); }\n\n.alertify-resetFocus {\n  border: 0;\n  clip: rect(0 0 0 0);\n  height: 1px;\n  width: 1px;\n  margin: -1px;\n  padding: 0;\n  overflow: hidden;\n  position: absolute; }\n\n.alertify-text {\n  margin-bottom: 15px;\n  width: 100%;\n  font-size: 100%;\n  -webkit-box-sizing: border-box;\n  -moz-box-sizing: border-box;\n  box-sizing: border-box; }\n\n.alertify-button,\n.alertify-button:hover,\n.alertify-button:active,\n.alertify-button:visited {\n  background: none;\n  text-decoration: none;\n  border: none;\n  line-height: 1.5;\n  font-size: 100%;\n  display: inline-block;\n  cursor: pointer;\n  margin-left: 5px; }\n\n.is-alertify-cover-hidden {\n  display: none; }\n\n.is-alertify-dialog-hidden {\n  opacity: 0;\n  display: none;\n  -webkit-transform: translate(0, -150px);\n  -moz-transform: translate(0, -150px);\n  -ms-transform: translate(0, -150px);\n  -o-transform: translate(0, -150px);\n  transform: translate(0, -150px); }\n\n:root * > .is-alertify-dialog-hidden {\n  display: block; }\n\n.alertify-logs {\n  position: fixed;\n  z-index: 9999; }\n\n.alertify-log {\n  position: relative;\n  display: block;\n  opacity: 0;\n  -webkit-transition: all 500ms cubic-bezier(0.175, 0.885, 0.32, 1.275);\n  -moz-transition: all 500ms cubic-bezier(0.175, 0.885, 0.32, 1.275);\n  -ms-transition: all 500ms cubic-bezier(0.175, 0.885, 0.32, 1.275);\n  -o-transition: all 500ms cubic-bezier(0.175, 0.885, 0.32, 1.275);\n  transition: all 500ms cubic-bezier(0.175, 0.885, 0.32, 1.275); }\n\n.is-alertify-log-showing {\n  opacity: 1; }\n\n.is-alertify-log-hidden {\n  opacity: 0; }\n", ""]);
-
-/***/ }),
-/* 25 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(26);
-if(typeof content === 'string') content = [[module.i, content, '']];
-// add the styles to the DOM
-var update = __webpack_require__(3)(content, {});
-// Hot Module Replacement
-if(false) {
-	// When the styles change, update the <style> tags
-	module.hot.accept("!!/node_modules/css-loader/index.js!/node_modules/alertify-webpack/dist/themes/alertify.default.css", function() {
-		var newContent = require("!!/node_modules/css-loader/index.js!/node_modules/alertify-webpack/dist/themes/alertify.default.css");
-		if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-		update(newContent);
-	});
-	// When the module is disposed, remove the <style> tags
-	module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-/* 26 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(2)();
-exports.push([module.i, ".alertify-dialog {\n  width: 550px;\n  margin-left: -275px;\n  background: #FFF;\n  border: 10px solid #333333;\n  border: 10px solid rgba(0, 0, 0, 0.7);\n  border-radius: 8px;\n  box-shadow: 0 3px 3px rgba(0, 0, 0, 0.3);\n  -webkit-background-clip: padding;\n  -moz-background-clip: padding;\n  background-clip: padding-box; }\n\n.alertify-dialog-inner {\n  padding: 25px; }\n\n.alertify-inner {\n  text-align: center; }\n\n.alertify-text {\n  border: 1px solid #cccccc;\n  padding: 10px;\n  border-radius: 4px; }\n\n.alertify-button {\n  border-radius: 4px;\n  color: #FFF;\n  font-weight: bold;\n  padding: 6px 15px;\n  text-decoration: none;\n  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);\n  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.5);\n  background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0));\n  background-image:    -moz-linear-gradient(top, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0));\n  background-image:     -ms-linear-gradient(top, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0));\n  background-image:      -o-linear-gradient(top, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0));\n  background-image:         linear-gradient(top, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0)); }\n\n.alertify-button:hover,\n.alertify-button:focus {\n  outline: none;\n  background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0));\n  background-image:    -moz-linear-gradient(top, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0));\n  background-image:     -ms-linear-gradient(top, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0));\n  background-image:      -o-linear-gradient(top, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0));\n  background-image:         linear-gradient(top, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0)); }\n\n.alertify-button:focus {\n  box-shadow: 0 0 10px #2b72d5; }\n\n.alertify-button:active {\n  position: relative;\n  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05); }\n\n.alertify-button-cancel,\n.alertify-button-cancel:hover,\n.alertify-button-cancel:focus {\n  background-color: #fe1a00;\n  border: 1px solid #cb1500; }\n\n.alertify-button-ok,\n.alertify-button-ok:hover,\n.alertify-button-ok:focus {\n  background-color: #5cb811;\n  border: 1px solid #45890d; }\n\n@media only screen and (max-width: 680px) {\n  .alertify-dialog {\n    width: 90%;\n    left: 5%;\n    margin: 0;\n    -webkit-box-sizing: border-box;\n    -moz-box-sizing: border-box;\n    box-sizing: border-box; } }\n.alertify-logs {\n  position: fixed;\n  z-index: 9999;\n  bottom: 8px;\n  right: 8px;\n  width: 300px; }\n\n.alertify-log {\n  margin-top: 8px;\n  right: -300px;\n  padding: 16px 16px;\n  border-radius: 4px; }\n\n.alertify-log-info {\n  color: #3A8ABF;\n  background: #D9EDF7;\n}\n\n.alertify-log-error {\n  color: #B94A48;\n  background: #F2DEDE;\n}\n\n.alertify-log-success {\n  color: #468847;\n  background: #DFF0D8;\n}\n\n.is-alertify-log-showing {\n  right: 0; }\n\n.is-alertify-log-hidden {\n  right: -300px; }\n", ""]);
-
-/***/ }),
-/* 27 */
-/***/ (function(module, exports) {
-
-/*!
- * alertify.js
- * browser dialogs never looked so good
- *
- * @author Fabien Doiron <fabien.doiron@gmail.com>
- * @copyright Fabien Doiron 2013
- * @license MIT <http://opensource.org/licenses/mit-license.php>
- * @link http://fabien-d.github.com/alertify.js/
- * @module alertify
- * @version 0.4.0rc1
- */
-(function (global, document, undefined) {
-var AlertifyProto = (function () {
-    
-
-    var AlertifyProto,
-        add,
-        attach;
-
-    /**
-     * Add
-     * Update bind and unbind method for browser
-     * that support add/removeEventListener
-     *
-     * @return {undefined}
-     */
-    add = function () {
-        this.on = function (el, event, fn) {
-            el.addEventListener(event, fn, false);
-        };
-        this.off = function (el, event, fn) {
-            el.removeEventListener(event, fn, false);
-        };
-    };
-
-    /**
-     * Attach
-     * Update bind and unbind method for browser
-     * that support attach/detachEvent
-     *
-     * @return {undefined}
-     */
-    attach = function () {
-        this.on = function (el, event, fn) {
-            el.attachEvent("on" + event, fn);
-        };
-        this.off = function (el, event, fn) {
-            el.detachEvent("on" + event, fn);
-        };
-    };
-
-    /**
-     * Alertify Prototype API
-     *
-     * @type {Object}
-     */
-    AlertifyProto = {
-        _version : "0.4.0",
-        _prefix  : "alertify",
-        get: function (id) {
-            return document.getElementById(id);
-        },
-        on: function (el, event, fn) {
-            if (typeof el.addEventListener === "function") {
-                el.addEventListener(event, fn, false);
-                add.call(this);
-            } else if (el.attachEvent) {
-                el.attachEvent("on" + event, fn);
-                attach.call(this);
-            }
-        },
-        off: function (el, event, fn) {
-            if (typeof el.removeEventListener === "function") {
-                el.removeEventListener(event, fn, false);
-                add.call(this);
-            } else if (el.detachEvent) {
-                el.detachEvent("on" + event, fn);
-                attach.call(this);
-            }
-        }
-    };
-
-    return AlertifyProto;
-}());
-var Alertify = (function () {
-    
-
-    var Alertify = function () {};
-    Alertify.prototype = AlertifyProto;
-    Alertify = new Alertify();
-
-    return Alertify;
-}());
-var validate = (function () {
-    
-
-    var _checkValidation,
-        validate;
-
-    /**
-     * Validate Parameters
-     * The validation checks parameter against specified type.
-     * If the parameter is set to optional, is will be valid unless
-     * a parameter is specified and does not pass the test
-     *
-     * @param  {String}  type     Type to check parameter against
-     * @param  {Mixed}   param    Parameter to check
-     * @param  {Boolean} optional [Optional] Whether the parameter is optional
-     * @return {Boolean}
-     */
-    _checkValidation = function (type, param, optional) {
-        var valid = false;
-        if (optional && typeof param === "undefined") {
-            valid = true;
-        } else {
-            if (type === "object") {
-                valid = (typeof param === "object" && !(param instanceof Array));
-            } else {
-                valid = (typeof param === type);
-            }
-        }
-        return valid;
-    };
-
-    /**
-     * Validate API
-     *
-     * @type {Object}
-     */
-    validate = {
-        messages: {
-            invalidArguments: "Invalid arguments"
-        },
-        isFunction: function (param, optional) {
-            return _checkValidation("function", param, optional);
-        },
-        isNumber: function (param, optional) {
-            return _checkValidation("number", param, optional);
-        },
-        isObject: function (param, optional) {
-            return _checkValidation("object", param, optional);
-        },
-        isString: function (param, optional) {
-            return _checkValidation("string", param, optional);
-        },
-    };
-
-    return validate;
-}());
-var element = (function () {
-    
-
-    var element = {},
-        setAttributes;
-
-    /**
-     * Set Attributes
-     * Add attributes to a created element
-     *
-     * @param {Object} el     Created DOM element
-     * @param {Object} params [Optional] Attributes object
-     * @return {Object}
-     */
-    setAttributes = function (el, params) {
-        var k;
-        if (!validate.isObject(el) ||
-            !validate.isObject(params, true)) {
-            throw new Error(validate.messages.invalidArguments);
-        }
-        if (typeof params !== "undefined") {
-            if (params.attributes) {
-                for (k in params.attributes) {
-                    if (params.attributes.hasOwnProperty(k)) {
-                        el.setAttribute(k, params.attributes[k]);
-                    }
-                }
-            }
-            if (params.classes) {
-                el.className = params.classes;
-            }
-        }
-        return el;
-    };
-
-    /**
-     * element API
-     *
-     * @type {Object}
-     */
-    element = {
-        create: function (type, params) {
-            var el;
-            if (!validate.isString(type) ||
-                !validate.isObject(params, true)) {
-                throw new Error(validate.messages.invalidArguments);
-            }
-
-            el = document.createElement(type);
-            el = setAttributes(el, params);
-            return el;
-        },
-        ready: function (el) {
-            if (!validate.isObject(el)) {
-                throw new Error(validate.messages.invalidArguments);
-            }
-            if (el && el.scrollTop !== null) {
-                return;
-            } else {
-                this.ready();
-            }
-        }
-    };
-
-    return element;
-}());
-var transition = (function () {
-    
-
-    var transition;
-
-    /**
-     * Transition
-     * Determines if current browser supports CSS transitions
-     * And if so, assigns the proper transition event
-     *
-     * @return {Object}
-     */
-    transition = function () {
-        var t,
-            type,
-            supported   = false,
-            el          = element.create("fakeelement"),
-            transitions = {
-                "WebkitTransition" : "webkitTransitionEnd",
-                "MozTransition"    : "transitionend",
-                "OTransition"      : "otransitionend",
-                "transition"       : "transitionend"
-            };
-
-        for (t in transitions) {
-            if (el.style[t] !== undefined) {
-                type      = transitions[t];
-                supported = true;
-                break;
-            }
-        }
-
-        return {
-            type      : type,
-            supported : supported
-        };
-    };
-
-    return transition();
-}());
-var keys = (function () {
-    
-
-    var keys = {
-        ENTER : 13,
-        ESC   : 27,
-        SPACE : 32
-    };
-
-    return keys;
-}());
-var Dialog = (function () {
-    
-
-    var dialog,
-        _dialog = {};
-
-    var Dialog = function () {
-        var controls     = {},
-            dialog       = {},
-            isOpen       = false,
-            queue        = [],
-            tpl          = {},
-            prefixEl     = Alertify._prefix + "-dialog",
-            prefixCover  = Alertify._prefix + "-cover",
-            clsElShow    = prefixEl + " is-" + prefixEl + "-showing",
-            clsElHide    = prefixEl + " is-" + prefixEl + "-hidden",
-            clsCoverShow = prefixCover + " is-" + prefixCover + "-showing",
-            clsCoverHide = prefixCover + " is-" + prefixCover + "-hidden",
-            elCallee,
-            $,
-            appendBtns,
-            addListeners,
-            build,
-            hide,
-            init,
-            onBtnCancel,
-            onBtnOK,
-            onBtnResetFocus,
-            onFormSubmit,
-            onKeyUp,
-            open,
-            removeListeners,
-            setFocus,
-            setup;
-
-        tpl = {
-            buttons : {
-                holder : "<nav class=\"alertify-buttons\">{{buttons}}</nav>",
-                submit : "<button role=\"button\" type=\"submit\" class=\"alertify-button alertify-button-ok\" id=\"alertify-ok\">{{ok}}</button>",
-                ok     : "<button role=\"button\" type=\"button\" class=\"alertify-button alertify-button-ok\" id=\"alertify-ok\">{{ok}}</button>",
-                cancel : "<button role=\"button\" type=\"button\" class=\"alertify-button alertify-button-cancel\" id=\"alertify-cancel\">{{cancel}}</button>"
-            },
-            input   : "<div class=\"alertify-text-wrapper\"><input type=\"text\" class=\"alertify-text\" id=\"alertify-text\"></div>",
-            message : "<p class=\"alertify-message\">{{message}}</p>",
-            log     : "<article class=\"alertify-log{{class}}\">{{message}}</article>"
-        };
-
-        addListeners = function (item) {
-            // ok event handler
-            onBtnOK = function (event) {
-                var val = "";
-                if (typeof event.preventDefault !== "undefined") {
-                    event.preventDefault();
-                }
-                removeListeners();
-                hide();
-
-                if (controls.input) {
-                    val = controls.input.value;
-                }
-                if (typeof item.accept === "function") {
-                    if (controls.input) {
-                        item.accept(val);
-                    } else {
-                        item.accept();
-                    }
-                }
-                return false;
-            };
-
-            // cancel event handler
-            onBtnCancel = function (event) {
-                if (typeof event.preventDefault !== "undefined") {
-                    event.preventDefault();
-                }
-                removeListeners();
-                hide();
-                if (typeof item.deny === "function") {
-                    item.deny();
-                }
-                return false;
-            };
-
-            // keyup handler
-            onKeyUp = function (event) {
-                var keyCode = event.keyCode;
-                if (keyCode === keys.SPACE && !controls.input) {
-                    onBtnOK(event);
-                }
-                if (keyCode === keys.ESC && controls.cancel) {
-                    onBtnCancel(event);
-                }
-            };
-
-            // reset focus to first item in the dialog
-            onBtnResetFocus = function (event) {
-                if (controls.input) {
-                    controls.input.focus();
-                } else if (controls.cancel) {
-                    controls.cancel.focus();
-                } else {
-                    controls.ok.focus();
-                }
-            };
-
-            // handle reset focus link
-            // this ensures that the keyboard focus does not
-            // ever leave the dialog box until an action has
-            // been taken
-            Alertify.on(controls.reset, "focus", onBtnResetFocus);
-            // handle OK click
-            if (controls.ok) {
-                Alertify.on(controls.ok, "click", onBtnOK);
-            }
-            // handle Cancel click
-            if (controls.cancel) {
-                Alertify.on(controls.cancel, "click", onBtnCancel);
-            }
-            // listen for keys, Cancel => ESC
-            Alertify.on(document.body, "keyup", onKeyUp);
-            // bind form submit
-            if (controls.form) {
-                Alertify.on(controls.form, "submit", onBtnOK);
-            }
-            if (!transition.supported) {
-                setFocus();
-            }
-        };
-
-        /**
-         * Append Buttons
-         * Insert the buttons in the proper order
-         *
-         * @param  {String} secondary Cancel button string
-         * @param  {String} primary   OK button string
-         * @return {String}
-         */
-        appendBtns = function (secondary, primary) {
-            return dialog.buttonReverse ? primary + secondary : secondary + primary;
-        };
-
-        build = function (item) {
-            var html    = "",
-                type    = item.type,
-                message = item.message;
-
-            html += "<div class=\"alertify-dialog-inner\">";
-
-            if (dialog.buttonFocus === "none") {
-                html += "<a href=\"#\" id=\"alertify-noneFocus\" class=\"alertify-hidden\"></a>";
-            }
-
-            if (type === "prompt") {
-                html += "<form id=\"alertify-form\">";
-            }
-
-            html += "<article class=\"alertify-inner\">";
-            html += tpl.message.replace("{{message}}", message);
-
-            if (type === "prompt") {
-                html += tpl.input;
-            }
-
-            html += tpl.buttons.holder;
-            html += "</article>";
-
-            if (type === "prompt") {
-                html += "</form>";
-            }
-
-            html += "<a id=\"alertify-resetFocus\" class=\"alertify-resetFocus\" href=\"#\">Reset Focus</a>";
-            html += "</div>";
-
-            switch (type) {
-            case "confirm":
-                html = html.replace("{{buttons}}", appendBtns(tpl.buttons.cancel, tpl.buttons.ok));
-                html = html.replace("{{ok}}", dialog.labels.ok).replace("{{cancel}}", dialog.labels.cancel);
-                break;
-            case "prompt":
-                html = html.replace("{{buttons}}", appendBtns(tpl.buttons.cancel, tpl.buttons.submit));
-                html = html.replace("{{ok}}", dialog.labels.ok).replace("{{cancel}}", dialog.labels.cancel);
-                break;
-            case "alert":
-                html = html.replace("{{buttons}}", tpl.buttons.ok);
-                html = html.replace("{{ok}}", dialog.labels.ok);
-                break;
-            }
-
-            return html;
-        };
-
-        hide = function () {
-            var transitionDone;
-            queue.splice(0,1);
-            if (queue.length > 0) {
-                open(true);
-            } else {
-                isOpen = false;
-                transitionDone = function (event) {
-                    event.stopPropagation();
-                    //this.className += " alertify-isHidden";
-                    Alertify.off(this, transition.type, transitionDone);
-                };
-                if (transition.supported) {
-                    Alertify.on(dialog.el, transition.type, transitionDone);
-                    dialog.el.className = clsElHide;
-                } else {
-                    dialog.el.className = clsElHide;
-                }
-                dialog.cover.className  = clsCoverHide;
-                elCallee.focus();
-            }
-        };
-
-        /**
-         * Initialize Dialog
-         * Create the dialog and cover elements
-         *
-         * @return {Object}
-         */
-        init = function () {
-            var cover = element.create("div", { classes: clsCoverHide }),
-                el    = element.create("section", { classes: clsElHide });
-
-            document.body.appendChild(cover);
-            document.body.appendChild(el);
-            element.ready(cover);
-            element.ready(el);
-            dialog.cover = cover;
-            return el;
-        };
-
-        open = function (fromQueue) {
-            var item = queue[0],
-                onTransitionEnd;
-
-            isOpen = true;
-
-            onTransitionEnd = function (event) {
-                event.stopPropagation();
-                setFocus();
-                Alertify.off(this, transition.type, onTransitionEnd);
-            };
-
-            if (transition.supported && !fromQueue) {
-                Alertify.on(dialog.el, transition.type, onTransitionEnd);
-            }
-            dialog.el.innerHTML    = build(item);
-            dialog.cover.className = clsCoverShow;
-            dialog.el.className    = clsElShow;
-
-            controls.reset  = Alertify.get("alertify-resetFocus");
-            controls.ok     = Alertify.get("alertify-ok")     || undefined;
-            controls.cancel = Alertify.get("alertify-cancel") || undefined;
-            controls.focus  = (dialog.buttonFocus === "cancel" && controls.cancel) ? controls.cancel : ((dialog.buttonFocus === "none") ? Alertify.get("alertify-noneFocus") : controls.ok),
-            controls.input  = Alertify.get("alertify-text")   || undefined;
-            controls.form   = Alertify.get("alertify-form")   || undefined;
-
-            if (typeof item.placeholder === "string" && item.placeholder !== "") {
-                controls.input.value = item.placeholder;
-            }
-
-            if (fromQueue) {
-                setFocus();
-            }
-            addListeners(item);
-        };
-
-        /**
-         * Remove Event Listeners
-         *
-         * @return {undefined}
-         */
-        removeListeners = function () {
-            Alertify.off(document.body, "keyup", onKeyUp);
-            Alertify.off(controls.reset, "focus", onBtnResetFocus);
-            if (controls.input) {
-                Alertify.off(controls.form, "submit", onFormSubmit);
-            }
-            if (controls.ok) {
-                Alertify.off(controls.ok, "click", onBtnOK);
-            }
-            if (controls.cancel) {
-                Alertify.off(controls.cancel, "click", onBtnCancel);
-            }
-        };
-
-        /**
-         * Set Focus
-         * Set focus to proper element
-         *
-         * @return {undefined}
-         */
-        setFocus = function () {
-            if (controls.input) {
-                controls.input.focus();
-                controls.input.select();
-            } else {
-                controls.focus.focus();
-            }
-        };
-
-        /**
-         * Setup Dialog
-         *
-         * @param  {String} type        Dialog type
-         * @param  {String} msg         Dialog message
-         * @param  {Function} accept    [Optional] Accept callback
-         * @param  {Function} deny      [Optional] Deny callback
-         * @param  {String} placeholder [Optional] Input placeholder text
-         * @return {undefined}
-         */
-        setup = function (type, msg, accept, deny, placeholder) {
-            if (!validate.isString(type)          ||
-                !validate.isString(msg)           ||
-                !validate.isFunction(accept,true) ||
-                !validate.isFunction(deny,true)   ||
-                !validate.isString(placeholder, true)) {
-                throw new Error(validate.messages.invalidArguments);
-            }
-            dialog.el = dialog.el || init();
-            elCallee = document.activeElement;
-
-            queue.push({
-                type        : type,
-                message     : msg,
-                accept      : accept,
-                deny        : deny,
-                placeholder : placeholder
-            });
-
-            if (!isOpen) {
-                open();
-            }
-        };
-
-        return {
-            buttonFocus   : "ok",
-            buttonReverse : false,
-            cover         : undefined,
-            el            : undefined,
-            labels: {
-                ok: "OK",
-                cancel: "Cancel"
-            },
-            alert: function (msg, accept) {
-                dialog = this;
-                setup("alert", msg, accept);
-                return this;
-            },
-            confirm: function (msg, accept, deny) {
-                dialog = this;
-                setup("confirm", msg, accept, deny);
-                return this;
-            },
-            prompt: function (msg, accept, deny, placeholder) {
-                dialog = this;
-                setup("prompt", msg, accept, deny, placeholder);
-                return this;
-            }
-        };
-    };
-
-    return new Dialog();
-}());
-var Log = (function () {
-    
-
-    var Log,
-        onTransitionEnd,
-        remove,
-        startTimer,
-        prefix  = Alertify._prefix + "-log",
-        clsShow = prefix + " is-" + prefix + "-showing",
-        clsHide = prefix + " is-" + prefix + "-hidden";
-
-    /**
-     * Log Method
-     *
-     * @param {Object} parent HTML DOM to insert log message into
-     * @param {String} type   Log type
-     * @param {String} msg    Log message
-     * @param {Number} delay  [Optional] Delay in ms
-     */
-    Log = function (parent, type, msg, delay) {
-        if (!validate.isObject(parent) ||
-            !validate.isString(type) ||
-            !validate.isString(msg) ||
-            !validate.isNumber(delay, true)) {
-            throw new Error(validate.messages.invalidArguments);
-        }
-
-        this.delay  = (typeof delay !== "undefined") ? delay : 5000;
-        this.msg    = msg;
-        this.parent = parent;
-        this.type   = type;
-        this.create();
-        this.show();
-    };
-
-    /**
-     * Transition End
-     * Handle CSS transition end
-     *
-     * @param  {Event} event Event
-     * @return {undefined}
-     */
-    onTransitionEnd = function (event) {
-        event.stopPropagation();
-        if (typeof this.el !== "undefined") {
-            Alertify.off(this.el, transition.type, this.fn);
-            remove.call(this);
-        }
-    };
-
-    /**
-     * Remove
-     * Remove the element from the DOM
-     *
-     * @return {undefined}
-     */
-    remove = function () {
-        this.parent.removeChild(this.el);
-        delete this.el;
-    };
-
-    /**
-     * StartTimer
-     *
-     * @return {undefined}
-     */
-    startTimer = function () {
-        var that = this;
-        if (this.delay !== 0) {
-            setTimeout(function () {
-                that.close();
-            }, this.delay);
-        }
-    };
-
-    /**
-     * Close
-     * Prepare the log element to be removed.
-     * Set an event listener for transition complete
-     * or call the remove directly
-     *
-     * @return {undefined}
-     */
-    Log.prototype.close = function () {
-        var that = this;
-        if (typeof this.el !== "undefined" && this.el.parentNode === this.parent) {
-            if (transition.supported) {
-                this.fn = function (event) {
-                    onTransitionEnd.call(that, event);
-                };
-                Alertify.on(this.el, transition.type, this.fn);
-                this.el.className = clsHide + " " + prefix + "-" + this.type;
-            } else {
-                remove.call(this);
-            }
-        }
-    };
-
-    /**
-     * Create
-     * Create a new log element and
-     * append it to the parent
-     *
-     * @return {undefined}
-     */
-    Log.prototype.create = function () {
-        if (typeof this.el === "undefined") {
-            var el = element.create("article", {
-                classes: clsHide + " " + prefix + "-" + this.type
-            });
-            el.innerHTML = this.msg;
-            this.parent.appendChild(el);
-            element.ready(el);
-            this.el = el;
-        }
-    };
-
-    /**
-     * Show
-     * Show new log element and bind click listener
-     *
-     * @return {undefined}
-     */
-    Log.prototype.show = function () {
-        var that = this;
-        if (typeof this.el === "undefined") {
-            return;
-        }
-        Alertify.on(this.el, "click", function () {
-            that.close();
-        });
-        this.el.className = clsShow + " " + prefix + "-" + this.type;
-        startTimer.call(this);
-    };
-
-    return Log;
-}());
-var logs = (function () {
-    
-
-    var init,
-        createLog,
-        validateParams,
-        logs;
-
-    /**
-     * Init Method
-     * Create the log holder element
-     *
-     * @return {Object} Log holder element
-     */
-    init = function () {
-        var el = element.create("section", { classes: Alertify._prefix + "-logs" });
-        document.body.appendChild(el);
-        element.ready(el);
-        return el;
-    };
-
-    /**
-     * Create Log
-     *
-     * @param  {String} type  Log type
-     * @param  {String} msg   Log message
-     * @param  {Number} delay [Optional] Delay in ms
-     * @return {Object}
-     */
-    createLog = function (type, msg, delay) {
-        validateParams(type, msg, delay);
-        this.el = this.el || init();
-        return new Log(this.el, type, msg, delay);
-    };
-
-    /**
-     * Validate Parameters
-     *
-     * @param  {String} type  Log type
-     * @param  {String} msg   Log message
-     * @param  {Number} delay [Optional] Delay in ms
-     * @return {undefined}
-     */
-    validateParams = function (type, msg, delay) {
-        if (!validate.isString(type) ||
-            !validate.isString(msg) ||
-            !validate.isNumber(delay, true)) {
-            throw new Error(validate.messages.invalidArguments);
-        }
-    };
-
-    /**
-     * Logs API
-     *
-     * @type {Object}
-     */
-    logs = {
-        delay : 5000,
-        el    : undefined,
-        create: function (type, msg, delay) {
-            return createLog.call(this, type, msg, delay);
-        },
-        error: function (msg, delay) {
-            return createLog.call(this, "error", msg, delay);
-        },
-        info: function (msg, delay) {
-            return createLog.call(this, "info", msg, delay);
-        },
-        success: function (msg, delay) {
-            return createLog.call(this, "success", msg, delay);
-        }
-    };
-
-    return logs;
-}());
-
-    Alertify.dialog = Dialog;
-    Alertify.log    = logs;
-    window.Alertify = Alertify;
-
-
-})(this, document);
-
-/***/ }),
-/* 28 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(process) {  /* globals require, module */
-
-  
-
-  /**
-   * Module dependencies.
-   */
-
-  var pathtoRegexp = __webpack_require__(30);
-
-  /**
-   * Module exports.
-   */
-
-  module.exports = page;
-  page.default = page;
-  page.Context = Context;
-  page.Route = Route;
-  page.sameOrigin = sameOrigin;
-
-  /**
-   * Short-cuts for global-object checks
-   */
-
-  var hasDocument = ('undefined' !== typeof document);
-  var hasWindow = ('undefined' !== typeof window);
-  var hasHistory = ('undefined' !== typeof history);
-  var hasProcess = typeof process !== 'undefined';
-
-  /**
-   * Detect click event
-   */
-  var clickEvent = hasDocument && document.ontouchstart ? 'touchstart' : 'click';
-
-  /**
-   * To work properly with the URL
-   * history.location generated polyfill in https://github.com/devote/HTML5-History-API
-   */
-
-  var isLocation = hasWindow && !!(window.history.location || window.location);
-
-  /**
-   * Perform initial dispatch.
-   */
-
-  var dispatch = true;
-
-
-  /**
-   * Decode URL components (query string, pathname, hash).
-   * Accommodates both regular percent encoding and x-www-form-urlencoded format.
-   */
-  var decodeURLComponents = true;
-
-  /**
-   * Base path.
-   */
-
-  var base = '';
-
-  /**
-   * Strict path matching.
-   */
-
-  var strict = false;
-
-  /**
-   * Running flag.
-   */
-
-  var running;
-
-  /**
-   * HashBang option
-   */
-
-  var hashbang = false;
-
-  /**
-   * Previous context, for capturing
-   * page exit events.
-   */
-
-  var prevContext;
-
-  /**
-   * The window for which this `page` is running
-   */
-  var pageWindow;
-
-  /**
-   * Register `path` with callback `fn()`,
-   * or route `path`, or redirection,
-   * or `page.start()`.
-   *
-   *   page(fn);
-   *   page('*', fn);
-   *   page('/user/:id', load, user);
-   *   page('/user/' + user.id, { some: 'thing' });
-   *   page('/user/' + user.id);
-   *   page('/from', '/to')
-   *   page();
-   *
-   * @param {string|!Function|!Object} path
-   * @param {Function=} fn
-   * @api public
-   */
-
-  function page(path, fn) {
-    // <callback>
-    if ('function' === typeof path) {
-      return page('*', path);
-    }
-
-    // route <path> to <callback ...>
-    if ('function' === typeof fn) {
-      var route = new Route(/** @type {string} */ (path));
-      for (var i = 1; i < arguments.length; ++i) {
-        page.callbacks.push(route.middleware(arguments[i]));
-      }
-      // show <path> with [state]
-    } else if ('string' === typeof path) {
-      page['string' === typeof fn ? 'redirect' : 'show'](path, fn);
-      // start [options]
-    } else {
-      page.start(path);
-    }
-  }
-
-  /**
-   * Callback functions.
-   */
-
-  page.callbacks = [];
-  page.exits = [];
-
-  /**
-   * Current path being processed
-   * @type {string}
-   */
-  page.current = '';
-
-  /**
-   * Number of pages navigated to.
-   * @type {number}
-   *
-   *     page.len == 0;
-   *     page('/login');
-   *     page.len == 1;
-   */
-
-  page.len = 0;
-
-  /**
-   * Get or set basepath to `path`.
-   *
-   * @param {string} path
-   * @api public
-   */
-
-  page.base = function(path) {
-    if (0 === arguments.length) return base;
-    base = path;
-  };
-
-  /**
-   * Get or set strict path matching to `enable`
-   *
-   * @param {boolean} enable
-   * @api public
-   */
-
-  page.strict = function(enable) {
-    if (0 === arguments.length) return strict;
-    strict = enable;
-  };
-
-  /**
-   * Bind with the given `options`.
-   *
-   * Options:
-   *
-   *    - `click` bind to click events [true]
-   *    - `popstate` bind to popstate [true]
-   *    - `dispatch` perform initial dispatch [true]
-   *
-   * @param {Object} options
-   * @api public
-   */
-
-  page.start = function(options) {
-    options = options || {};
-    if (running) return;
-    running = true;
-    pageWindow = options.window || (hasWindow && window);
-    if (false === options.dispatch) dispatch = false;
-    if (false === options.decodeURLComponents) decodeURLComponents = false;
-    if (false !== options.popstate && hasWindow) pageWindow.addEventListener('popstate', onpopstate, false);
-    if (false !== options.click && hasDocument) {
-      pageWindow.document.addEventListener(clickEvent, onclick, false);
-    }
-    hashbang = !!options.hashbang;
-    if(hashbang && hasWindow && !hasHistory) {
-      pageWindow.addEventListener('hashchange', onpopstate, false);
-    }
-    if (!dispatch) return;
-
-    var url;
-    if(isLocation) {
-      var loc = pageWindow.location;
-
-      if(hashbang && ~loc.hash.indexOf('#!')) {
-        url = loc.hash.substr(2) + loc.search;
-      } else if (hashbang) {
-        url = loc.search + loc.hash;
-      } else {
-        url = loc.pathname + loc.search + loc.hash;
-      }
-    }
-
-    page.replace(url, null, true, dispatch);
-  };
-
-  /**
-   * Unbind click and popstate event handlers.
-   *
-   * @api public
-   */
-
-  page.stop = function() {
-    if (!running) return;
-    page.current = '';
-    page.len = 0;
-    running = false;
-    hasDocument && pageWindow.document.removeEventListener(clickEvent, onclick, false);
-    hasWindow && pageWindow.removeEventListener('popstate', onpopstate, false);
-    hasWindow && pageWindow.removeEventListener('hashchange', onpopstate, false);
-  };
-
-  /**
-   * Show `path` with optional `state` object.
-   *
-   * @param {string} path
-   * @param {Object=} state
-   * @param {boolean=} dispatch
-   * @param {boolean=} push
-   * @return {!Context}
-   * @api public
-   */
-
-  page.show = function(path, state, dispatch, push) {
-    var ctx = new Context(path, state),
-      prev = prevContext;
-    prevContext = ctx;
-    page.current = ctx.path;
-    if (false !== dispatch) page.dispatch(ctx, prev);
-    if (false !== ctx.handled && false !== push) ctx.pushState();
-    return ctx;
-  };
-
-  /**
-   * Goes back in the history
-   * Back should always let the current route push state and then go back.
-   *
-   * @param {string} path - fallback path to go back if no more history exists, if undefined defaults to page.base
-   * @param {Object=} state
-   * @api public
-   */
-
-  page.back = function(path, state) {
-    if (page.len > 0) {
-      // this may need more testing to see if all browsers
-      // wait for the next tick to go back in history
-      hasHistory && pageWindow.history.back();
-      page.len--;
-    } else if (path) {
-      setTimeout(function() {
-        page.show(path, state);
-      });
-    }else{
-      setTimeout(function() {
-        page.show(getBase(), state);
-      });
-    }
-  };
-
-
-  /**
-   * Register route to redirect from one path to other
-   * or just redirect to another route
-   *
-   * @param {string} from - if param 'to' is undefined redirects to 'from'
-   * @param {string=} to
-   * @api public
-   */
-  page.redirect = function(from, to) {
-    // Define route from a path to another
-    if ('string' === typeof from && 'string' === typeof to) {
-      page(from, function(e) {
-        setTimeout(function() {
-          page.replace(/** @type {!string} */ (to));
-        }, 0);
-      });
-    }
-
-    // Wait for the push state and replace it with another
-    if ('string' === typeof from && 'undefined' === typeof to) {
-      setTimeout(function() {
-        page.replace(from);
-      }, 0);
-    }
-  };
-
-  /**
-   * Replace `path` with optional `state` object.
-   *
-   * @param {string} path
-   * @param {Object=} state
-   * @param {boolean=} init
-   * @param {boolean=} dispatch
-   * @return {!Context}
-   * @api public
-   */
-
-
-  page.replace = function(path, state, init, dispatch) {
-    var ctx = new Context(path, state),
-      prev = prevContext;
-    prevContext = ctx;
-    page.current = ctx.path;
-    ctx.init = init;
-    ctx.save(); // save before dispatching, which may redirect
-    if (false !== dispatch) page.dispatch(ctx, prev);
-    return ctx;
-  };
-
-  /**
-   * Dispatch the given `ctx`.
-   *
-   * @param {Context} ctx
-   * @api private
-   */
-
-  page.dispatch = function(ctx, prev) {
-    var i = 0,
-      j = 0;
-
-    function nextExit() {
-      var fn = page.exits[j++];
-      if (!fn) return nextEnter();
-      fn(prev, nextExit);
-    }
-
-    function nextEnter() {
-      var fn = page.callbacks[i++];
-
-      if (ctx.path !== page.current) {
-        ctx.handled = false;
-        return;
-      }
-      if (!fn) return unhandled(ctx);
-      fn(ctx, nextEnter);
-    }
-
-    if (prev) {
-      nextExit();
-    } else {
-      nextEnter();
-    }
-  };
-
-  /**
-   * Unhandled `ctx`. When it's not the initial
-   * popstate then redirect. If you wish to handle
-   * 404s on your own use `page('*', callback)`.
-   *
-   * @param {Context} ctx
-   * @api private
-   */
-  function unhandled(ctx) {
-    if (ctx.handled) return;
-    var current;
-
-    if (hashbang) {
-      current = isLocation && getBase() + pageWindow.location.hash.replace('#!', '');
-    } else {
-      current = isLocation && pageWindow.location.pathname + pageWindow.location.search;
-    }
-
-    if (current === ctx.canonicalPath) return;
-    page.stop();
-    ctx.handled = false;
-    isLocation && (pageWindow.location.href = ctx.canonicalPath);
-  }
-
-  /**
-   * Register an exit route on `path` with
-   * callback `fn()`, which will be called
-   * on the previous context when a new
-   * page is visited.
-   */
-  page.exit = function(path, fn) {
-    if (typeof path === 'function') {
-      return page.exit('*', path);
-    }
-
-    var route = new Route(path);
-    for (var i = 1; i < arguments.length; ++i) {
-      page.exits.push(route.middleware(arguments[i]));
-    }
-  };
-
-  /**
-   * Remove URL encoding from the given `str`.
-   * Accommodates whitespace in both x-www-form-urlencoded
-   * and regular percent-encoded form.
-   *
-   * @param {string} val - URL component to decode
-   */
-  function decodeURLEncodedURIComponent(val) {
-    if (typeof val !== 'string') { return val; }
-    return decodeURLComponents ? decodeURIComponent(val.replace(/\+/g, ' ')) : val;
-  }
-
-  /**
-   * Initialize a new "request" `Context`
-   * with the given `path` and optional initial `state`.
-   *
-   * @constructor
-   * @param {string} path
-   * @param {Object=} state
-   * @api public
-   */
-
-  function Context(path, state) {
-    var pageBase = getBase();
-    if ('/' === path[0] && 0 !== path.indexOf(pageBase)) path = pageBase + (hashbang ? '#!' : '') + path;
-    var i = path.indexOf('?');
-
-    this.canonicalPath = path;
-    this.path = path.replace(pageBase, '') || '/';
-    if (hashbang) this.path = this.path.replace('#!', '') || '/';
-
-    this.title = (hasDocument && pageWindow.document.title);
-    this.state = state || {};
-    this.state.path = path;
-    this.querystring = ~i ? decodeURLEncodedURIComponent(path.slice(i + 1)) : '';
-    this.pathname = decodeURLEncodedURIComponent(~i ? path.slice(0, i) : path);
-    this.params = {};
-
-    // fragment
-    this.hash = '';
-    if (!hashbang) {
-      if (!~this.path.indexOf('#')) return;
-      var parts = this.path.split('#');
-      this.path = this.pathname = parts[0];
-      this.hash = decodeURLEncodedURIComponent(parts[1]) || '';
-      this.querystring = this.querystring.split('#')[0];
-    }
-  }
-
-  /**
-   * Expose `Context`.
-   */
-
-  page.Context = Context;
-
-  /**
-   * Push state.
-   *
-   * @api private
-   */
-
-  Context.prototype.pushState = function() {
-    page.len++;
-    if (hasHistory) {
-        pageWindow.history.pushState(this.state, this.title,
-          hashbang && this.path !== '/' ? '#!' + this.path : this.canonicalPath);
-    }
-  };
-
-  /**
-   * Save the context state.
-   *
-   * @api public
-   */
-
-  Context.prototype.save = function() {
-    if (hasHistory && pageWindow.location.protocol !== 'file:') {
-        pageWindow.history.replaceState(this.state, this.title,
-          hashbang && this.path !== '/' ? '#!' + this.path : this.canonicalPath);
-    }
-  };
-
-  /**
-   * Initialize `Route` with the given HTTP `path`,
-   * and an array of `callbacks` and `options`.
-   *
-   * Options:
-   *
-   *   - `sensitive`    enable case-sensitive routes
-   *   - `strict`       enable strict matching for trailing slashes
-   *
-   * @constructor
-   * @param {string} path
-   * @param {Object=} options
-   * @api private
-   */
-
-  function Route(path, options) {
-    options = options || {};
-    options.strict = options.strict || strict;
-    this.path = (path === '*') ? '(.*)' : path;
-    this.method = 'GET';
-    this.regexp = pathtoRegexp(this.path,
-      this.keys = [],
-      options);
-  }
-
-  /**
-   * Expose `Route`.
-   */
-
-  page.Route = Route;
-
-  /**
-   * Return route middleware with
-   * the given callback `fn()`.
-   *
-   * @param {Function} fn
-   * @return {Function}
-   * @api public
-   */
-
-  Route.prototype.middleware = function(fn) {
-    var self = this;
-    return function(ctx, next) {
-      if (self.match(ctx.path, ctx.params)) return fn(ctx, next);
-      next();
-    };
-  };
-
-  /**
-   * Check if this route matches `path`, if so
-   * populate `params`.
-   *
-   * @param {string} path
-   * @param {Object} params
-   * @return {boolean}
-   * @api private
-   */
-
-  Route.prototype.match = function(path, params) {
-    var keys = this.keys,
-      qsIndex = path.indexOf('?'),
-      pathname = ~qsIndex ? path.slice(0, qsIndex) : path,
-      m = this.regexp.exec(decodeURIComponent(pathname));
-
-    if (!m) return false;
-
-    for (var i = 1, len = m.length; i < len; ++i) {
-      var key = keys[i - 1];
-      var val = decodeURLEncodedURIComponent(m[i]);
-      if (val !== undefined || !(hasOwnProperty.call(params, key.name))) {
-        params[key.name] = val;
-      }
-    }
-
-    return true;
-  };
-
-
-  /**
-   * Handle "populate" events.
-   */
-
-  var onpopstate = (function () {
-    var loaded = false;
-    if ( ! hasWindow ) {
-      return;
-    }
-    if (hasDocument && document.readyState === 'complete') {
-      loaded = true;
-    } else {
-      window.addEventListener('load', function() {
-        setTimeout(function() {
-          loaded = true;
-        }, 0);
-      });
-    }
-    return function onpopstate(e) {
-      if (!loaded) return;
-      if (e.state) {
-        var path = e.state.path;
-        page.replace(path, e.state);
-      } else if (isLocation) {
-        var loc = pageWindow.location;
-        page.show(loc.pathname + loc.hash, undefined, undefined, false);
-      }
-    };
-  })();
-  /**
-   * Handle "click" events.
-   */
-
-  /* jshint +W054 */
-  function onclick(e) {
-    if (1 !== which(e)) return;
-
-    if (e.metaKey || e.ctrlKey || e.shiftKey) return;
-    if (e.defaultPrevented) return;
-
-    // ensure link
-    // use shadow dom when available
-    var el = e.path ? e.path[0] : e.target;
-
-    // continue ensure link
-    // el.nodeName for svg links are 'a' instead of 'A'
-    while (el && 'A' !== el.nodeName.toUpperCase()) el = el.parentNode;
-    if (!el || 'A' !== el.nodeName.toUpperCase()) return;
-
-    // check if link is inside an svg
-    // in this case, both href and target are always inside an object
-    var svg = (typeof el.href === 'object') && el.href.constructor.name === 'SVGAnimatedString';
-
-    // Ignore if tag has
-    // 1. "download" attribute
-    // 2. rel="external" attribute
-    if (el.hasAttribute('download') || el.getAttribute('rel') === 'external') return;
-
-    // ensure non-hash for the same path
-    var link = el.getAttribute('href');
-    if(!hashbang && samePath(el) && (el.hash || '#' === link)) return;
-
-    // Check for mailto: in the href
-    if (link && link.indexOf('mailto:') > -1) return;
-
-    // check target
-    // svg target is an object and its desired value is in .baseVal property
-    if (svg ? el.target.baseVal : el.target) return;
-
-    // x-origin
-    // note: svg links that are not relative don't call click events (and skip page.js)
-    // consequently, all svg links tested inside page.js are relative and in the same origin
-    if (!svg && !sameOrigin(el.href)) return;
-
-    // rebuild path
-    // There aren't .pathname and .search properties in svg links, so we use href
-    // Also, svg href is an object and its desired value is in .baseVal property
-    var path = svg ? el.href.baseVal : (el.pathname + el.search + (el.hash || ''));
-
-    path = path[0] !== '/' ? '/' + path : path;
-
-    // strip leading "/[drive letter]:" on NW.js on Windows
-    if (hasProcess && path.match(/^\/[a-zA-Z]:\//)) {
-      path = path.replace(/^\/[a-zA-Z]:\//, '/');
-    }
-
-    // same page
-    var orig = path;
-    var pageBase = getBase();
-
-    if (path.indexOf(pageBase) === 0) {
-      path = path.substr(base.length);
-    }
-
-    if (hashbang) path = path.replace('#!', '');
-
-    if (pageBase && orig === path) return;
-
-    e.preventDefault();
-    page.show(orig);
-  }
-
-  /**
-   * Event button.
-   */
-
-  function which(e) {
-    e = e || (hasWindow && window.event);
-    return null == e.which ? e.button : e.which;
-  }
-
-  /**
-   * Convert to a URL object
-   */
-  function toURL(href) {
-    if(typeof URL === 'function' && isLocation) {
-      return new URL(href, location.toString());
-    } else if (hasDocument) {
-      var anc = document.createElement('a');
-      anc.href = href;
-      return anc;
-    }
-  }
-
-  /**
-   * Check if `href` is the same origin.
-   */
-
-  function sameOrigin(href) {
-    if(!href || !isLocation) return false;
-    var url = toURL(href);
-
-    var loc = pageWindow.location;
-    return loc.protocol === url.protocol &&
-      loc.hostname === url.hostname &&
-      loc.port === url.port;
-  }
-
-  function samePath(url) {
-    if(!isLocation) return false;
-    var loc = pageWindow.location;
-    return url.pathname === loc.pathname &&
-      url.search === loc.search;
-  }
-
-  /**
-   * Gets the `base`, which depends on whether we are using History or
-   * hashbang routing.
-   */
-  function getBase() {
-    if(!!base) return base;
-    var loc = hasWindow && pageWindow.location;
-    return (hasWindow && hashbang && loc.protocol === 'file:') ? loc.pathname : base;
-  }
-
-  page.sameOrigin = sameOrigin;
-
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(29)))
-
-/***/ }),
-/* 29 */
-/***/ (function(module, exports) {
-
-// shim for using process in browser
-var process = module.exports = {};
-
-// cached from whatever global is present so that test runners that stub it
-// don't break things.  But we need to wrap it in a try catch in case it is
-// wrapped in strict mode code which doesn't define any globals.  It's inside a
-// function because try/catches deoptimize in certain engines.
-
-var cachedSetTimeout;
-var cachedClearTimeout;
-
-function defaultSetTimout() {
-    throw new Error('setTimeout has not been defined');
-}
-function defaultClearTimeout () {
-    throw new Error('clearTimeout has not been defined');
-}
-(function () {
-    try {
-        if (typeof setTimeout === 'function') {
-            cachedSetTimeout = setTimeout;
-        } else {
-            cachedSetTimeout = defaultSetTimout;
-        }
-    } catch (e) {
-        cachedSetTimeout = defaultSetTimout;
-    }
-    try {
-        if (typeof clearTimeout === 'function') {
-            cachedClearTimeout = clearTimeout;
-        } else {
-            cachedClearTimeout = defaultClearTimeout;
-        }
-    } catch (e) {
-        cachedClearTimeout = defaultClearTimeout;
-    }
-} ())
-function runTimeout(fun) {
-    if (cachedSetTimeout === setTimeout) {
-        //normal enviroments in sane situations
-        return setTimeout(fun, 0);
-    }
-    // if setTimeout wasn't available but was latter defined
-    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
-        cachedSetTimeout = setTimeout;
-        return setTimeout(fun, 0);
-    }
-    try {
-        // when when somebody has screwed with setTimeout but no I.E. maddness
-        return cachedSetTimeout(fun, 0);
-    } catch(e){
-        try {
-            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
-            return cachedSetTimeout.call(null, fun, 0);
-        } catch(e){
-            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
-            return cachedSetTimeout.call(this, fun, 0);
-        }
-    }
-
-
-}
-function runClearTimeout(marker) {
-    if (cachedClearTimeout === clearTimeout) {
-        //normal enviroments in sane situations
-        return clearTimeout(marker);
-    }
-    // if clearTimeout wasn't available but was latter defined
-    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
-        cachedClearTimeout = clearTimeout;
-        return clearTimeout(marker);
-    }
-    try {
-        // when when somebody has screwed with setTimeout but no I.E. maddness
-        return cachedClearTimeout(marker);
-    } catch (e){
-        try {
-            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
-            return cachedClearTimeout.call(null, marker);
-        } catch (e){
-            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
-            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
-            return cachedClearTimeout.call(this, marker);
-        }
-    }
-
-
-
-}
-var queue = [];
-var draining = false;
-var currentQueue;
-var queueIndex = -1;
-
-function cleanUpNextTick() {
-    if (!draining || !currentQueue) {
-        return;
-    }
-    draining = false;
-    if (currentQueue.length) {
-        queue = currentQueue.concat(queue);
-    } else {
-        queueIndex = -1;
-    }
-    if (queue.length) {
-        drainQueue();
-    }
-}
-
-function drainQueue() {
-    if (draining) {
-        return;
-    }
-    var timeout = runTimeout(cleanUpNextTick);
-    draining = true;
-
-    var len = queue.length;
-    while(len) {
-        currentQueue = queue;
-        queue = [];
-        while (++queueIndex < len) {
-            if (currentQueue) {
-                currentQueue[queueIndex].run();
-            }
-        }
-        queueIndex = -1;
-        len = queue.length;
-    }
-    currentQueue = null;
-    draining = false;
-    runClearTimeout(timeout);
-}
-
-process.nextTick = function (fun) {
-    var args = new Array(arguments.length - 1);
-    if (arguments.length > 1) {
-        for (var i = 1; i < arguments.length; i++) {
-            args[i - 1] = arguments[i];
-        }
-    }
-    queue.push(new Item(fun, args));
-    if (queue.length === 1 && !draining) {
-        runTimeout(drainQueue);
-    }
-};
-
-// v8 likes predictible objects
-function Item(fun, array) {
-    this.fun = fun;
-    this.array = array;
-}
-Item.prototype.run = function () {
-    this.fun.apply(null, this.array);
-};
-process.title = 'browser';
-process.browser = true;
-process.env = {};
-process.argv = [];
-process.version = ''; // empty string to avoid regexp issues
-process.versions = {};
-
-function noop() {}
-
-process.on = noop;
-process.addListener = noop;
-process.once = noop;
-process.off = noop;
-process.removeListener = noop;
-process.removeAllListeners = noop;
-process.emit = noop;
-process.prependListener = noop;
-process.prependOnceListener = noop;
-
-process.listeners = function (name) { return [] }
-
-process.binding = function (name) {
-    throw new Error('process.binding is not supported');
-};
-
-process.cwd = function () { return '/' };
-process.chdir = function (dir) {
-    throw new Error('process.chdir is not supported');
-};
-process.umask = function() { return 0; };
-
-
-/***/ }),
-/* 30 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var isarray = __webpack_require__(31)
-
-/**
- * Expose `pathToRegexp`.
- */
-module.exports = pathToRegexp
-module.exports.parse = parse
-module.exports.compile = compile
-module.exports.tokensToFunction = tokensToFunction
-module.exports.tokensToRegExp = tokensToRegExp
-
-/**
- * The main path matching regexp utility.
- *
- * @type {RegExp}
- */
-var PATH_REGEXP = new RegExp([
-  // Match escaped characters that would otherwise appear in future matches.
-  // This allows the user to escape special characters that won't transform.
-  '(\\\\.)',
-  // Match Express-style parameters and un-named parameters with a prefix
-  // and optional suffixes. Matches appear as:
-  //
-  // "/:test(\\d+)?" => ["/", "test", "\d+", undefined, "?", undefined]
-  // "/route(\\d+)"  => [undefined, undefined, undefined, "\d+", undefined, undefined]
-  // "/*"            => ["/", undefined, undefined, undefined, undefined, "*"]
-  '([\\/.])?(?:(?:\\:(\\w+)(?:\\(((?:\\\\.|[^()])+)\\))?|\\(((?:\\\\.|[^()])+)\\))([+*?])?|(\\*))'
-].join('|'), 'g')
-
-/**
- * Parse a string for the raw tokens.
- *
- * @param  {String} str
- * @return {Array}
- */
-function parse (str) {
-  var tokens = []
-  var key = 0
-  var index = 0
-  var path = ''
-  var res
-
-  while ((res = PATH_REGEXP.exec(str)) != null) {
-    var m = res[0]
-    var escaped = res[1]
-    var offset = res.index
-    path += str.slice(index, offset)
-    index = offset + m.length
-
-    // Ignore already escaped sequences.
-    if (escaped) {
-      path += escaped[1]
-      continue
-    }
-
-    // Push the current path onto the tokens.
-    if (path) {
-      tokens.push(path)
-      path = ''
-    }
-
-    var prefix = res[2]
-    var name = res[3]
-    var capture = res[4]
-    var group = res[5]
-    var suffix = res[6]
-    var asterisk = res[7]
-
-    var repeat = suffix === '+' || suffix === '*'
-    var optional = suffix === '?' || suffix === '*'
-    var delimiter = prefix || '/'
-    var pattern = capture || group || (asterisk ? '.*' : '[^' + delimiter + ']+?')
-
-    tokens.push({
-      name: name || key++,
-      prefix: prefix || '',
-      delimiter: delimiter,
-      optional: optional,
-      repeat: repeat,
-      pattern: escapeGroup(pattern)
-    })
-  }
-
-  // Match any characters still remaining.
-  if (index < str.length) {
-    path += str.substr(index)
-  }
-
-  // If the path exists, push it onto the end.
-  if (path) {
-    tokens.push(path)
-  }
-
-  return tokens
-}
-
-/**
- * Compile a string to a template function for the path.
- *
- * @param  {String}   str
- * @return {Function}
- */
-function compile (str) {
-  return tokensToFunction(parse(str))
-}
-
-/**
- * Expose a method for transforming tokens into the path function.
- */
-function tokensToFunction (tokens) {
-  // Compile all the tokens into regexps.
-  var matches = new Array(tokens.length)
-
-  // Compile all the patterns before compilation.
-  for (var i = 0; i < tokens.length; i++) {
-    if (typeof tokens[i] === 'object') {
-      matches[i] = new RegExp('^' + tokens[i].pattern + '$')
-    }
-  }
-
-  return function (obj) {
-    var path = ''
-    var data = obj || {}
-
-    for (var i = 0; i < tokens.length; i++) {
-      var token = tokens[i]
-
-      if (typeof token === 'string') {
-        path += token
-
-        continue
-      }
-
-      var value = data[token.name]
-      var segment
-
-      if (value == null) {
-        if (token.optional) {
-          continue
-        } else {
-          throw new TypeError('Expected "' + token.name + '" to be defined')
-        }
-      }
-
-      if (isarray(value)) {
-        if (!token.repeat) {
-          throw new TypeError('Expected "' + token.name + '" to not repeat, but received "' + value + '"')
-        }
-
-        if (value.length === 0) {
-          if (token.optional) {
-            continue
-          } else {
-            throw new TypeError('Expected "' + token.name + '" to not be empty')
-          }
-        }
-
-        for (var j = 0; j < value.length; j++) {
-          segment = encodeURIComponent(value[j])
-
-          if (!matches[i].test(segment)) {
-            throw new TypeError('Expected all "' + token.name + '" to match "' + token.pattern + '", but received "' + segment + '"')
-          }
-
-          path += (j === 0 ? token.prefix : token.delimiter) + segment
-        }
-
-        continue
-      }
-
-      segment = encodeURIComponent(value)
-
-      if (!matches[i].test(segment)) {
-        throw new TypeError('Expected "' + token.name + '" to match "' + token.pattern + '", but received "' + segment + '"')
-      }
-
-      path += token.prefix + segment
-    }
-
-    return path
-  }
-}
-
-/**
- * Escape a regular expression string.
- *
- * @param  {String} str
- * @return {String}
- */
-function escapeString (str) {
-  return str.replace(/([.+*?=^!:${}()[\]|\/])/g, '\\$1')
-}
-
-/**
- * Escape the capturing group by escaping special characters and meaning.
- *
- * @param  {String} group
- * @return {String}
- */
-function escapeGroup (group) {
-  return group.replace(/([=!:$\/()])/g, '\\$1')
-}
-
-/**
- * Attach the keys as a property of the regexp.
- *
- * @param  {RegExp} re
- * @param  {Array}  keys
- * @return {RegExp}
- */
-function attachKeys (re, keys) {
-  re.keys = keys
-  return re
-}
-
-/**
- * Get the flags for a regexp from the options.
- *
- * @param  {Object} options
- * @return {String}
- */
-function flags (options) {
-  return options.sensitive ? '' : 'i'
-}
-
-/**
- * Pull out keys from a regexp.
- *
- * @param  {RegExp} path
- * @param  {Array}  keys
- * @return {RegExp}
- */
-function regexpToRegexp (path, keys) {
-  // Use a negative lookahead to match only capturing groups.
-  var groups = path.source.match(/\((?!\?)/g)
-
-  if (groups) {
-    for (var i = 0; i < groups.length; i++) {
-      keys.push({
-        name: i,
-        prefix: null,
-        delimiter: null,
-        optional: false,
-        repeat: false,
-        pattern: null
-      })
-    }
-  }
-
-  return attachKeys(path, keys)
-}
-
-/**
- * Transform an array into a regexp.
- *
- * @param  {Array}  path
- * @param  {Array}  keys
- * @param  {Object} options
- * @return {RegExp}
- */
-function arrayToRegexp (path, keys, options) {
-  var parts = []
-
-  for (var i = 0; i < path.length; i++) {
-    parts.push(pathToRegexp(path[i], keys, options).source)
-  }
-
-  var regexp = new RegExp('(?:' + parts.join('|') + ')', flags(options))
-
-  return attachKeys(regexp, keys)
-}
-
-/**
- * Create a path regexp from string input.
- *
- * @param  {String} path
- * @param  {Array}  keys
- * @param  {Object} options
- * @return {RegExp}
- */
-function stringToRegexp (path, keys, options) {
-  var tokens = parse(path)
-  var re = tokensToRegExp(tokens, options)
-
-  // Attach keys back to the regexp.
-  for (var i = 0; i < tokens.length; i++) {
-    if (typeof tokens[i] !== 'string') {
-      keys.push(tokens[i])
-    }
-  }
-
-  return attachKeys(re, keys)
-}
-
-/**
- * Expose a function for taking tokens and returning a RegExp.
- *
- * @param  {Array}  tokens
- * @param  {Array}  keys
- * @param  {Object} options
- * @return {RegExp}
- */
-function tokensToRegExp (tokens, options) {
-  options = options || {}
-
-  var strict = options.strict
-  var end = options.end !== false
-  var route = ''
-  var lastToken = tokens[tokens.length - 1]
-  var endsWithSlash = typeof lastToken === 'string' && /\/$/.test(lastToken)
-
-  // Iterate over the tokens and create our regexp string.
-  for (var i = 0; i < tokens.length; i++) {
-    var token = tokens[i]
-
-    if (typeof token === 'string') {
-      route += escapeString(token)
-    } else {
-      var prefix = escapeString(token.prefix)
-      var capture = token.pattern
-
-      if (token.repeat) {
-        capture += '(?:' + prefix + capture + ')*'
-      }
-
-      if (token.optional) {
-        if (prefix) {
-          capture = '(?:' + prefix + '(' + capture + '))?'
-        } else {
-          capture = '(' + capture + ')?'
-        }
-      } else {
-        capture = prefix + '(' + capture + ')'
-      }
-
-      route += capture
-    }
-  }
-
-  // In non-strict mode we allow a slash at the end of match. If the path to
-  // match already ends with a slash, we remove it for consistency. The slash
-  // is valid at the end of a path match, not in the middle. This is important
-  // in non-ending mode, where "/test/" shouldn't match "/test//route".
-  if (!strict) {
-    route = (endsWithSlash ? route.slice(0, -2) : route) + '(?:\\/(?=$))?'
-  }
-
-  if (end) {
-    route += '$'
-  } else {
-    // In non-ending mode, we need the capturing groups to match as much as
-    // possible by using a positive lookahead to the end or next path segment.
-    route += strict && endsWithSlash ? '' : '(?=\\/|$)'
-  }
-
-  return new RegExp('^' + route, flags(options))
-}
-
-/**
- * Normalize the given path string, returning a regular expression.
- *
- * An empty array can be passed in for the keys, which will hold the
- * placeholder key descriptions. For example, using `/user/:id`, `keys` will
- * contain `[{ name: 'id', delimiter: '/', optional: false, repeat: false }]`.
- *
- * @param  {(String|RegExp|Array)} path
- * @param  {Array}                 [keys]
- * @param  {Object}                [options]
- * @return {RegExp}
- */
-function pathToRegexp (path, keys, options) {
-  keys = keys || []
-
-  if (!isarray(keys)) {
-    options = keys
-    keys = []
-  } else if (!options) {
-    options = {}
-  }
-
-  if (path instanceof RegExp) {
-    return regexpToRegexp(path, keys, options)
-  }
-
-  if (isarray(path)) {
-    return arrayToRegexp(path, keys, options)
-  }
-
-  return stringToRegexp(path, keys, options)
-}
-
-
-/***/ }),
-/* 31 */
-/***/ (function(module, exports) {
-
-module.exports = Array.isArray || function (arr) {
-  return Object.prototype.toString.call(arr) == '[object Array]';
-};
-
-
-/***/ }),
-/* 32 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return PageModule; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__category__ = __webpack_require__(33);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__searchProduct__ = __webpack_require__(34);
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-
-
-
-
-var PageModule = function (_ApiModule) {
-    _inherits(PageModule, _ApiModule);
-
-    function PageModule() {
-        _classCallCheck(this, PageModule);
-
-        var _this = _possibleConstructorReturn(this, (PageModule.__proto__ || Object.getPrototypeOf(PageModule)).call(this));
-
-        console.log('Page: PageModule');
-
-        _this.category = new __WEBPACK_IMPORTED_MODULE_1__category__["a" /* CategoryModule */]();
-        if ($('#js-searchProductForm').length > 0) {
-            console.log('Page: has search product');
-            new __WEBPACK_IMPORTED_MODULE_2__searchProduct__["a" /* SearchProductModule */]();
-        }
-
-        _this.data = {};
-        _this.apiUrl = '/api/store/addtocart';
-        _this.addProductToCartBtnHandler();
-        _this.checkForm();
-        return _this;
-    }
-
-    _createClass(PageModule, [{
-        key: 'checkForm',
-        value: function checkForm() {
-            var _this2 = this;
-
-            $('form.addProductToCart').each(function (index, item) {
-                $(item).validate({
-                    rules: {
-                        productId: {
-                            digits: true,
-                            max: 100000,
-                            min: 1,
-                            required: true
-                        },
-                        qty: {
-                            digits: true,
-                            max: 100000,
-                            min: 1,
-                            required: true
-                        }
-                    },
-                    messages: {
-                        productId: {
-                            digits: _this2.digitsField,
-                            max: _this2.maxValueField,
-                            min: _this2.minValueField,
-                            required: _this2.requiredField
-                        },
-                        qty: {
-                            digits: _this2.digitsField,
-                            max: _this2.maxValueField,
-                            min: _this2.minValueField,
-                            required: _this2.requiredField
-                        }
-                    }
-                });
-            });
-        }
-    }, {
-        key: 'addProductToCart',
-        value: function addProductToCart() {
-            this.post({
-                data: this.data,
-                url: this.apiUrl,
-                success: function success(response) {
-                    alertify.log.success('Продукт ' + response.name + ' добавлен в корзину');
-                }
-            });
-        }
-    }, {
-        key: 'addProductToCartBtnHandler',
-        value: function addProductToCartBtnHandler() {
-            var _this3 = this;
-
-            $('.js-add_to_cart').off('click').on('click', function (e) {
-                if (_this3.apiToken == null) {
-                    Alertify.dialog.alert("<p>Для того чтобы положить товар в корзину</p>Вам необходимо войти в магазин</p>" + "<a href='/login'>Перейти к странице входа <i class='fa fa-sign-in' aria-hidden='true'></i></a>");
-                    return;
-                }
-
-                var $el = $(e.target),
-                    $form = $el.closest('form.addProductToCart');
-                _this3.data = $form.serialize();
-
-                console.log(_this3.data);
-
-                if ($form.valid()) {
-                    _this3.addProductToCart();
-                } else {
-                    console.log('not valid');
-                }
-            });
-        }
-    }]);
-
-    return PageModule;
-}(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
-
-/***/ }),
-/* 33 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return CategoryModule; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-
-
-var CategoryModule = function (_ApiModule) {
-    _inherits(CategoryModule, _ApiModule);
-
-    function CategoryModule() {
-        _classCallCheck(this, CategoryModule);
-
-        var _this = _possibleConstructorReturn(this, (CategoryModule.__proto__ || Object.getPrototypeOf(CategoryModule)).call(this));
-
-        console.log('Module: Category');
-
-        _this.init();
-        return _this;
-    }
-
-    _createClass(CategoryModule, [{
-        key: 'init',
-        value: function init() {
-            var $categoryBox = $('#category_menu');
-            $categoryBox.find('.active').parents('ul.sub_menu').addClass('display_item');
-            console.log($categoryBox.find('.active'));
-        }
-    }]);
-
-    return CategoryModule;
-}(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
-
-/***/ }),
-/* 34 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SearchProductModule; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-
-
-var SearchProductModule = function (_ApiModule) {
-    _inherits(SearchProductModule, _ApiModule);
-
-    function SearchProductModule() {
-        _classCallCheck(this, SearchProductModule);
-
-        var _this = _possibleConstructorReturn(this, (SearchProductModule.__proto__ || Object.getPrototypeOf(SearchProductModule)).call(this));
-
-        console.log('Module: SearchProductModule');
-
-        _this.selectInputData = $('#inputData').val();
-
-        _this.searchFormHandler();
-        _this.changeInputData();
-        return _this;
-    }
-
-    _createClass(SearchProductModule, [{
-        key: 'searchFormHandler',
-        value: function searchFormHandler() {
-            var _this2 = this;
-
-            $('#js-searchProductForm').submit(function (e) {
-                e.preventDefault();
-                console.log('Enter submit');
-                _this2.searchFormMethod();
-            });
-        }
-    }, {
-        key: 'formValidationHandler',
-        value: function formValidationHandler() {
-            console.log('formValidationHandler');
-            $('#js-searchProductForm').validate({
-                rules: {
-                    sku: {
-                        digits: true,
-                        max: 100000,
-                        min: 1,
-                        required: {
-                            param: true,
-                            depends: function depends(element) {
-                                return $('#inputData').val() == 'sku';
-                            }
-
-                        }
-                    },
-                    name: {
-                        maxlength: 255,
-                        minlength: 3,
-                        required: {
-                            param: true,
-                            depends: function depends(element) {
-                                return $('#inputData').val() == 'name';
-                            }
-
-                        }
-                    }
-                }
-            });
-        }
-    }, {
-        key: 'changeInputData',
-        value: function changeInputData() {
-            var _this3 = this;
-
-            $('#inputData').change(function (e) {
-                _this3.formValidationHandler();
-                _this3.selectInputData = e.target.value;
-                console.log(_this3.selectInputData);
-
-                if (_this3.selectInputData == 'sku') {
-                    $('.search-input').html('<input id="inputSku" name="sku" type="text" class="form-control" placeholder="Введите артикул">');
-                    $('#inputName').remove();
-                } else {
-                    $('#inputSku').remove();
-                    $('.search-input').html('<input id="inputName" name="name" type="text" class="form-control" placeholder="Введите название">');
-                }
-                $('#inputSku').val('');
-                $('#inputName').val('');
-                $('label.error').remove();
-            });
-        }
-    }, {
-        key: 'searchFormMethod',
-        value: function searchFormMethod() {
-            this.formValidationHandler();
-            if ($('#js-searchProductForm').valid()) {
-                console.log('SEARCH');
-                this.getSearchData();
-            }
-        }
-    }, {
-        key: 'getSearchData',
-        value: function getSearchData() {
-            window.location.href = '//' + window.location.hostname + '/store/search?' + $('#js-searchProductForm').serialize();
-        }
-    }]);
-
-    return SearchProductModule;
-}(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
-
-/***/ }),
-/* 35 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return CartModule; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__removeItemCart__ = __webpack_require__(36);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__destroyCart__ = __webpack_require__(37);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__changeItemAmountCart__ = __webpack_require__(38);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__createOrder__ = __webpack_require__(39);
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-
-
-
-
-
-
-var CartModule = function (_ApiModule) {
-    _inherits(CartModule, _ApiModule);
-
-    function CartModule() {
-        _classCallCheck(this, CartModule);
-
-        var _this = _possibleConstructorReturn(this, (CartModule.__proto__ || Object.getPrototypeOf(CartModule)).call(this));
-
-        console.log('Page: CartModule');
-
-        new __WEBPACK_IMPORTED_MODULE_1__removeItemCart__["a" /* RemoveItemCartModule */]();
-        new __WEBPACK_IMPORTED_MODULE_2__destroyCart__["a" /* DestroyCartModule */]();
-        new __WEBPACK_IMPORTED_MODULE_3__changeItemAmountCart__["a" /* ChangeItemAmountModule */]();
-        new __WEBPACK_IMPORTED_MODULE_4__createOrder__["a" /* CreateOrderModule */]();
-
-        _this.initGeocomplete();
-        return _this;
-    }
-
-    return CartModule;
-}(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
-
-/***/ }),
-/* 36 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return RemoveItemCartModule; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-
-
-var RemoveItemCartModule = function (_ApiModule) {
-    _inherits(RemoveItemCartModule, _ApiModule);
-
-    function RemoveItemCartModule() {
-        _classCallCheck(this, RemoveItemCartModule);
-
-        var _this = _possibleConstructorReturn(this, (RemoveItemCartModule.__proto__ || Object.getPrototypeOf(RemoveItemCartModule)).call(this));
-
-        console.log('Module: RemoveItemCartModule');
-
-        _this.apiDeleteProductItemUrl = '/cart/item';
-        _this.removeProductHandler();
-        return _this;
-    }
-
-    _createClass(RemoveItemCartModule, [{
-        key: 'removeProductHandler',
-        value: function removeProductHandler() {
-            var _this2 = this;
-
-            $('.js-remove-product').off('click').on('click', function (e) {
-                var $el = $(e.target),
-                    $form = $el.closest('.js-item-form');
-
-                if ($form.valid()) {
-                    console.log('removeProductHandler');
-                    _this2.removeProductItemMethod($form);
-                }
-            });
-        }
-    }, {
-        key: 'removeProductItemMethod',
-        value: function removeProductItemMethod($form) {
-            this.delete({
-                data: $form.serialize(),
-                url: this.apiDeleteProductItemUrl,
-                success: function success(response) {
-                    if (typeof response.deleteId != 'undefined') {
-                        console.log(response.deleteId);
-                        $form.closest('.table-row-cart').remove();
-
-                        $('#cartTotal').html(response.total + " грн");
-                        $('#cartTotal').data('total_sum', response.total);
-                        alertify.log.error('Remove product form Cart');
-                    } else if (typeof response.html != 'undefined') {
-                        $('.js-cart-content').html(response.html);
-                    }
-                }
-            });
-        }
-    }, {
-        key: 'checkForm',
-        value: function checkForm() {
-            $('.js-item-form').each(function (index, form) {
-
-                $(form).validate({
-                    rules: {
-                        rowId: {
-                            required: true,
-                            minlength: 10
-                        },
-                        amount: {
-                            required: true,
-                            digits: true,
-                            max: 10000,
-                            min: 1
-                        }
-                    },
-                    ignore: []
-                });
-            });
-        }
-    }]);
-
-    return RemoveItemCartModule;
-}(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
-
-/***/ }),
-/* 37 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return DestroyCartModule; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-
-
-var DestroyCartModule = function (_ApiModule) {
-    _inherits(DestroyCartModule, _ApiModule);
-
-    function DestroyCartModule() {
-        _classCallCheck(this, DestroyCartModule);
-
-        var _this = _possibleConstructorReturn(this, (DestroyCartModule.__proto__ || Object.getPrototypeOf(DestroyCartModule)).call(this));
-
-        console.log('Module: DestroyCartModule');
-
-        _this.apiDeleteCartUrl = '/cart';
-        _this.clearCartHandler();
-        return _this;
-    }
-
-    _createClass(DestroyCartModule, [{
-        key: 'clearCartHandler',
-        value: function clearCartHandler() {
-            var _this2 = this;
-
-            $('#clearCart').off('click').on('click', function () {
-                console.log('clearCartHandler');
-                _this2.clearCartMethod();
-            });
-        }
-    }, {
-        key: 'clearCartMethod',
-        value: function clearCartMethod() {
-            this.delete({
-                data: {},
-                url: this.apiDeleteCartUrl,
-                success: function success(response) {
-                    $('.js-cart-content').html('<div class="row empty-cart"><div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">' + response.html + '</div></div>');
-                }
-            });
-        }
-    }]);
-
-    return DestroyCartModule;
-}(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
-
-/***/ }),
-/* 38 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ChangeItemAmountModule; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-
-
-var ChangeItemAmountModule = function (_ApiModule) {
-    _inherits(ChangeItemAmountModule, _ApiModule);
-
-    function ChangeItemAmountModule() {
-        _classCallCheck(this, ChangeItemAmountModule);
-
-        var _this = _possibleConstructorReturn(this, (ChangeItemAmountModule.__proto__ || Object.getPrototypeOf(ChangeItemAmountModule)).call(this));
-
-        console.log('Module: ChangeItemAmountModule');
-
-        _this.apiAmountAddItemUrl = '/cart/add_item';
-        _this.apiAmountSubItemUrl = '/cart/sub_item';
-
-        _this.checkForm();
-        _this.changeAmountAddBtnHandler();
-        _this.changeAmountSubBtnHandler();
-        return _this;
-    }
-
-    _createClass(ChangeItemAmountModule, [{
-        key: 'changeAmountAddBtnHandler',
-        value: function changeAmountAddBtnHandler() {
-            var _this2 = this;
-
-            $('.js-add-product').off('click').on('click', function (e) {
-                console.log('changeAmount - Add');
-                _this2.prepareDataHandler(e, _this2.apiAmountAddItemUrl, 'add');
-            });
-        }
-    }, {
-        key: 'changeAmountSubBtnHandler',
-        value: function changeAmountSubBtnHandler() {
-            var _this3 = this;
-
-            $('.js-sub-product').off('click').on('click', function (e) {
-                console.log('changeAmount - Sub');
-                _this3.prepareDataHandler(e, _this3.apiAmountSubItemUrl, 'sub');
-            });
-        }
-    }, {
-        key: 'prepareDataHandler',
-        value: function prepareDataHandler(e, urlAction, action) {
-            var $el = $(e.target),
-                $form = $el.closest('.js-item-form');
-
-            var $qtyInput = $form.find('input.products_quantity');
-            var $currentAmount = $qtyInput.val();
-            console.log($qtyInput);
-
-            if ($currentAmount < 1 || $currentAmount == 1 && action == 'sub') {
-                alertify.log.error('Значение не может быть меньше 1');
-                return;
-            }
-
-            switch (action) {
-                case 'add':
-                    $qtyInput.val(++$currentAmount);
-                    break;
-                case 'sub':
-                    $qtyInput.val(--$currentAmount);
-                    break;
-                case 'set':
-                    break;
-            }
-
-            this.changeAmountItemMethod($form, urlAction);
-        }
-    }, {
-        key: 'changeAmountItemMethod',
-        value: function changeAmountItemMethod($form, urlAction) {
-            if ($form.valid()) {
-                this.post({
-                    data: $form.serialize(),
-                    url: urlAction,
-                    success: function success(response) {
-                        alertify.log.success('Значение поля успешно обновилось');
-                        $form.find('.products_quantity').val(response.item.qty);
-                        $form.find('.td-sum').html((response.item.price * response.item.qty).toFixed(2));
-
-                        $('#cartTotal').html(parseFloat(response.total).toFixed(2) + ' грн');
-                        $('#cartTotal').data('total_sum', response.total);
-                    }
-                });
-            } else {
-                console.log('not valid');
-            }
-        }
-    }, {
-        key: 'checkForm',
-        value: function checkForm() {
-            $('.js-item-form').each(function (index, form) {
-
-                $(form).validate({
-                    rules: {
-                        rowId: {
-                            required: true,
-                            minlength: 10
-                        },
-                        amount: {
-                            required: true,
-                            digits: true,
-                            max: 10000,
-                            min: 1
-                        }
-                    },
-                    ignore: []
-                });
-            });
-        }
-    }]);
-
-    return ChangeItemAmountModule;
-}(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
-
-/***/ }),
-/* 39 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return CreateOrderModule; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-
-
-var CreateOrderModule = function (_ApiModule) {
-    _inherits(CreateOrderModule, _ApiModule);
-
-    function CreateOrderModule() {
-        _classCallCheck(this, CreateOrderModule);
-
-        var _this = _possibleConstructorReturn(this, (CreateOrderModule.__proto__ || Object.getPrototypeOf(CreateOrderModule)).call(this));
-
-        console.log('Module: CreateOrderModule');
-
-        _this.apisendDataUrl = '/orders/create';
-        _this.minOrderAmount = 200;
-
-        _this.createOrderHandler();
-        _this.formValidationHandler();
-        return _this;
-    }
-
-    _createClass(CreateOrderModule, [{
-        key: 'isCartAmountLessThanMin',
-        value: function isCartAmountLessThanMin() {
-            var total_sum = $('#cartTotal').data('total_sum') + "";
-            if (parseInt(total_sum.replace(/,/, '')) < this.minOrderAmount) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-    }, {
-        key: 'createOrderHandler',
-        value: function createOrderHandler() {
-            var _this2 = this;
-
-            $('#submitCart').off('click').on('click', function () {
-                console.log('createOrderHandler');
-                if (_this2.isCartAmountLessThanMin()) {
-                    console.log('isCartAmountLessThanMin');
-                    Alertify.dialog.alert('Минимальная сумма заказа - 200 грн');
-                    return;
-                }
-                if ($('#create-order-form').valid()) {
-                    _this2.sendDataMethod();
-                    console.log('spiner');
-                    $('#loadToCreateOrder').addClass('create-order');
-                }
-            });
-        }
-    }, {
-        key: 'sendDataMethod',
-        value: function sendDataMethod() {
-            this.post({
-                data: $('#create-order-form').serialize(),
-                url: this.apisendDataUrl,
-                success: function success(response) {
-                    if (response.redirectUrl) {
-                        $('#loadToCreateOrder').remove();
-                        window.location.replace(response.redirectUrl);
-                    }
-                    //todo add broker order
-                }
-            });
-        }
-    }, {
-        key: 'formValidationHandler',
-        value: function formValidationHandler() {
-            $('#create-order-form').validate({
-                rules: {
-                    address: {
-                        minlength: 5,
-                        required: true
-                    },
-                    phone: {
-                        maxlength: 13,
-                        minlength: 10,
-                        required: true
-                    },
-                    note: {
-                        maxlength: 1000
-                    }
-                },
-                messages: {
-                    address: {
-                        minlength: this.minlengthField,
-                        required: this.requiredField
-                    },
-                    phone: {
-                        minlength: this.minlengthField,
-                        maxlength: this.maxlengthField,
-                        required: this.requiredField
-                    }
-                }
-            });
-        }
-    }]);
-
-    return CreateOrderModule;
-}(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
-
-/***/ }),
-/* 40 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MyProfileModule; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__user_data__ = __webpack_require__(41);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__user_password__ = __webpack_require__(42);
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-
-
-
-
-var MyProfileModule = function (_ApiModule) {
-    _inherits(MyProfileModule, _ApiModule);
-
-    function MyProfileModule() {
-        _classCallCheck(this, MyProfileModule);
-
-        var _this = _possibleConstructorReturn(this, (MyProfileModule.__proto__ || Object.getPrototypeOf(MyProfileModule)).call(this));
-
-        console.log('Module: MyProfileModule');
-
-        new __WEBPACK_IMPORTED_MODULE_1__user_data__["a" /* UserDataModule */]();
-        new __WEBPACK_IMPORTED_MODULE_2__user_password__["a" /* UserPasswordModule */]();
-
-        _this.initGeocomplete();
-        return _this;
-    }
-
-    return MyProfileModule;
-}(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
-
-/***/ }),
-/* 41 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return UserDataModule; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-
-
-var UserDataModule = function (_ApiModule) {
-    _inherits(UserDataModule, _ApiModule);
-
-    function UserDataModule() {
-        _classCallCheck(this, UserDataModule);
-
-        var _this = _possibleConstructorReturn(this, (UserDataModule.__proto__ || Object.getPrototypeOf(UserDataModule)).call(this));
-
-        console.log('Module: UserDataModule');
-
-        _this.apiUrlUdateUserData = '/api/my_profile/data';
-
-        _this.formUsersDataValidationHandler();
-        _this.submitUserDataHandler();
-        return _this;
-    }
-
-    _createClass(UserDataModule, [{
-        key: 'formUsersDataValidationHandler',
-        value: function formUsersDataValidationHandler() {
-            var validationUsersName = function validationUsersName(value, element) {
-                return this.optional(element) || !/[^a-zA-Zа-яА-Я]+/g.test(value);
-            };
-
-            $.validator.addMethod("checkName", validationUsersName, "Please enter the correct value. Only latin chars");
-            //todo add cyrillic validation
-
-            $('#usersData').validate({
-                rules: {
-                    name: {
-                        maxlength: 250,
-                        minlength: 5,
-                        normalizer: function normalizer(value) {
-                            return $.trim(value);
-                        },
-                        checkName: true
-                    },
-                    fname: {
-                        maxlength: 250,
-                        minlength: 3,
-                        normalizer: function normalizer(value) {
-                            return $.trim(value);
-                        },
-                        checkName: true
-                    },
-                    lname: {
-                        maxlength: 250,
-                        minlength: 3,
-                        normalizer: function normalizer(value) {
-                            return $.trim(value);
-                        },
-                        checkName: true
-                    },
-                    address: {
-                        maxlength: 250,
-                        minlength: 10,
-                        normalizer: function normalizer(value) {
-                            return $.trim(value);
-                        }
-                    },
-                    phone: {
-                        digits: true,
-                        maxlength: 12,
-                        minlength: 10,
-                        normalizer: function normalizer(value) {
-                            return $.trim(value);
-                        }
-                    }
-                }
-            });
-        }
-    }, {
-        key: 'submitUserDataHandler',
-        value: function submitUserDataHandler() {
-            var _this2 = this;
-
-            $('#usersData').on('submit', function (e) {
-                e.preventDefault();
-
-                if ($('#usersData').valid()) {
-                    _this2.sendUserFormData();
-                    alertify.log.info("Changed user's data");
-                }
-            });
-        }
-    }, {
-        key: 'sendUserFormData',
-        value: function sendUserFormData() {
-            console.log('sendUserFormData: ');
-            this.post({
-                data: $('#usersData').serialize(),
-                url: this.apiUrlUdateUserData,
-                success: function success(response) {}
-            });
-        }
-    }]);
-
-    return UserDataModule;
-}(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
-
-/***/ }),
-/* 42 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return UserPasswordModule; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-
-
-var UserPasswordModule = function (_ApiModule) {
-    _inherits(UserPasswordModule, _ApiModule);
-
-    function UserPasswordModule() {
-        _classCallCheck(this, UserPasswordModule);
-
-        var _this = _possibleConstructorReturn(this, (UserPasswordModule.__proto__ || Object.getPrototypeOf(UserPasswordModule)).call(this));
-
-        console.log('Module: UserPasswordModule');
-
-        _this.apiUrlUdateUserPassword = '/api/my_profile/password';
-
-        _this.formUsersPasswordValidationHandler();
-        _this.submitUserPasswordHandler();
-        return _this;
-    }
-
-    _createClass(UserPasswordModule, [{
-        key: 'formUsersPasswordValidationHandler',
-        value: function formUsersPasswordValidationHandler() {
-            var validationUsersPassword = function validationUsersPassword(value, element) {
-                return this.optional(element) || !/[^a-zA-Z0-9]+/g.test(value);
-            };
-
-            $.validator.addMethod("checkPassword", validationUsersPassword, "Please enter the correct value. Only latin chars, numbers");
-
-            $('#usersPassword').validate({
-                rules: {
-                    password: {
-                        maxlength: 50,
-                        minlength: 6,
-                        normalizer: function normalizer(value) {
-                            return $.trim(value);
-                        },
-                        checkPassword: true
-                    },
-                    password_confirmation: {
-                        equalTo: "#password"
-                    }
-                }
-            });
-        }
-    }, {
-        key: 'submitUserPasswordHandler',
-        value: function submitUserPasswordHandler() {
-            var _this2 = this;
-
-            $('#usersPassword').on('submit', function (e) {
-                e.preventDefault();
-
-                if ($('#usersPassword').valid()) {
-                    _this2.sendUserFormPassword();
-                    alertify.log.info("Changed user's password");
-                    _this2.cleanFormFields();
-                }
-            });
-        }
-    }, {
-        key: 'sendUserFormPassword',
-        value: function sendUserFormPassword() {
-            console.log('sendUserFormData: ');
-            this.post({
-                data: $('#usersPassword').serialize(),
-                url: this.apiUrlUdateUserPassword,
-                success: function success(response) {}
-            });
-        }
-    }, {
-        key: 'cleanFormFields',
-        value: function cleanFormFields() {
-            $('#password').val('');
-            $('#passwordConfirmation').val('');
-        }
-    }]);
-
-    return UserPasswordModule;
-}(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
-
-/***/ }),
-/* 43 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ManagersModule; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-
-
-var ManagersModule = function (_ApiModule) {
-    _inherits(ManagersModule, _ApiModule);
-
-    function ManagersModule() {
-        _classCallCheck(this, ManagersModule);
-
-        var _this = _possibleConstructorReturn(this, (ManagersModule.__proto__ || Object.getPrototypeOf(ManagersModule)).call(this));
-
-        console.log('Page: ManagersModule');
-        _this.apiUpdateUrl = '/api/managers';
-        _this.createManagerHandler();
-        return _this;
-    }
-
-    _createClass(ManagersModule, [{
-        key: 'createManagerHandler',
-        value: function createManagerHandler() {
-            var _this2 = this;
-
-            $('#createManagerBtn').off('click').on('click', function (e) {
-                e.preventDefault();
-
-                _this2.createManagerMethod();
-            });
-        }
-    }, {
-        key: 'createManagerMethod',
-        value: function createManagerMethod() {
-            this.post({
-                data: $('#addManagerForm').serialize(),
-                url: this.apiUpdateUrl,
-                success: function success(response) {}
-            });
-        }
-    }]);
-
-    return ManagersModule;
-}(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
-
-/***/ }),
-/* 44 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return UserListModule; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-
-
-var UserListModule = function (_ApiModule) {
-    _inherits(UserListModule, _ApiModule);
-
-    function UserListModule() {
-        _classCallCheck(this, UserListModule);
-
-        var _this = _possibleConstructorReturn(this, (UserListModule.__proto__ || Object.getPrototypeOf(UserListModule)).call(this));
-
-        console.log('Page: UserListModule');
-
-        _this.selectUserHandle();
-        return _this;
-    }
-
-    _createClass(UserListModule, [{
-        key: 'selectUserHandle',
-        value: function selectUserHandle() {
-            $('.js-row.user-item').off('click').on('click', function (e) {
-                // e.preventDefault();
-                // const el = e.target;
-                // const $row = $(el).closest('tr');
-
-            });
-        }
-    }]);
-
-    return UserListModule;
-}(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
-
-/***/ }),
-/* 45 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return EditUserModule; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__add_user__ = __webpack_require__(4);
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-
-
-var EditUserModule = function (_AddUserModule) {
-    _inherits(EditUserModule, _AddUserModule);
-
-    function EditUserModule() {
-        _classCallCheck(this, EditUserModule);
-
-        var _this = _possibleConstructorReturn(this, (EditUserModule.__proto__ || Object.getPrototypeOf(EditUserModule)).call(this));
-
-        console.log('Page: EditUserModule');
-
-        _this.apiUpdateUserUrl = '/api/users';
-        return _this;
-    }
-
-    _createClass(EditUserModule, [{
-        key: 'createUserHandler',
-        value: function createUserHandler() {
-            var _this2 = this;
-
-            $('#addUser').off('click').on('click', function (e) {
-                e.preventDefault();
-                console.log('updateUserHandler');
-
-                var user_id = $('#user_id').val();
-                if (user_id > 0) {
-                    _this2.apiUpdateUrl = '';
-                    _this2.apiUpdateUrl = _this2.apiUpdateUserUrl + '/' + user_id;
-                } else {
-                    alertify.log.error('Ошибочные данные пользователя');
-                    return;
-                }
-
-                console.log(_this2.apiUpdateUrl);
-
-                if ($('#addUserForm').valid()) {
-                    _this2.createUserMethod();
-                } else {
-                    console.log('not valid');
-                }
-            });
-        }
-    }]);
-
-    return EditUserModule;
-}(__WEBPACK_IMPORTED_MODULE_0__add_user__["a" /* AddUserModule */]);
-
-/***/ }),
-/* 46 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LoginModule; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-
-
-var LoginModule = function (_ApiModule) {
-    _inherits(LoginModule, _ApiModule);
-
-    function LoginModule() {
-        _classCallCheck(this, LoginModule);
-
-        var _this = _possibleConstructorReturn(this, (LoginModule.__proto__ || Object.getPrototypeOf(LoginModule)).call(this));
-
-        console.log('Page: LoginModule');
-
-        _this.loginBtnHandler();
-        _this.checkForm();
-        _this.submitLoginForEnter();
-        return _this;
-    }
-
-    _createClass(LoginModule, [{
-        key: 'submitLoginForEnter',
-        value: function submitLoginForEnter() {
-            var _this2 = this;
-
-            $('#password').on('keypress', function (e) {
-                if (e.keyCode == 13) {
-                    console.log('enter');
-                    _this2.loginMethod();
-                }
-            });
-        }
-    }, {
-        key: 'loginBtnHandler',
-        value: function loginBtnHandler() {
-            var _this3 = this;
-
-            $('#loginBtn').off('click').on('click', function (e) {
-                e.preventDefault();
-
-                _this3.loginMethod();
-            });
-        }
-    }, {
-        key: 'loginMethod',
-        value: function loginMethod() {
-            console.log('loginBtnHandler');
-            if ($('#loginForm').valid()) {
-                $('#loginForm').submit();
-            } else {
-                console.log('not valid Form');
-            }
-        }
-    }, {
-        key: 'checkForm',
-        value: function checkForm() {
-            $('#loginForm').validate({
-                rules: {
-                    name: {
-                        required: true,
-                        minlength: 3,
-                        normalizer: function normalizer(value) {
-                            return $.trim(value);
-                        }
-
-                    },
-                    password: {
-                        required: true,
-                        minlength: 3,
-                        normalizer: function normalizer(value) {
-                            return $.trim(value);
-                        }
-
-                    }
-                },
-                messages: {
-                    name: {
-                        required: this.requiredField,
-                        minlength: this.minlengthField
-                    },
-                    password: {
-                        required: this.requiredField,
-                        minlength: this.minlengthField
-                    }
-                }
-            });
-        }
-    }]);
-
-    return LoginModule;
-}(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
-
-/***/ }),
-/* 47 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return RegisterModule; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__facebook__ = __webpack_require__(48);
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-
-
-
-var RegisterModule = function (_ApiModule) {
-    _inherits(RegisterModule, _ApiModule);
-
-    function RegisterModule() {
-        _classCallCheck(this, RegisterModule);
-
-        var _this = _possibleConstructorReturn(this, (RegisterModule.__proto__ || Object.getPrototypeOf(RegisterModule)).call(this));
-
-        console.log('Page: RegisterModule');
-
-        new __WEBPACK_IMPORTED_MODULE_1__facebook__["a" /* Facebook */]();
-
-        _this.registerBtnHandler();
-        _this.checkForm();
-        return _this;
-    }
-
-    _createClass(RegisterModule, [{
-        key: 'registerBtnHandler',
-        value: function registerBtnHandler() {
-            var _this2 = this;
-
-            $('#registerBtn').off('click').on('click', function (e) {
-                e.preventDefault();
-                FB.AppEvents.logEvent("Register New user");
-                _this2.registerMethod();
-            });
-        }
-    }, {
-        key: 'registerMethod',
-        value: function registerMethod() {
-            if ($('#registerForm').valid()) {
-                $('#registerForm').submit();
-            } else {
-                console.log('not valid Form');
-                alertify.log.error('Ошибка! Проверть данные, которые Вы ввели!');
-            }
-        }
-    }, {
-        key: 'checkForm',
-        value: function checkForm() {
-            $('#registerForm').validate({
-                rules: {
-                    userType: {
-                        required: true
-                    },
-                    fname: {
-                        required: true,
-                        minlength: 5,
-                        normalizer: function normalizer(value) {
-                            return $.trim(value);
-                        }
-                    },
-                    name: {
-                        required: true,
-                        minlength: 3,
-                        normalizer: function normalizer(value) {
-                            return $.trim(value);
-                        }
-                    },
-                    email: {
-                        // required: true,
-                        // email: true,
-                        email: {
-                            depends: function depends(element) {
-                                console.log($(element).val().length);
-                                return $(element).val().length > 0;
-                            }
-                        },
-                        normalizer: function normalizer(value) {
-                            return $.trim(value);
-                        }
-
-                    },
-                    password: {
-                        required: true,
-                        minlength: 4
-                    },
-                    password_confirmation: {
-                        equalTo: "#password"
-                    },
-                    phone: {
-                        required: true,
-                        number: true,
-                        rangelength: [10, 12],
-                        normalizer: function normalizer(value) {
-                            return $.trim(value);
-                        }
-                    },
-                    address: {
-                        required: true,
-                        minlength: 3,
-                        normalizer: function normalizer(value) {
-                            return $.trim(value);
-                        }
-                    }
-                },
-                errorPlacement: function errorPlacement(error, element) {
-                    console.log(element.attr("name"));
-                    if (element.attr("name") == "userType") {
-                        $("#insertErrorMessage").html(error);
-                    } else {
-                        error.insertAfter(element);
-                    }
-                },
-                messages: {
-                    userType: {
-                        required: "Выберите тип покупателя"
-                    },
-                    fname: {
-                        required: this.requiredField,
-                        minlength: this.minlengthField
-                    },
-                    name: {
-                        required: this.requiredField,
-                        minlength: this.minlengthField
-                    },
-                    email: {
-                        // required: this.requiredField,
-                        email: this.emailField
-                    },
-                    password: {
-                        required: this.requiredField,
-                        minlength: this.minlengthField
-                    },
-                    password_confirmation: {
-                        required: this.requiredField,
-                        equalTo: this.equalToField
-                    },
-                    phone: {
-                        rangelength: "Не верное количество символов в номере телефона",
-                        number: "Вводите только цифры!",
-                        required: this.requiredField,
-                        minlength: this.minlengthField
-                    },
-                    address: {
-                        required: this.requiredField,
-                        minlength: this.minlengthField
-                    }
-                }
-            });
-        }
-    }]);
-
-    return RegisterModule;
-}(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
-
-/***/ }),
-/* 48 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Facebook; });
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var Facebook = function Facebook() {
-    _classCallCheck(this, Facebook);
-
-    window.fbAsyncInit = function () {
-        FB.init({
-            appId: '386151865185880',
-            xfbml: true,
-            version: 'v2.10'
-        });
-
-        FB.AppEvents.logPageView();
-    };
-
-    (function (d, s, id) {
-        var js,
-            fjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) {
-            return;
-        }
-        js = d.createElement(s);js.id = id;
-        js.src = "https://connect.facebook.net/en_US/sdk.js";
-        fjs.parentNode.insertBefore(js, fjs);
-    })(document, 'script', 'facebook-jssdk');
-};
-
-/***/ }),
-/* 49 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ContactsModule; });
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var ContactsModule = function () {
-    function ContactsModule() {
-        _classCallCheck(this, ContactsModule);
-
-        console.log('Page: ContactsModule');
-
-        this.init();
-    }
-
-    _createClass(ContactsModule, [{
-        key: 'init',
-        value: function init() {}
-    }]);
-
-    return ContactsModule;
-}();
-
-/***/ }),
-/* 50 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return CtaModule; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-
-
-var CtaModule = function (_ApiModule) {
-    _inherits(CtaModule, _ApiModule);
-
-    function CtaModule() {
-        _classCallCheck(this, CtaModule);
-
-        var _this = _possibleConstructorReturn(this, (CtaModule.__proto__ || Object.getPrototypeOf(CtaModule)).call(this));
-
-        console.log('Page: CtaModule');
-
-        _this.openCtaModalHandler();
-        _this.closeCtaModalHandler();
-        _this.hideCtaModalHandler();
-        _this.sendBtnHandler();
-        _this.checkForm();
-        return _this;
-    }
-
-    _createClass(CtaModule, [{
-        key: 'openCtaModalHandler',
-        value: function openCtaModalHandler() {
-            $('#cta_modal_open').off('click').on('click', function (e) {
-                e.preventDefault();
-                console.log('Click: CtaModule');
-
-                $('#modal_cta').addClass('open_modal');
-            });
-        }
-    }, {
-        key: 'closeCtaModalHandler',
-        value: function closeCtaModalHandler() {
-            var _this2 = this;
-
-            $('#close_modal').off('click').on('click', function (e) {
-                e.preventDefault();
-                console.log('Click: CtaModule Close');
-
-                _this2.cleanAndHideCtaModalHandler();
-            });
-        }
-    }, {
-        key: 'hideCtaModalHandler',
-        value: function hideCtaModalHandler() {
-            var _this3 = this;
-
-            $('#modal_cta').off('click').on('click', function (e) {
-                e.preventDefault();
-                if (event.target == event.currentTarget) {
-                    console.log('Click: CtaModule Close');
-
-                    _this3.cleanAndHideCtaModalHandler();
-                }
-            });
-        }
-    }, {
-        key: 'sendBtnHandler',
-        value: function sendBtnHandler() {
-            var _this4 = this;
-
-            $('#sendCta').off('click').on('click', function (e) {
-                e.preventDefault();
-                console.log('sendBtnHandler');
-                _this4.sendCtaMethod();
-            });
-        }
-    }, {
-        key: 'sendCtaMethod',
-        value: function sendCtaMethod() {
-
-            if ($('#ctaForm').valid()) {
-                console.log('valid Form');
-                // $('#ctaForm').submit();
-                this.post({
-                    data: $('#ctaForm').serialize(),
-                    url: '/api/send_cta',
-                    success: function success(response) {
-                        alertify.log.success('Значение поля успешно обновилось');
-                    }
-                });
-                this.cleanAndHideCtaModalHandler();
-            } else {
-                console.log('not valid Form');
-            }
-        }
-    }, {
-        key: 'cleanAndHideCtaModalHandler',
-        value: function cleanAndHideCtaModalHandler() {
-
-            $('#modal_cta').removeClass('open_modal');
-            $('#ctaForm input[name="name"]').val('');
-            $('#ctaForm input[name="phone"]').val('');
-        }
-    }, {
-        key: 'checkForm',
-        value: function checkForm() {
-            $('#ctaForm').validate({
-                rules: {
-                    name: {
-                        required: true,
-                        minlength: 3,
-                        normalizer: function normalizer(value) {
-                            return $.trim(value);
-                        }
-                    },
-                    phone: {
-                        required: true,
-                        number: true,
-                        rangelength: [10, 12],
-                        normalizer: function normalizer(value) {
-                            return $.trim(value);
-                        }
-                    }
-                },
-                messages: {
-                    name: {
-                        required: this.requiredField,
-                        minlength: this.minlengthField
-                    },
-                    phone: {
-                        rangelength: "Не верное количество символов в номере телефона",
-                        number: "Вводите только цифры!",
-                        required: this.requiredField,
-                        minlength: this.minlengthField
-                    }
-                }
-            });
-        }
-    }]);
-
-    return CtaModule;
-}(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
-
-/***/ }),
-/* 51 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 52 */,
-/* 53 */,
-/* 54 */,
-/* 55 */,
-/* 56 */,
-/* 57 */,
-/* 58 */,
-/* 59 */,
-/* 60 */,
-/* 61 */,
-/* 62 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SliderModule; });
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var SliderModule = function () {
-    function SliderModule() {
-        _classCallCheck(this, SliderModule);
-
-        console.log('Page: SliderModule');
-
-        this.init();
-    }
-
-    _createClass(SliderModule, [{
-        key: 'init',
-        value: function init() {
-            $('.main_slider').flexslider({
-                animation: "slide"
-            });
-        }
-    }]);
-
-    return SliderModule;
-}();
-
-/***/ }),
-/* 63 */
-/***/ (function(module, exports) {
-
-var g;
-
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || Function("return this")() || (1,eval)("this");
-} catch(e) {
-	// This works if the window reference is available
-	if(typeof window === "object")
-		g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
-
-/***/ }),
-/* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(setImmediate) {/*
@@ -20837,10 +17099,10 @@ module.exports = g;
   };
 })(jQuery);
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(65).setImmediate))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(25).setImmediate))
 
 /***/ }),
-/* 65 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {var apply = Function.prototype.apply;
@@ -20893,7 +17155,7 @@ exports._unrefActive = exports.active = function(item) {
 };
 
 // setimmediate attaches itself to the global object
-__webpack_require__(66);
+__webpack_require__(26);
 // On some exotic environments, it's not clear which object `setimmeidate` was
 // able to install onto.  Search each possibility in the same order as the
 // `setimmediate` library.
@@ -20904,10 +17166,10 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
                          (typeof global !== "undefined" && global.clearImmediate) ||
                          (this && this.clearImmediate);
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(63)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 66 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, process) {(function (global, undefined) {
@@ -21097,7 +17359,3735 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
     attachTo.clearImmediate = clearImmediate;
 }(typeof self === "undefined" ? typeof global === "undefined" ? this : global : self));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(63), __webpack_require__(29)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2), __webpack_require__(3)))
+
+/***/ }),
+/* 27 */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+__webpack_require__(28);
+__webpack_require__(30);
+__webpack_require__(32);
+
+// With no changes to the original source we must export from the global object
+module.exports = window.Alertify;
+
+
+/***/ }),
+/* 28 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(29);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(5)(content, {});
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	module.hot.accept("!!/node_modules/css-loader/index.js!/node_modules/alertify-webpack/dist/themes/alertify.css", function() {
+		var newContent = require("!!/node_modules/css-loader/index.js!/node_modules/alertify-webpack/dist/themes/alertify.css");
+		if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+		update(newContent);
+	});
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 29 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(4)();
+exports.push([module.i, ".alertify-cover {\n  position: fixed;\n  z-index: 9999;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  right: 0; }\n\n.alertify-dialog {\n  position: fixed;\n  z-index: 99999;\n  top: 50px;\n  left: 50%;\n  opacity: 1;\n  -webkit-transition: all 500ms cubic-bezier(0.175, 0.885, 0.32, 1.275);\n  -moz-transition: all 500ms cubic-bezier(0.175, 0.885, 0.32, 1.275);\n  -ms-transition: all 500ms cubic-bezier(0.175, 0.885, 0.32, 1.275);\n  -o-transition: all 500ms cubic-bezier(0.175, 0.885, 0.32, 1.275);\n  transition: all 500ms cubic-bezier(0.175, 0.885, 0.32, 1.275); }\n\n.alertify-resetFocus {\n  border: 0;\n  clip: rect(0 0 0 0);\n  height: 1px;\n  width: 1px;\n  margin: -1px;\n  padding: 0;\n  overflow: hidden;\n  position: absolute; }\n\n.alertify-text {\n  margin-bottom: 15px;\n  width: 100%;\n  font-size: 100%;\n  -webkit-box-sizing: border-box;\n  -moz-box-sizing: border-box;\n  box-sizing: border-box; }\n\n.alertify-button,\n.alertify-button:hover,\n.alertify-button:active,\n.alertify-button:visited {\n  background: none;\n  text-decoration: none;\n  border: none;\n  line-height: 1.5;\n  font-size: 100%;\n  display: inline-block;\n  cursor: pointer;\n  margin-left: 5px; }\n\n.is-alertify-cover-hidden {\n  display: none; }\n\n.is-alertify-dialog-hidden {\n  opacity: 0;\n  display: none;\n  -webkit-transform: translate(0, -150px);\n  -moz-transform: translate(0, -150px);\n  -ms-transform: translate(0, -150px);\n  -o-transform: translate(0, -150px);\n  transform: translate(0, -150px); }\n\n:root * > .is-alertify-dialog-hidden {\n  display: block; }\n\n.alertify-logs {\n  position: fixed;\n  z-index: 9999; }\n\n.alertify-log {\n  position: relative;\n  display: block;\n  opacity: 0;\n  -webkit-transition: all 500ms cubic-bezier(0.175, 0.885, 0.32, 1.275);\n  -moz-transition: all 500ms cubic-bezier(0.175, 0.885, 0.32, 1.275);\n  -ms-transition: all 500ms cubic-bezier(0.175, 0.885, 0.32, 1.275);\n  -o-transition: all 500ms cubic-bezier(0.175, 0.885, 0.32, 1.275);\n  transition: all 500ms cubic-bezier(0.175, 0.885, 0.32, 1.275); }\n\n.is-alertify-log-showing {\n  opacity: 1; }\n\n.is-alertify-log-hidden {\n  opacity: 0; }\n", ""]);
+
+/***/ }),
+/* 30 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(31);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(5)(content, {});
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	module.hot.accept("!!/node_modules/css-loader/index.js!/node_modules/alertify-webpack/dist/themes/alertify.default.css", function() {
+		var newContent = require("!!/node_modules/css-loader/index.js!/node_modules/alertify-webpack/dist/themes/alertify.default.css");
+		if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+		update(newContent);
+	});
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 31 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(4)();
+exports.push([module.i, ".alertify-dialog {\n  width: 550px;\n  margin-left: -275px;\n  background: #FFF;\n  border: 10px solid #333333;\n  border: 10px solid rgba(0, 0, 0, 0.7);\n  border-radius: 8px;\n  box-shadow: 0 3px 3px rgba(0, 0, 0, 0.3);\n  -webkit-background-clip: padding;\n  -moz-background-clip: padding;\n  background-clip: padding-box; }\n\n.alertify-dialog-inner {\n  padding: 25px; }\n\n.alertify-inner {\n  text-align: center; }\n\n.alertify-text {\n  border: 1px solid #cccccc;\n  padding: 10px;\n  border-radius: 4px; }\n\n.alertify-button {\n  border-radius: 4px;\n  color: #FFF;\n  font-weight: bold;\n  padding: 6px 15px;\n  text-decoration: none;\n  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);\n  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.5);\n  background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0));\n  background-image:    -moz-linear-gradient(top, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0));\n  background-image:     -ms-linear-gradient(top, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0));\n  background-image:      -o-linear-gradient(top, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0));\n  background-image:         linear-gradient(top, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0)); }\n\n.alertify-button:hover,\n.alertify-button:focus {\n  outline: none;\n  background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0));\n  background-image:    -moz-linear-gradient(top, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0));\n  background-image:     -ms-linear-gradient(top, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0));\n  background-image:      -o-linear-gradient(top, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0));\n  background-image:         linear-gradient(top, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0)); }\n\n.alertify-button:focus {\n  box-shadow: 0 0 10px #2b72d5; }\n\n.alertify-button:active {\n  position: relative;\n  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05); }\n\n.alertify-button-cancel,\n.alertify-button-cancel:hover,\n.alertify-button-cancel:focus {\n  background-color: #fe1a00;\n  border: 1px solid #cb1500; }\n\n.alertify-button-ok,\n.alertify-button-ok:hover,\n.alertify-button-ok:focus {\n  background-color: #5cb811;\n  border: 1px solid #45890d; }\n\n@media only screen and (max-width: 680px) {\n  .alertify-dialog {\n    width: 90%;\n    left: 5%;\n    margin: 0;\n    -webkit-box-sizing: border-box;\n    -moz-box-sizing: border-box;\n    box-sizing: border-box; } }\n.alertify-logs {\n  position: fixed;\n  z-index: 9999;\n  bottom: 8px;\n  right: 8px;\n  width: 300px; }\n\n.alertify-log {\n  margin-top: 8px;\n  right: -300px;\n  padding: 16px 16px;\n  border-radius: 4px; }\n\n.alertify-log-info {\n  color: #3A8ABF;\n  background: #D9EDF7;\n}\n\n.alertify-log-error {\n  color: #B94A48;\n  background: #F2DEDE;\n}\n\n.alertify-log-success {\n  color: #468847;\n  background: #DFF0D8;\n}\n\n.is-alertify-log-showing {\n  right: 0; }\n\n.is-alertify-log-hidden {\n  right: -300px; }\n", ""]);
+
+/***/ }),
+/* 32 */
+/***/ (function(module, exports) {
+
+/*!
+ * alertify.js
+ * browser dialogs never looked so good
+ *
+ * @author Fabien Doiron <fabien.doiron@gmail.com>
+ * @copyright Fabien Doiron 2013
+ * @license MIT <http://opensource.org/licenses/mit-license.php>
+ * @link http://fabien-d.github.com/alertify.js/
+ * @module alertify
+ * @version 0.4.0rc1
+ */
+(function (global, document, undefined) {
+var AlertifyProto = (function () {
+    
+
+    var AlertifyProto,
+        add,
+        attach;
+
+    /**
+     * Add
+     * Update bind and unbind method for browser
+     * that support add/removeEventListener
+     *
+     * @return {undefined}
+     */
+    add = function () {
+        this.on = function (el, event, fn) {
+            el.addEventListener(event, fn, false);
+        };
+        this.off = function (el, event, fn) {
+            el.removeEventListener(event, fn, false);
+        };
+    };
+
+    /**
+     * Attach
+     * Update bind and unbind method for browser
+     * that support attach/detachEvent
+     *
+     * @return {undefined}
+     */
+    attach = function () {
+        this.on = function (el, event, fn) {
+            el.attachEvent("on" + event, fn);
+        };
+        this.off = function (el, event, fn) {
+            el.detachEvent("on" + event, fn);
+        };
+    };
+
+    /**
+     * Alertify Prototype API
+     *
+     * @type {Object}
+     */
+    AlertifyProto = {
+        _version : "0.4.0",
+        _prefix  : "alertify",
+        get: function (id) {
+            return document.getElementById(id);
+        },
+        on: function (el, event, fn) {
+            if (typeof el.addEventListener === "function") {
+                el.addEventListener(event, fn, false);
+                add.call(this);
+            } else if (el.attachEvent) {
+                el.attachEvent("on" + event, fn);
+                attach.call(this);
+            }
+        },
+        off: function (el, event, fn) {
+            if (typeof el.removeEventListener === "function") {
+                el.removeEventListener(event, fn, false);
+                add.call(this);
+            } else if (el.detachEvent) {
+                el.detachEvent("on" + event, fn);
+                attach.call(this);
+            }
+        }
+    };
+
+    return AlertifyProto;
+}());
+var Alertify = (function () {
+    
+
+    var Alertify = function () {};
+    Alertify.prototype = AlertifyProto;
+    Alertify = new Alertify();
+
+    return Alertify;
+}());
+var validate = (function () {
+    
+
+    var _checkValidation,
+        validate;
+
+    /**
+     * Validate Parameters
+     * The validation checks parameter against specified type.
+     * If the parameter is set to optional, is will be valid unless
+     * a parameter is specified and does not pass the test
+     *
+     * @param  {String}  type     Type to check parameter against
+     * @param  {Mixed}   param    Parameter to check
+     * @param  {Boolean} optional [Optional] Whether the parameter is optional
+     * @return {Boolean}
+     */
+    _checkValidation = function (type, param, optional) {
+        var valid = false;
+        if (optional && typeof param === "undefined") {
+            valid = true;
+        } else {
+            if (type === "object") {
+                valid = (typeof param === "object" && !(param instanceof Array));
+            } else {
+                valid = (typeof param === type);
+            }
+        }
+        return valid;
+    };
+
+    /**
+     * Validate API
+     *
+     * @type {Object}
+     */
+    validate = {
+        messages: {
+            invalidArguments: "Invalid arguments"
+        },
+        isFunction: function (param, optional) {
+            return _checkValidation("function", param, optional);
+        },
+        isNumber: function (param, optional) {
+            return _checkValidation("number", param, optional);
+        },
+        isObject: function (param, optional) {
+            return _checkValidation("object", param, optional);
+        },
+        isString: function (param, optional) {
+            return _checkValidation("string", param, optional);
+        },
+    };
+
+    return validate;
+}());
+var element = (function () {
+    
+
+    var element = {},
+        setAttributes;
+
+    /**
+     * Set Attributes
+     * Add attributes to a created element
+     *
+     * @param {Object} el     Created DOM element
+     * @param {Object} params [Optional] Attributes object
+     * @return {Object}
+     */
+    setAttributes = function (el, params) {
+        var k;
+        if (!validate.isObject(el) ||
+            !validate.isObject(params, true)) {
+            throw new Error(validate.messages.invalidArguments);
+        }
+        if (typeof params !== "undefined") {
+            if (params.attributes) {
+                for (k in params.attributes) {
+                    if (params.attributes.hasOwnProperty(k)) {
+                        el.setAttribute(k, params.attributes[k]);
+                    }
+                }
+            }
+            if (params.classes) {
+                el.className = params.classes;
+            }
+        }
+        return el;
+    };
+
+    /**
+     * element API
+     *
+     * @type {Object}
+     */
+    element = {
+        create: function (type, params) {
+            var el;
+            if (!validate.isString(type) ||
+                !validate.isObject(params, true)) {
+                throw new Error(validate.messages.invalidArguments);
+            }
+
+            el = document.createElement(type);
+            el = setAttributes(el, params);
+            return el;
+        },
+        ready: function (el) {
+            if (!validate.isObject(el)) {
+                throw new Error(validate.messages.invalidArguments);
+            }
+            if (el && el.scrollTop !== null) {
+                return;
+            } else {
+                this.ready();
+            }
+        }
+    };
+
+    return element;
+}());
+var transition = (function () {
+    
+
+    var transition;
+
+    /**
+     * Transition
+     * Determines if current browser supports CSS transitions
+     * And if so, assigns the proper transition event
+     *
+     * @return {Object}
+     */
+    transition = function () {
+        var t,
+            type,
+            supported   = false,
+            el          = element.create("fakeelement"),
+            transitions = {
+                "WebkitTransition" : "webkitTransitionEnd",
+                "MozTransition"    : "transitionend",
+                "OTransition"      : "otransitionend",
+                "transition"       : "transitionend"
+            };
+
+        for (t in transitions) {
+            if (el.style[t] !== undefined) {
+                type      = transitions[t];
+                supported = true;
+                break;
+            }
+        }
+
+        return {
+            type      : type,
+            supported : supported
+        };
+    };
+
+    return transition();
+}());
+var keys = (function () {
+    
+
+    var keys = {
+        ENTER : 13,
+        ESC   : 27,
+        SPACE : 32
+    };
+
+    return keys;
+}());
+var Dialog = (function () {
+    
+
+    var dialog,
+        _dialog = {};
+
+    var Dialog = function () {
+        var controls     = {},
+            dialog       = {},
+            isOpen       = false,
+            queue        = [],
+            tpl          = {},
+            prefixEl     = Alertify._prefix + "-dialog",
+            prefixCover  = Alertify._prefix + "-cover",
+            clsElShow    = prefixEl + " is-" + prefixEl + "-showing",
+            clsElHide    = prefixEl + " is-" + prefixEl + "-hidden",
+            clsCoverShow = prefixCover + " is-" + prefixCover + "-showing",
+            clsCoverHide = prefixCover + " is-" + prefixCover + "-hidden",
+            elCallee,
+            $,
+            appendBtns,
+            addListeners,
+            build,
+            hide,
+            init,
+            onBtnCancel,
+            onBtnOK,
+            onBtnResetFocus,
+            onFormSubmit,
+            onKeyUp,
+            open,
+            removeListeners,
+            setFocus,
+            setup;
+
+        tpl = {
+            buttons : {
+                holder : "<nav class=\"alertify-buttons\">{{buttons}}</nav>",
+                submit : "<button role=\"button\" type=\"submit\" class=\"alertify-button alertify-button-ok\" id=\"alertify-ok\">{{ok}}</button>",
+                ok     : "<button role=\"button\" type=\"button\" class=\"alertify-button alertify-button-ok\" id=\"alertify-ok\">{{ok}}</button>",
+                cancel : "<button role=\"button\" type=\"button\" class=\"alertify-button alertify-button-cancel\" id=\"alertify-cancel\">{{cancel}}</button>"
+            },
+            input   : "<div class=\"alertify-text-wrapper\"><input type=\"text\" class=\"alertify-text\" id=\"alertify-text\"></div>",
+            message : "<p class=\"alertify-message\">{{message}}</p>",
+            log     : "<article class=\"alertify-log{{class}}\">{{message}}</article>"
+        };
+
+        addListeners = function (item) {
+            // ok event handler
+            onBtnOK = function (event) {
+                var val = "";
+                if (typeof event.preventDefault !== "undefined") {
+                    event.preventDefault();
+                }
+                removeListeners();
+                hide();
+
+                if (controls.input) {
+                    val = controls.input.value;
+                }
+                if (typeof item.accept === "function") {
+                    if (controls.input) {
+                        item.accept(val);
+                    } else {
+                        item.accept();
+                    }
+                }
+                return false;
+            };
+
+            // cancel event handler
+            onBtnCancel = function (event) {
+                if (typeof event.preventDefault !== "undefined") {
+                    event.preventDefault();
+                }
+                removeListeners();
+                hide();
+                if (typeof item.deny === "function") {
+                    item.deny();
+                }
+                return false;
+            };
+
+            // keyup handler
+            onKeyUp = function (event) {
+                var keyCode = event.keyCode;
+                if (keyCode === keys.SPACE && !controls.input) {
+                    onBtnOK(event);
+                }
+                if (keyCode === keys.ESC && controls.cancel) {
+                    onBtnCancel(event);
+                }
+            };
+
+            // reset focus to first item in the dialog
+            onBtnResetFocus = function (event) {
+                if (controls.input) {
+                    controls.input.focus();
+                } else if (controls.cancel) {
+                    controls.cancel.focus();
+                } else {
+                    controls.ok.focus();
+                }
+            };
+
+            // handle reset focus link
+            // this ensures that the keyboard focus does not
+            // ever leave the dialog box until an action has
+            // been taken
+            Alertify.on(controls.reset, "focus", onBtnResetFocus);
+            // handle OK click
+            if (controls.ok) {
+                Alertify.on(controls.ok, "click", onBtnOK);
+            }
+            // handle Cancel click
+            if (controls.cancel) {
+                Alertify.on(controls.cancel, "click", onBtnCancel);
+            }
+            // listen for keys, Cancel => ESC
+            Alertify.on(document.body, "keyup", onKeyUp);
+            // bind form submit
+            if (controls.form) {
+                Alertify.on(controls.form, "submit", onBtnOK);
+            }
+            if (!transition.supported) {
+                setFocus();
+            }
+        };
+
+        /**
+         * Append Buttons
+         * Insert the buttons in the proper order
+         *
+         * @param  {String} secondary Cancel button string
+         * @param  {String} primary   OK button string
+         * @return {String}
+         */
+        appendBtns = function (secondary, primary) {
+            return dialog.buttonReverse ? primary + secondary : secondary + primary;
+        };
+
+        build = function (item) {
+            var html    = "",
+                type    = item.type,
+                message = item.message;
+
+            html += "<div class=\"alertify-dialog-inner\">";
+
+            if (dialog.buttonFocus === "none") {
+                html += "<a href=\"#\" id=\"alertify-noneFocus\" class=\"alertify-hidden\"></a>";
+            }
+
+            if (type === "prompt") {
+                html += "<form id=\"alertify-form\">";
+            }
+
+            html += "<article class=\"alertify-inner\">";
+            html += tpl.message.replace("{{message}}", message);
+
+            if (type === "prompt") {
+                html += tpl.input;
+            }
+
+            html += tpl.buttons.holder;
+            html += "</article>";
+
+            if (type === "prompt") {
+                html += "</form>";
+            }
+
+            html += "<a id=\"alertify-resetFocus\" class=\"alertify-resetFocus\" href=\"#\">Reset Focus</a>";
+            html += "</div>";
+
+            switch (type) {
+            case "confirm":
+                html = html.replace("{{buttons}}", appendBtns(tpl.buttons.cancel, tpl.buttons.ok));
+                html = html.replace("{{ok}}", dialog.labels.ok).replace("{{cancel}}", dialog.labels.cancel);
+                break;
+            case "prompt":
+                html = html.replace("{{buttons}}", appendBtns(tpl.buttons.cancel, tpl.buttons.submit));
+                html = html.replace("{{ok}}", dialog.labels.ok).replace("{{cancel}}", dialog.labels.cancel);
+                break;
+            case "alert":
+                html = html.replace("{{buttons}}", tpl.buttons.ok);
+                html = html.replace("{{ok}}", dialog.labels.ok);
+                break;
+            }
+
+            return html;
+        };
+
+        hide = function () {
+            var transitionDone;
+            queue.splice(0,1);
+            if (queue.length > 0) {
+                open(true);
+            } else {
+                isOpen = false;
+                transitionDone = function (event) {
+                    event.stopPropagation();
+                    //this.className += " alertify-isHidden";
+                    Alertify.off(this, transition.type, transitionDone);
+                };
+                if (transition.supported) {
+                    Alertify.on(dialog.el, transition.type, transitionDone);
+                    dialog.el.className = clsElHide;
+                } else {
+                    dialog.el.className = clsElHide;
+                }
+                dialog.cover.className  = clsCoverHide;
+                elCallee.focus();
+            }
+        };
+
+        /**
+         * Initialize Dialog
+         * Create the dialog and cover elements
+         *
+         * @return {Object}
+         */
+        init = function () {
+            var cover = element.create("div", { classes: clsCoverHide }),
+                el    = element.create("section", { classes: clsElHide });
+
+            document.body.appendChild(cover);
+            document.body.appendChild(el);
+            element.ready(cover);
+            element.ready(el);
+            dialog.cover = cover;
+            return el;
+        };
+
+        open = function (fromQueue) {
+            var item = queue[0],
+                onTransitionEnd;
+
+            isOpen = true;
+
+            onTransitionEnd = function (event) {
+                event.stopPropagation();
+                setFocus();
+                Alertify.off(this, transition.type, onTransitionEnd);
+            };
+
+            if (transition.supported && !fromQueue) {
+                Alertify.on(dialog.el, transition.type, onTransitionEnd);
+            }
+            dialog.el.innerHTML    = build(item);
+            dialog.cover.className = clsCoverShow;
+            dialog.el.className    = clsElShow;
+
+            controls.reset  = Alertify.get("alertify-resetFocus");
+            controls.ok     = Alertify.get("alertify-ok")     || undefined;
+            controls.cancel = Alertify.get("alertify-cancel") || undefined;
+            controls.focus  = (dialog.buttonFocus === "cancel" && controls.cancel) ? controls.cancel : ((dialog.buttonFocus === "none") ? Alertify.get("alertify-noneFocus") : controls.ok),
+            controls.input  = Alertify.get("alertify-text")   || undefined;
+            controls.form   = Alertify.get("alertify-form")   || undefined;
+
+            if (typeof item.placeholder === "string" && item.placeholder !== "") {
+                controls.input.value = item.placeholder;
+            }
+
+            if (fromQueue) {
+                setFocus();
+            }
+            addListeners(item);
+        };
+
+        /**
+         * Remove Event Listeners
+         *
+         * @return {undefined}
+         */
+        removeListeners = function () {
+            Alertify.off(document.body, "keyup", onKeyUp);
+            Alertify.off(controls.reset, "focus", onBtnResetFocus);
+            if (controls.input) {
+                Alertify.off(controls.form, "submit", onFormSubmit);
+            }
+            if (controls.ok) {
+                Alertify.off(controls.ok, "click", onBtnOK);
+            }
+            if (controls.cancel) {
+                Alertify.off(controls.cancel, "click", onBtnCancel);
+            }
+        };
+
+        /**
+         * Set Focus
+         * Set focus to proper element
+         *
+         * @return {undefined}
+         */
+        setFocus = function () {
+            if (controls.input) {
+                controls.input.focus();
+                controls.input.select();
+            } else {
+                controls.focus.focus();
+            }
+        };
+
+        /**
+         * Setup Dialog
+         *
+         * @param  {String} type        Dialog type
+         * @param  {String} msg         Dialog message
+         * @param  {Function} accept    [Optional] Accept callback
+         * @param  {Function} deny      [Optional] Deny callback
+         * @param  {String} placeholder [Optional] Input placeholder text
+         * @return {undefined}
+         */
+        setup = function (type, msg, accept, deny, placeholder) {
+            if (!validate.isString(type)          ||
+                !validate.isString(msg)           ||
+                !validate.isFunction(accept,true) ||
+                !validate.isFunction(deny,true)   ||
+                !validate.isString(placeholder, true)) {
+                throw new Error(validate.messages.invalidArguments);
+            }
+            dialog.el = dialog.el || init();
+            elCallee = document.activeElement;
+
+            queue.push({
+                type        : type,
+                message     : msg,
+                accept      : accept,
+                deny        : deny,
+                placeholder : placeholder
+            });
+
+            if (!isOpen) {
+                open();
+            }
+        };
+
+        return {
+            buttonFocus   : "ok",
+            buttonReverse : false,
+            cover         : undefined,
+            el            : undefined,
+            labels: {
+                ok: "OK",
+                cancel: "Cancel"
+            },
+            alert: function (msg, accept) {
+                dialog = this;
+                setup("alert", msg, accept);
+                return this;
+            },
+            confirm: function (msg, accept, deny) {
+                dialog = this;
+                setup("confirm", msg, accept, deny);
+                return this;
+            },
+            prompt: function (msg, accept, deny, placeholder) {
+                dialog = this;
+                setup("prompt", msg, accept, deny, placeholder);
+                return this;
+            }
+        };
+    };
+
+    return new Dialog();
+}());
+var Log = (function () {
+    
+
+    var Log,
+        onTransitionEnd,
+        remove,
+        startTimer,
+        prefix  = Alertify._prefix + "-log",
+        clsShow = prefix + " is-" + prefix + "-showing",
+        clsHide = prefix + " is-" + prefix + "-hidden";
+
+    /**
+     * Log Method
+     *
+     * @param {Object} parent HTML DOM to insert log message into
+     * @param {String} type   Log type
+     * @param {String} msg    Log message
+     * @param {Number} delay  [Optional] Delay in ms
+     */
+    Log = function (parent, type, msg, delay) {
+        if (!validate.isObject(parent) ||
+            !validate.isString(type) ||
+            !validate.isString(msg) ||
+            !validate.isNumber(delay, true)) {
+            throw new Error(validate.messages.invalidArguments);
+        }
+
+        this.delay  = (typeof delay !== "undefined") ? delay : 5000;
+        this.msg    = msg;
+        this.parent = parent;
+        this.type   = type;
+        this.create();
+        this.show();
+    };
+
+    /**
+     * Transition End
+     * Handle CSS transition end
+     *
+     * @param  {Event} event Event
+     * @return {undefined}
+     */
+    onTransitionEnd = function (event) {
+        event.stopPropagation();
+        if (typeof this.el !== "undefined") {
+            Alertify.off(this.el, transition.type, this.fn);
+            remove.call(this);
+        }
+    };
+
+    /**
+     * Remove
+     * Remove the element from the DOM
+     *
+     * @return {undefined}
+     */
+    remove = function () {
+        this.parent.removeChild(this.el);
+        delete this.el;
+    };
+
+    /**
+     * StartTimer
+     *
+     * @return {undefined}
+     */
+    startTimer = function () {
+        var that = this;
+        if (this.delay !== 0) {
+            setTimeout(function () {
+                that.close();
+            }, this.delay);
+        }
+    };
+
+    /**
+     * Close
+     * Prepare the log element to be removed.
+     * Set an event listener for transition complete
+     * or call the remove directly
+     *
+     * @return {undefined}
+     */
+    Log.prototype.close = function () {
+        var that = this;
+        if (typeof this.el !== "undefined" && this.el.parentNode === this.parent) {
+            if (transition.supported) {
+                this.fn = function (event) {
+                    onTransitionEnd.call(that, event);
+                };
+                Alertify.on(this.el, transition.type, this.fn);
+                this.el.className = clsHide + " " + prefix + "-" + this.type;
+            } else {
+                remove.call(this);
+            }
+        }
+    };
+
+    /**
+     * Create
+     * Create a new log element and
+     * append it to the parent
+     *
+     * @return {undefined}
+     */
+    Log.prototype.create = function () {
+        if (typeof this.el === "undefined") {
+            var el = element.create("article", {
+                classes: clsHide + " " + prefix + "-" + this.type
+            });
+            el.innerHTML = this.msg;
+            this.parent.appendChild(el);
+            element.ready(el);
+            this.el = el;
+        }
+    };
+
+    /**
+     * Show
+     * Show new log element and bind click listener
+     *
+     * @return {undefined}
+     */
+    Log.prototype.show = function () {
+        var that = this;
+        if (typeof this.el === "undefined") {
+            return;
+        }
+        Alertify.on(this.el, "click", function () {
+            that.close();
+        });
+        this.el.className = clsShow + " " + prefix + "-" + this.type;
+        startTimer.call(this);
+    };
+
+    return Log;
+}());
+var logs = (function () {
+    
+
+    var init,
+        createLog,
+        validateParams,
+        logs;
+
+    /**
+     * Init Method
+     * Create the log holder element
+     *
+     * @return {Object} Log holder element
+     */
+    init = function () {
+        var el = element.create("section", { classes: Alertify._prefix + "-logs" });
+        document.body.appendChild(el);
+        element.ready(el);
+        return el;
+    };
+
+    /**
+     * Create Log
+     *
+     * @param  {String} type  Log type
+     * @param  {String} msg   Log message
+     * @param  {Number} delay [Optional] Delay in ms
+     * @return {Object}
+     */
+    createLog = function (type, msg, delay) {
+        validateParams(type, msg, delay);
+        this.el = this.el || init();
+        return new Log(this.el, type, msg, delay);
+    };
+
+    /**
+     * Validate Parameters
+     *
+     * @param  {String} type  Log type
+     * @param  {String} msg   Log message
+     * @param  {Number} delay [Optional] Delay in ms
+     * @return {undefined}
+     */
+    validateParams = function (type, msg, delay) {
+        if (!validate.isString(type) ||
+            !validate.isString(msg) ||
+            !validate.isNumber(delay, true)) {
+            throw new Error(validate.messages.invalidArguments);
+        }
+    };
+
+    /**
+     * Logs API
+     *
+     * @type {Object}
+     */
+    logs = {
+        delay : 5000,
+        el    : undefined,
+        create: function (type, msg, delay) {
+            return createLog.call(this, type, msg, delay);
+        },
+        error: function (msg, delay) {
+            return createLog.call(this, "error", msg, delay);
+        },
+        info: function (msg, delay) {
+            return createLog.call(this, "info", msg, delay);
+        },
+        success: function (msg, delay) {
+            return createLog.call(this, "success", msg, delay);
+        }
+    };
+
+    return logs;
+}());
+
+    Alertify.dialog = Dialog;
+    Alertify.log    = logs;
+    window.Alertify = Alertify;
+
+
+})(this, document);
+
+/***/ }),
+/* 33 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(process) {  /* globals require, module */
+
+  
+
+  /**
+   * Module dependencies.
+   */
+
+  var pathtoRegexp = __webpack_require__(34);
+
+  /**
+   * Module exports.
+   */
+
+  module.exports = page;
+  page.default = page;
+  page.Context = Context;
+  page.Route = Route;
+  page.sameOrigin = sameOrigin;
+
+  /**
+   * Short-cuts for global-object checks
+   */
+
+  var hasDocument = ('undefined' !== typeof document);
+  var hasWindow = ('undefined' !== typeof window);
+  var hasHistory = ('undefined' !== typeof history);
+  var hasProcess = typeof process !== 'undefined';
+
+  /**
+   * Detect click event
+   */
+  var clickEvent = hasDocument && document.ontouchstart ? 'touchstart' : 'click';
+
+  /**
+   * To work properly with the URL
+   * history.location generated polyfill in https://github.com/devote/HTML5-History-API
+   */
+
+  var isLocation = hasWindow && !!(window.history.location || window.location);
+
+  /**
+   * Perform initial dispatch.
+   */
+
+  var dispatch = true;
+
+
+  /**
+   * Decode URL components (query string, pathname, hash).
+   * Accommodates both regular percent encoding and x-www-form-urlencoded format.
+   */
+  var decodeURLComponents = true;
+
+  /**
+   * Base path.
+   */
+
+  var base = '';
+
+  /**
+   * Strict path matching.
+   */
+
+  var strict = false;
+
+  /**
+   * Running flag.
+   */
+
+  var running;
+
+  /**
+   * HashBang option
+   */
+
+  var hashbang = false;
+
+  /**
+   * Previous context, for capturing
+   * page exit events.
+   */
+
+  var prevContext;
+
+  /**
+   * The window for which this `page` is running
+   */
+  var pageWindow;
+
+  /**
+   * Register `path` with callback `fn()`,
+   * or route `path`, or redirection,
+   * or `page.start()`.
+   *
+   *   page(fn);
+   *   page('*', fn);
+   *   page('/user/:id', load, user);
+   *   page('/user/' + user.id, { some: 'thing' });
+   *   page('/user/' + user.id);
+   *   page('/from', '/to')
+   *   page();
+   *
+   * @param {string|!Function|!Object} path
+   * @param {Function=} fn
+   * @api public
+   */
+
+  function page(path, fn) {
+    // <callback>
+    if ('function' === typeof path) {
+      return page('*', path);
+    }
+
+    // route <path> to <callback ...>
+    if ('function' === typeof fn) {
+      var route = new Route(/** @type {string} */ (path));
+      for (var i = 1; i < arguments.length; ++i) {
+        page.callbacks.push(route.middleware(arguments[i]));
+      }
+      // show <path> with [state]
+    } else if ('string' === typeof path) {
+      page['string' === typeof fn ? 'redirect' : 'show'](path, fn);
+      // start [options]
+    } else {
+      page.start(path);
+    }
+  }
+
+  /**
+   * Callback functions.
+   */
+
+  page.callbacks = [];
+  page.exits = [];
+
+  /**
+   * Current path being processed
+   * @type {string}
+   */
+  page.current = '';
+
+  /**
+   * Number of pages navigated to.
+   * @type {number}
+   *
+   *     page.len == 0;
+   *     page('/login');
+   *     page.len == 1;
+   */
+
+  page.len = 0;
+
+  /**
+   * Get or set basepath to `path`.
+   *
+   * @param {string} path
+   * @api public
+   */
+
+  page.base = function(path) {
+    if (0 === arguments.length) return base;
+    base = path;
+  };
+
+  /**
+   * Get or set strict path matching to `enable`
+   *
+   * @param {boolean} enable
+   * @api public
+   */
+
+  page.strict = function(enable) {
+    if (0 === arguments.length) return strict;
+    strict = enable;
+  };
+
+  /**
+   * Bind with the given `options`.
+   *
+   * Options:
+   *
+   *    - `click` bind to click events [true]
+   *    - `popstate` bind to popstate [true]
+   *    - `dispatch` perform initial dispatch [true]
+   *
+   * @param {Object} options
+   * @api public
+   */
+
+  page.start = function(options) {
+    options = options || {};
+    if (running) return;
+    running = true;
+    pageWindow = options.window || (hasWindow && window);
+    if (false === options.dispatch) dispatch = false;
+    if (false === options.decodeURLComponents) decodeURLComponents = false;
+    if (false !== options.popstate && hasWindow) pageWindow.addEventListener('popstate', onpopstate, false);
+    if (false !== options.click && hasDocument) {
+      pageWindow.document.addEventListener(clickEvent, onclick, false);
+    }
+    hashbang = !!options.hashbang;
+    if(hashbang && hasWindow && !hasHistory) {
+      pageWindow.addEventListener('hashchange', onpopstate, false);
+    }
+    if (!dispatch) return;
+
+    var url;
+    if(isLocation) {
+      var loc = pageWindow.location;
+
+      if(hashbang && ~loc.hash.indexOf('#!')) {
+        url = loc.hash.substr(2) + loc.search;
+      } else if (hashbang) {
+        url = loc.search + loc.hash;
+      } else {
+        url = loc.pathname + loc.search + loc.hash;
+      }
+    }
+
+    page.replace(url, null, true, dispatch);
+  };
+
+  /**
+   * Unbind click and popstate event handlers.
+   *
+   * @api public
+   */
+
+  page.stop = function() {
+    if (!running) return;
+    page.current = '';
+    page.len = 0;
+    running = false;
+    hasDocument && pageWindow.document.removeEventListener(clickEvent, onclick, false);
+    hasWindow && pageWindow.removeEventListener('popstate', onpopstate, false);
+    hasWindow && pageWindow.removeEventListener('hashchange', onpopstate, false);
+  };
+
+  /**
+   * Show `path` with optional `state` object.
+   *
+   * @param {string} path
+   * @param {Object=} state
+   * @param {boolean=} dispatch
+   * @param {boolean=} push
+   * @return {!Context}
+   * @api public
+   */
+
+  page.show = function(path, state, dispatch, push) {
+    var ctx = new Context(path, state),
+      prev = prevContext;
+    prevContext = ctx;
+    page.current = ctx.path;
+    if (false !== dispatch) page.dispatch(ctx, prev);
+    if (false !== ctx.handled && false !== push) ctx.pushState();
+    return ctx;
+  };
+
+  /**
+   * Goes back in the history
+   * Back should always let the current route push state and then go back.
+   *
+   * @param {string} path - fallback path to go back if no more history exists, if undefined defaults to page.base
+   * @param {Object=} state
+   * @api public
+   */
+
+  page.back = function(path, state) {
+    if (page.len > 0) {
+      // this may need more testing to see if all browsers
+      // wait for the next tick to go back in history
+      hasHistory && pageWindow.history.back();
+      page.len--;
+    } else if (path) {
+      setTimeout(function() {
+        page.show(path, state);
+      });
+    }else{
+      setTimeout(function() {
+        page.show(getBase(), state);
+      });
+    }
+  };
+
+
+  /**
+   * Register route to redirect from one path to other
+   * or just redirect to another route
+   *
+   * @param {string} from - if param 'to' is undefined redirects to 'from'
+   * @param {string=} to
+   * @api public
+   */
+  page.redirect = function(from, to) {
+    // Define route from a path to another
+    if ('string' === typeof from && 'string' === typeof to) {
+      page(from, function(e) {
+        setTimeout(function() {
+          page.replace(/** @type {!string} */ (to));
+        }, 0);
+      });
+    }
+
+    // Wait for the push state and replace it with another
+    if ('string' === typeof from && 'undefined' === typeof to) {
+      setTimeout(function() {
+        page.replace(from);
+      }, 0);
+    }
+  };
+
+  /**
+   * Replace `path` with optional `state` object.
+   *
+   * @param {string} path
+   * @param {Object=} state
+   * @param {boolean=} init
+   * @param {boolean=} dispatch
+   * @return {!Context}
+   * @api public
+   */
+
+
+  page.replace = function(path, state, init, dispatch) {
+    var ctx = new Context(path, state),
+      prev = prevContext;
+    prevContext = ctx;
+    page.current = ctx.path;
+    ctx.init = init;
+    ctx.save(); // save before dispatching, which may redirect
+    if (false !== dispatch) page.dispatch(ctx, prev);
+    return ctx;
+  };
+
+  /**
+   * Dispatch the given `ctx`.
+   *
+   * @param {Context} ctx
+   * @api private
+   */
+
+  page.dispatch = function(ctx, prev) {
+    var i = 0,
+      j = 0;
+
+    function nextExit() {
+      var fn = page.exits[j++];
+      if (!fn) return nextEnter();
+      fn(prev, nextExit);
+    }
+
+    function nextEnter() {
+      var fn = page.callbacks[i++];
+
+      if (ctx.path !== page.current) {
+        ctx.handled = false;
+        return;
+      }
+      if (!fn) return unhandled(ctx);
+      fn(ctx, nextEnter);
+    }
+
+    if (prev) {
+      nextExit();
+    } else {
+      nextEnter();
+    }
+  };
+
+  /**
+   * Unhandled `ctx`. When it's not the initial
+   * popstate then redirect. If you wish to handle
+   * 404s on your own use `page('*', callback)`.
+   *
+   * @param {Context} ctx
+   * @api private
+   */
+  function unhandled(ctx) {
+    if (ctx.handled) return;
+    var current;
+
+    if (hashbang) {
+      current = isLocation && getBase() + pageWindow.location.hash.replace('#!', '');
+    } else {
+      current = isLocation && pageWindow.location.pathname + pageWindow.location.search;
+    }
+
+    if (current === ctx.canonicalPath) return;
+    page.stop();
+    ctx.handled = false;
+    isLocation && (pageWindow.location.href = ctx.canonicalPath);
+  }
+
+  /**
+   * Register an exit route on `path` with
+   * callback `fn()`, which will be called
+   * on the previous context when a new
+   * page is visited.
+   */
+  page.exit = function(path, fn) {
+    if (typeof path === 'function') {
+      return page.exit('*', path);
+    }
+
+    var route = new Route(path);
+    for (var i = 1; i < arguments.length; ++i) {
+      page.exits.push(route.middleware(arguments[i]));
+    }
+  };
+
+  /**
+   * Remove URL encoding from the given `str`.
+   * Accommodates whitespace in both x-www-form-urlencoded
+   * and regular percent-encoded form.
+   *
+   * @param {string} val - URL component to decode
+   */
+  function decodeURLEncodedURIComponent(val) {
+    if (typeof val !== 'string') { return val; }
+    return decodeURLComponents ? decodeURIComponent(val.replace(/\+/g, ' ')) : val;
+  }
+
+  /**
+   * Initialize a new "request" `Context`
+   * with the given `path` and optional initial `state`.
+   *
+   * @constructor
+   * @param {string} path
+   * @param {Object=} state
+   * @api public
+   */
+
+  function Context(path, state) {
+    var pageBase = getBase();
+    if ('/' === path[0] && 0 !== path.indexOf(pageBase)) path = pageBase + (hashbang ? '#!' : '') + path;
+    var i = path.indexOf('?');
+
+    this.canonicalPath = path;
+    this.path = path.replace(pageBase, '') || '/';
+    if (hashbang) this.path = this.path.replace('#!', '') || '/';
+
+    this.title = (hasDocument && pageWindow.document.title);
+    this.state = state || {};
+    this.state.path = path;
+    this.querystring = ~i ? decodeURLEncodedURIComponent(path.slice(i + 1)) : '';
+    this.pathname = decodeURLEncodedURIComponent(~i ? path.slice(0, i) : path);
+    this.params = {};
+
+    // fragment
+    this.hash = '';
+    if (!hashbang) {
+      if (!~this.path.indexOf('#')) return;
+      var parts = this.path.split('#');
+      this.path = this.pathname = parts[0];
+      this.hash = decodeURLEncodedURIComponent(parts[1]) || '';
+      this.querystring = this.querystring.split('#')[0];
+    }
+  }
+
+  /**
+   * Expose `Context`.
+   */
+
+  page.Context = Context;
+
+  /**
+   * Push state.
+   *
+   * @api private
+   */
+
+  Context.prototype.pushState = function() {
+    page.len++;
+    if (hasHistory) {
+        pageWindow.history.pushState(this.state, this.title,
+          hashbang && this.path !== '/' ? '#!' + this.path : this.canonicalPath);
+    }
+  };
+
+  /**
+   * Save the context state.
+   *
+   * @api public
+   */
+
+  Context.prototype.save = function() {
+    if (hasHistory && pageWindow.location.protocol !== 'file:') {
+        pageWindow.history.replaceState(this.state, this.title,
+          hashbang && this.path !== '/' ? '#!' + this.path : this.canonicalPath);
+    }
+  };
+
+  /**
+   * Initialize `Route` with the given HTTP `path`,
+   * and an array of `callbacks` and `options`.
+   *
+   * Options:
+   *
+   *   - `sensitive`    enable case-sensitive routes
+   *   - `strict`       enable strict matching for trailing slashes
+   *
+   * @constructor
+   * @param {string} path
+   * @param {Object=} options
+   * @api private
+   */
+
+  function Route(path, options) {
+    options = options || {};
+    options.strict = options.strict || strict;
+    this.path = (path === '*') ? '(.*)' : path;
+    this.method = 'GET';
+    this.regexp = pathtoRegexp(this.path,
+      this.keys = [],
+      options);
+  }
+
+  /**
+   * Expose `Route`.
+   */
+
+  page.Route = Route;
+
+  /**
+   * Return route middleware with
+   * the given callback `fn()`.
+   *
+   * @param {Function} fn
+   * @return {Function}
+   * @api public
+   */
+
+  Route.prototype.middleware = function(fn) {
+    var self = this;
+    return function(ctx, next) {
+      if (self.match(ctx.path, ctx.params)) return fn(ctx, next);
+      next();
+    };
+  };
+
+  /**
+   * Check if this route matches `path`, if so
+   * populate `params`.
+   *
+   * @param {string} path
+   * @param {Object} params
+   * @return {boolean}
+   * @api private
+   */
+
+  Route.prototype.match = function(path, params) {
+    var keys = this.keys,
+      qsIndex = path.indexOf('?'),
+      pathname = ~qsIndex ? path.slice(0, qsIndex) : path,
+      m = this.regexp.exec(decodeURIComponent(pathname));
+
+    if (!m) return false;
+
+    for (var i = 1, len = m.length; i < len; ++i) {
+      var key = keys[i - 1];
+      var val = decodeURLEncodedURIComponent(m[i]);
+      if (val !== undefined || !(hasOwnProperty.call(params, key.name))) {
+        params[key.name] = val;
+      }
+    }
+
+    return true;
+  };
+
+
+  /**
+   * Handle "populate" events.
+   */
+
+  var onpopstate = (function () {
+    var loaded = false;
+    if ( ! hasWindow ) {
+      return;
+    }
+    if (hasDocument && document.readyState === 'complete') {
+      loaded = true;
+    } else {
+      window.addEventListener('load', function() {
+        setTimeout(function() {
+          loaded = true;
+        }, 0);
+      });
+    }
+    return function onpopstate(e) {
+      if (!loaded) return;
+      if (e.state) {
+        var path = e.state.path;
+        page.replace(path, e.state);
+      } else if (isLocation) {
+        var loc = pageWindow.location;
+        page.show(loc.pathname + loc.hash, undefined, undefined, false);
+      }
+    };
+  })();
+  /**
+   * Handle "click" events.
+   */
+
+  /* jshint +W054 */
+  function onclick(e) {
+    if (1 !== which(e)) return;
+
+    if (e.metaKey || e.ctrlKey || e.shiftKey) return;
+    if (e.defaultPrevented) return;
+
+    // ensure link
+    // use shadow dom when available
+    var el = e.path ? e.path[0] : e.target;
+
+    // continue ensure link
+    // el.nodeName for svg links are 'a' instead of 'A'
+    while (el && 'A' !== el.nodeName.toUpperCase()) el = el.parentNode;
+    if (!el || 'A' !== el.nodeName.toUpperCase()) return;
+
+    // check if link is inside an svg
+    // in this case, both href and target are always inside an object
+    var svg = (typeof el.href === 'object') && el.href.constructor.name === 'SVGAnimatedString';
+
+    // Ignore if tag has
+    // 1. "download" attribute
+    // 2. rel="external" attribute
+    if (el.hasAttribute('download') || el.getAttribute('rel') === 'external') return;
+
+    // ensure non-hash for the same path
+    var link = el.getAttribute('href');
+    if(!hashbang && samePath(el) && (el.hash || '#' === link)) return;
+
+    // Check for mailto: in the href
+    if (link && link.indexOf('mailto:') > -1) return;
+
+    // check target
+    // svg target is an object and its desired value is in .baseVal property
+    if (svg ? el.target.baseVal : el.target) return;
+
+    // x-origin
+    // note: svg links that are not relative don't call click events (and skip page.js)
+    // consequently, all svg links tested inside page.js are relative and in the same origin
+    if (!svg && !sameOrigin(el.href)) return;
+
+    // rebuild path
+    // There aren't .pathname and .search properties in svg links, so we use href
+    // Also, svg href is an object and its desired value is in .baseVal property
+    var path = svg ? el.href.baseVal : (el.pathname + el.search + (el.hash || ''));
+
+    path = path[0] !== '/' ? '/' + path : path;
+
+    // strip leading "/[drive letter]:" on NW.js on Windows
+    if (hasProcess && path.match(/^\/[a-zA-Z]:\//)) {
+      path = path.replace(/^\/[a-zA-Z]:\//, '/');
+    }
+
+    // same page
+    var orig = path;
+    var pageBase = getBase();
+
+    if (path.indexOf(pageBase) === 0) {
+      path = path.substr(base.length);
+    }
+
+    if (hashbang) path = path.replace('#!', '');
+
+    if (pageBase && orig === path) return;
+
+    e.preventDefault();
+    page.show(orig);
+  }
+
+  /**
+   * Event button.
+   */
+
+  function which(e) {
+    e = e || (hasWindow && window.event);
+    return null == e.which ? e.button : e.which;
+  }
+
+  /**
+   * Convert to a URL object
+   */
+  function toURL(href) {
+    if(typeof URL === 'function' && isLocation) {
+      return new URL(href, location.toString());
+    } else if (hasDocument) {
+      var anc = document.createElement('a');
+      anc.href = href;
+      return anc;
+    }
+  }
+
+  /**
+   * Check if `href` is the same origin.
+   */
+
+  function sameOrigin(href) {
+    if(!href || !isLocation) return false;
+    var url = toURL(href);
+
+    var loc = pageWindow.location;
+    return loc.protocol === url.protocol &&
+      loc.hostname === url.hostname &&
+      loc.port === url.port;
+  }
+
+  function samePath(url) {
+    if(!isLocation) return false;
+    var loc = pageWindow.location;
+    return url.pathname === loc.pathname &&
+      url.search === loc.search;
+  }
+
+  /**
+   * Gets the `base`, which depends on whether we are using History or
+   * hashbang routing.
+   */
+  function getBase() {
+    if(!!base) return base;
+    var loc = hasWindow && pageWindow.location;
+    return (hasWindow && hashbang && loc.protocol === 'file:') ? loc.pathname : base;
+  }
+
+  page.sameOrigin = sameOrigin;
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
+
+/***/ }),
+/* 34 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var isarray = __webpack_require__(35)
+
+/**
+ * Expose `pathToRegexp`.
+ */
+module.exports = pathToRegexp
+module.exports.parse = parse
+module.exports.compile = compile
+module.exports.tokensToFunction = tokensToFunction
+module.exports.tokensToRegExp = tokensToRegExp
+
+/**
+ * The main path matching regexp utility.
+ *
+ * @type {RegExp}
+ */
+var PATH_REGEXP = new RegExp([
+  // Match escaped characters that would otherwise appear in future matches.
+  // This allows the user to escape special characters that won't transform.
+  '(\\\\.)',
+  // Match Express-style parameters and un-named parameters with a prefix
+  // and optional suffixes. Matches appear as:
+  //
+  // "/:test(\\d+)?" => ["/", "test", "\d+", undefined, "?", undefined]
+  // "/route(\\d+)"  => [undefined, undefined, undefined, "\d+", undefined, undefined]
+  // "/*"            => ["/", undefined, undefined, undefined, undefined, "*"]
+  '([\\/.])?(?:(?:\\:(\\w+)(?:\\(((?:\\\\.|[^()])+)\\))?|\\(((?:\\\\.|[^()])+)\\))([+*?])?|(\\*))'
+].join('|'), 'g')
+
+/**
+ * Parse a string for the raw tokens.
+ *
+ * @param  {String} str
+ * @return {Array}
+ */
+function parse (str) {
+  var tokens = []
+  var key = 0
+  var index = 0
+  var path = ''
+  var res
+
+  while ((res = PATH_REGEXP.exec(str)) != null) {
+    var m = res[0]
+    var escaped = res[1]
+    var offset = res.index
+    path += str.slice(index, offset)
+    index = offset + m.length
+
+    // Ignore already escaped sequences.
+    if (escaped) {
+      path += escaped[1]
+      continue
+    }
+
+    // Push the current path onto the tokens.
+    if (path) {
+      tokens.push(path)
+      path = ''
+    }
+
+    var prefix = res[2]
+    var name = res[3]
+    var capture = res[4]
+    var group = res[5]
+    var suffix = res[6]
+    var asterisk = res[7]
+
+    var repeat = suffix === '+' || suffix === '*'
+    var optional = suffix === '?' || suffix === '*'
+    var delimiter = prefix || '/'
+    var pattern = capture || group || (asterisk ? '.*' : '[^' + delimiter + ']+?')
+
+    tokens.push({
+      name: name || key++,
+      prefix: prefix || '',
+      delimiter: delimiter,
+      optional: optional,
+      repeat: repeat,
+      pattern: escapeGroup(pattern)
+    })
+  }
+
+  // Match any characters still remaining.
+  if (index < str.length) {
+    path += str.substr(index)
+  }
+
+  // If the path exists, push it onto the end.
+  if (path) {
+    tokens.push(path)
+  }
+
+  return tokens
+}
+
+/**
+ * Compile a string to a template function for the path.
+ *
+ * @param  {String}   str
+ * @return {Function}
+ */
+function compile (str) {
+  return tokensToFunction(parse(str))
+}
+
+/**
+ * Expose a method for transforming tokens into the path function.
+ */
+function tokensToFunction (tokens) {
+  // Compile all the tokens into regexps.
+  var matches = new Array(tokens.length)
+
+  // Compile all the patterns before compilation.
+  for (var i = 0; i < tokens.length; i++) {
+    if (typeof tokens[i] === 'object') {
+      matches[i] = new RegExp('^' + tokens[i].pattern + '$')
+    }
+  }
+
+  return function (obj) {
+    var path = ''
+    var data = obj || {}
+
+    for (var i = 0; i < tokens.length; i++) {
+      var token = tokens[i]
+
+      if (typeof token === 'string') {
+        path += token
+
+        continue
+      }
+
+      var value = data[token.name]
+      var segment
+
+      if (value == null) {
+        if (token.optional) {
+          continue
+        } else {
+          throw new TypeError('Expected "' + token.name + '" to be defined')
+        }
+      }
+
+      if (isarray(value)) {
+        if (!token.repeat) {
+          throw new TypeError('Expected "' + token.name + '" to not repeat, but received "' + value + '"')
+        }
+
+        if (value.length === 0) {
+          if (token.optional) {
+            continue
+          } else {
+            throw new TypeError('Expected "' + token.name + '" to not be empty')
+          }
+        }
+
+        for (var j = 0; j < value.length; j++) {
+          segment = encodeURIComponent(value[j])
+
+          if (!matches[i].test(segment)) {
+            throw new TypeError('Expected all "' + token.name + '" to match "' + token.pattern + '", but received "' + segment + '"')
+          }
+
+          path += (j === 0 ? token.prefix : token.delimiter) + segment
+        }
+
+        continue
+      }
+
+      segment = encodeURIComponent(value)
+
+      if (!matches[i].test(segment)) {
+        throw new TypeError('Expected "' + token.name + '" to match "' + token.pattern + '", but received "' + segment + '"')
+      }
+
+      path += token.prefix + segment
+    }
+
+    return path
+  }
+}
+
+/**
+ * Escape a regular expression string.
+ *
+ * @param  {String} str
+ * @return {String}
+ */
+function escapeString (str) {
+  return str.replace(/([.+*?=^!:${}()[\]|\/])/g, '\\$1')
+}
+
+/**
+ * Escape the capturing group by escaping special characters and meaning.
+ *
+ * @param  {String} group
+ * @return {String}
+ */
+function escapeGroup (group) {
+  return group.replace(/([=!:$\/()])/g, '\\$1')
+}
+
+/**
+ * Attach the keys as a property of the regexp.
+ *
+ * @param  {RegExp} re
+ * @param  {Array}  keys
+ * @return {RegExp}
+ */
+function attachKeys (re, keys) {
+  re.keys = keys
+  return re
+}
+
+/**
+ * Get the flags for a regexp from the options.
+ *
+ * @param  {Object} options
+ * @return {String}
+ */
+function flags (options) {
+  return options.sensitive ? '' : 'i'
+}
+
+/**
+ * Pull out keys from a regexp.
+ *
+ * @param  {RegExp} path
+ * @param  {Array}  keys
+ * @return {RegExp}
+ */
+function regexpToRegexp (path, keys) {
+  // Use a negative lookahead to match only capturing groups.
+  var groups = path.source.match(/\((?!\?)/g)
+
+  if (groups) {
+    for (var i = 0; i < groups.length; i++) {
+      keys.push({
+        name: i,
+        prefix: null,
+        delimiter: null,
+        optional: false,
+        repeat: false,
+        pattern: null
+      })
+    }
+  }
+
+  return attachKeys(path, keys)
+}
+
+/**
+ * Transform an array into a regexp.
+ *
+ * @param  {Array}  path
+ * @param  {Array}  keys
+ * @param  {Object} options
+ * @return {RegExp}
+ */
+function arrayToRegexp (path, keys, options) {
+  var parts = []
+
+  for (var i = 0; i < path.length; i++) {
+    parts.push(pathToRegexp(path[i], keys, options).source)
+  }
+
+  var regexp = new RegExp('(?:' + parts.join('|') + ')', flags(options))
+
+  return attachKeys(regexp, keys)
+}
+
+/**
+ * Create a path regexp from string input.
+ *
+ * @param  {String} path
+ * @param  {Array}  keys
+ * @param  {Object} options
+ * @return {RegExp}
+ */
+function stringToRegexp (path, keys, options) {
+  var tokens = parse(path)
+  var re = tokensToRegExp(tokens, options)
+
+  // Attach keys back to the regexp.
+  for (var i = 0; i < tokens.length; i++) {
+    if (typeof tokens[i] !== 'string') {
+      keys.push(tokens[i])
+    }
+  }
+
+  return attachKeys(re, keys)
+}
+
+/**
+ * Expose a function for taking tokens and returning a RegExp.
+ *
+ * @param  {Array}  tokens
+ * @param  {Array}  keys
+ * @param  {Object} options
+ * @return {RegExp}
+ */
+function tokensToRegExp (tokens, options) {
+  options = options || {}
+
+  var strict = options.strict
+  var end = options.end !== false
+  var route = ''
+  var lastToken = tokens[tokens.length - 1]
+  var endsWithSlash = typeof lastToken === 'string' && /\/$/.test(lastToken)
+
+  // Iterate over the tokens and create our regexp string.
+  for (var i = 0; i < tokens.length; i++) {
+    var token = tokens[i]
+
+    if (typeof token === 'string') {
+      route += escapeString(token)
+    } else {
+      var prefix = escapeString(token.prefix)
+      var capture = token.pattern
+
+      if (token.repeat) {
+        capture += '(?:' + prefix + capture + ')*'
+      }
+
+      if (token.optional) {
+        if (prefix) {
+          capture = '(?:' + prefix + '(' + capture + '))?'
+        } else {
+          capture = '(' + capture + ')?'
+        }
+      } else {
+        capture = prefix + '(' + capture + ')'
+      }
+
+      route += capture
+    }
+  }
+
+  // In non-strict mode we allow a slash at the end of match. If the path to
+  // match already ends with a slash, we remove it for consistency. The slash
+  // is valid at the end of a path match, not in the middle. This is important
+  // in non-ending mode, where "/test/" shouldn't match "/test//route".
+  if (!strict) {
+    route = (endsWithSlash ? route.slice(0, -2) : route) + '(?:\\/(?=$))?'
+  }
+
+  if (end) {
+    route += '$'
+  } else {
+    // In non-ending mode, we need the capturing groups to match as much as
+    // possible by using a positive lookahead to the end or next path segment.
+    route += strict && endsWithSlash ? '' : '(?=\\/|$)'
+  }
+
+  return new RegExp('^' + route, flags(options))
+}
+
+/**
+ * Normalize the given path string, returning a regular expression.
+ *
+ * An empty array can be passed in for the keys, which will hold the
+ * placeholder key descriptions. For example, using `/user/:id`, `keys` will
+ * contain `[{ name: 'id', delimiter: '/', optional: false, repeat: false }]`.
+ *
+ * @param  {(String|RegExp|Array)} path
+ * @param  {Array}                 [keys]
+ * @param  {Object}                [options]
+ * @return {RegExp}
+ */
+function pathToRegexp (path, keys, options) {
+  keys = keys || []
+
+  if (!isarray(keys)) {
+    options = keys
+    keys = []
+  } else if (!options) {
+    options = {}
+  }
+
+  if (path instanceof RegExp) {
+    return regexpToRegexp(path, keys, options)
+  }
+
+  if (isarray(path)) {
+    return arrayToRegexp(path, keys, options)
+  }
+
+  return stringToRegexp(path, keys, options)
+}
+
+
+/***/ }),
+/* 35 */
+/***/ (function(module, exports) {
+
+module.exports = Array.isArray || function (arr) {
+  return Object.prototype.toString.call(arr) == '[object Array]';
+};
+
+
+/***/ }),
+/* 36 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return PageModule; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__category__ = __webpack_require__(37);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__searchProduct__ = __webpack_require__(38);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+
+
+
+
+var PageModule = function (_ApiModule) {
+    _inherits(PageModule, _ApiModule);
+
+    function PageModule() {
+        _classCallCheck(this, PageModule);
+
+        var _this = _possibleConstructorReturn(this, (PageModule.__proto__ || Object.getPrototypeOf(PageModule)).call(this));
+
+        console.log('Page: PageModule');
+
+        _this.category = new __WEBPACK_IMPORTED_MODULE_1__category__["a" /* CategoryModule */]();
+        if ($('#js-searchProductForm').length > 0) {
+            console.log('Page: has search product');
+            new __WEBPACK_IMPORTED_MODULE_2__searchProduct__["a" /* SearchProductModule */]();
+        }
+
+        _this.data = {};
+        _this.apiUrl = '/api/store/addtocart';
+        _this.addProductToCartBtnHandler();
+        _this.checkForm();
+        return _this;
+    }
+
+    _createClass(PageModule, [{
+        key: 'checkForm',
+        value: function checkForm() {
+            var _this2 = this;
+
+            $('form.addProductToCart').each(function (index, item) {
+                $(item).validate({
+                    rules: {
+                        productId: {
+                            digits: true,
+                            max: 100000,
+                            min: 1,
+                            required: true
+                        },
+                        qty: {
+                            digits: true,
+                            max: 100000,
+                            min: 1,
+                            required: true
+                        }
+                    },
+                    messages: {
+                        productId: {
+                            digits: _this2.digitsField,
+                            max: _this2.maxValueField,
+                            min: _this2.minValueField,
+                            required: _this2.requiredField
+                        },
+                        qty: {
+                            digits: _this2.digitsField,
+                            max: _this2.maxValueField,
+                            min: _this2.minValueField,
+                            required: _this2.requiredField
+                        }
+                    }
+                });
+            });
+        }
+    }, {
+        key: 'addProductToCart',
+        value: function addProductToCart() {
+            this.post({
+                data: this.data,
+                url: this.apiUrl,
+                success: function success(response) {
+                    alertify.log.success('Продукт ' + response.name + ' добавлен в корзину');
+                }
+            });
+        }
+    }, {
+        key: 'addProductToCartBtnHandler',
+        value: function addProductToCartBtnHandler() {
+            var _this3 = this;
+
+            $('.js-add_to_cart').off('click').on('click', function (e) {
+                if (_this3.apiToken == null) {
+                    Alertify.dialog.alert("<p>Для того чтобы положить товар в корзину</p>Вам необходимо войти в магазин</p>" + "<a href='/login'>Перейти к странице входа <i class='fa fa-sign-in' aria-hidden='true'></i></a>");
+                    return;
+                }
+
+                var $el = $(e.target),
+                    $form = $el.closest('form.addProductToCart');
+                _this3.data = $form.serialize();
+
+                console.log(_this3.data);
+
+                if ($form.valid()) {
+                    _this3.addProductToCart();
+                } else {
+                    console.log('not valid');
+                }
+            });
+        }
+    }]);
+
+    return PageModule;
+}(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
+
+/***/ }),
+/* 37 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return CategoryModule; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+
+
+var CategoryModule = function (_ApiModule) {
+    _inherits(CategoryModule, _ApiModule);
+
+    function CategoryModule() {
+        _classCallCheck(this, CategoryModule);
+
+        var _this = _possibleConstructorReturn(this, (CategoryModule.__proto__ || Object.getPrototypeOf(CategoryModule)).call(this));
+
+        console.log('Module: Category');
+
+        _this.init();
+        return _this;
+    }
+
+    _createClass(CategoryModule, [{
+        key: 'init',
+        value: function init() {
+            var $categoryBox = $('#category_menu');
+            $categoryBox.find('.active').parents('ul.sub_menu').addClass('display_item');
+            console.log($categoryBox.find('.active'));
+        }
+    }]);
+
+    return CategoryModule;
+}(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
+
+/***/ }),
+/* 38 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SearchProductModule; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+
+
+var SearchProductModule = function (_ApiModule) {
+    _inherits(SearchProductModule, _ApiModule);
+
+    function SearchProductModule() {
+        _classCallCheck(this, SearchProductModule);
+
+        var _this = _possibleConstructorReturn(this, (SearchProductModule.__proto__ || Object.getPrototypeOf(SearchProductModule)).call(this));
+
+        console.log('Module: SearchProductModule');
+
+        _this.selectInputData = $('#inputData').val();
+
+        _this.searchFormHandler();
+        _this.changeInputData();
+        return _this;
+    }
+
+    _createClass(SearchProductModule, [{
+        key: 'searchFormHandler',
+        value: function searchFormHandler() {
+            var _this2 = this;
+
+            $('#js-searchProductForm').submit(function (e) {
+                e.preventDefault();
+                console.log('Enter submit');
+                _this2.searchFormMethod();
+            });
+        }
+    }, {
+        key: 'formValidationHandler',
+        value: function formValidationHandler() {
+            console.log('formValidationHandler');
+            $('#js-searchProductForm').validate({
+                rules: {
+                    sku: {
+                        digits: true,
+                        max: 100000,
+                        min: 1,
+                        required: {
+                            param: true,
+                            depends: function depends(element) {
+                                return $('#inputData').val() == 'sku';
+                            }
+
+                        }
+                    },
+                    name: {
+                        maxlength: 255,
+                        minlength: 3,
+                        required: {
+                            param: true,
+                            depends: function depends(element) {
+                                return $('#inputData').val() == 'name';
+                            }
+
+                        }
+                    }
+                }
+            });
+        }
+    }, {
+        key: 'changeInputData',
+        value: function changeInputData() {
+            var _this3 = this;
+
+            $('#inputData').change(function (e) {
+                _this3.formValidationHandler();
+                _this3.selectInputData = e.target.value;
+                console.log(_this3.selectInputData);
+
+                if (_this3.selectInputData == 'sku') {
+                    $('.search-input').html('<input id="inputSku" name="sku" type="text" class="form-control" placeholder="Введите артикул">');
+                    $('#inputName').remove();
+                } else {
+                    $('#inputSku').remove();
+                    $('.search-input').html('<input id="inputName" name="name" type="text" class="form-control" placeholder="Введите название">');
+                }
+                $('#inputSku').val('');
+                $('#inputName').val('');
+                $('label.error').remove();
+            });
+        }
+    }, {
+        key: 'searchFormMethod',
+        value: function searchFormMethod() {
+            this.formValidationHandler();
+            if ($('#js-searchProductForm').valid()) {
+                console.log('SEARCH');
+                this.getSearchData();
+            }
+        }
+    }, {
+        key: 'getSearchData',
+        value: function getSearchData() {
+            window.location.href = '//' + window.location.hostname + '/store/search?' + $('#js-searchProductForm').serialize();
+        }
+    }]);
+
+    return SearchProductModule;
+}(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
+
+/***/ }),
+/* 39 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return CartModule; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__removeItemCart__ = __webpack_require__(40);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__destroyCart__ = __webpack_require__(41);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__changeItemAmountCart__ = __webpack_require__(42);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__createOrder__ = __webpack_require__(43);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+
+
+
+
+
+
+var CartModule = function (_ApiModule) {
+    _inherits(CartModule, _ApiModule);
+
+    function CartModule() {
+        _classCallCheck(this, CartModule);
+
+        var _this = _possibleConstructorReturn(this, (CartModule.__proto__ || Object.getPrototypeOf(CartModule)).call(this));
+
+        console.log('Page: CartModule');
+
+        new __WEBPACK_IMPORTED_MODULE_1__removeItemCart__["a" /* RemoveItemCartModule */]();
+        new __WEBPACK_IMPORTED_MODULE_2__destroyCart__["a" /* DestroyCartModule */]();
+        new __WEBPACK_IMPORTED_MODULE_3__changeItemAmountCart__["a" /* ChangeItemAmountModule */]();
+        new __WEBPACK_IMPORTED_MODULE_4__createOrder__["a" /* CreateOrderModule */]();
+
+        _this.initGeocomplete();
+        return _this;
+    }
+
+    return CartModule;
+}(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
+
+/***/ }),
+/* 40 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return RemoveItemCartModule; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+
+
+var RemoveItemCartModule = function (_ApiModule) {
+    _inherits(RemoveItemCartModule, _ApiModule);
+
+    function RemoveItemCartModule() {
+        _classCallCheck(this, RemoveItemCartModule);
+
+        var _this = _possibleConstructorReturn(this, (RemoveItemCartModule.__proto__ || Object.getPrototypeOf(RemoveItemCartModule)).call(this));
+
+        console.log('Module: RemoveItemCartModule');
+
+        _this.apiDeleteProductItemUrl = '/cart/item';
+        _this.removeProductHandler();
+        return _this;
+    }
+
+    _createClass(RemoveItemCartModule, [{
+        key: 'removeProductHandler',
+        value: function removeProductHandler() {
+            var _this2 = this;
+
+            $('.js-remove-product').off('click').on('click', function (e) {
+                var $el = $(e.target),
+                    $form = $el.closest('.js-item-form');
+
+                if ($form.valid()) {
+                    console.log('removeProductHandler');
+                    _this2.removeProductItemMethod($form);
+                }
+            });
+        }
+    }, {
+        key: 'removeProductItemMethod',
+        value: function removeProductItemMethod($form) {
+            this.delete({
+                data: $form.serialize(),
+                url: this.apiDeleteProductItemUrl,
+                success: function success(response) {
+                    if (typeof response.deleteId != 'undefined') {
+                        console.log(response.deleteId);
+                        $form.closest('.table-row-cart').remove();
+
+                        $('#cartTotal').html(response.total + " грн");
+                        $('#cartTotal').data('total_sum', response.total);
+                        alertify.log.error('Remove product form Cart');
+                    } else if (typeof response.html != 'undefined') {
+                        $('.js-cart-content').html(response.html);
+                    }
+                }
+            });
+        }
+    }, {
+        key: 'checkForm',
+        value: function checkForm() {
+            $('.js-item-form').each(function (index, form) {
+
+                $(form).validate({
+                    rules: {
+                        rowId: {
+                            required: true,
+                            minlength: 10
+                        },
+                        amount: {
+                            required: true,
+                            digits: true,
+                            max: 10000,
+                            min: 1
+                        }
+                    },
+                    ignore: []
+                });
+            });
+        }
+    }]);
+
+    return RemoveItemCartModule;
+}(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
+
+/***/ }),
+/* 41 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return DestroyCartModule; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+
+
+var DestroyCartModule = function (_ApiModule) {
+    _inherits(DestroyCartModule, _ApiModule);
+
+    function DestroyCartModule() {
+        _classCallCheck(this, DestroyCartModule);
+
+        var _this = _possibleConstructorReturn(this, (DestroyCartModule.__proto__ || Object.getPrototypeOf(DestroyCartModule)).call(this));
+
+        console.log('Module: DestroyCartModule');
+
+        _this.apiDeleteCartUrl = '/cart';
+        _this.clearCartHandler();
+        return _this;
+    }
+
+    _createClass(DestroyCartModule, [{
+        key: 'clearCartHandler',
+        value: function clearCartHandler() {
+            var _this2 = this;
+
+            $('#clearCart').off('click').on('click', function () {
+                console.log('clearCartHandler');
+                _this2.clearCartMethod();
+            });
+        }
+    }, {
+        key: 'clearCartMethod',
+        value: function clearCartMethod() {
+            this.delete({
+                data: {},
+                url: this.apiDeleteCartUrl,
+                success: function success(response) {
+                    $('.js-cart-content').html('<div class="row empty-cart"><div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">' + response.html + '</div></div>');
+                }
+            });
+        }
+    }]);
+
+    return DestroyCartModule;
+}(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
+
+/***/ }),
+/* 42 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ChangeItemAmountModule; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+
+
+var ChangeItemAmountModule = function (_ApiModule) {
+    _inherits(ChangeItemAmountModule, _ApiModule);
+
+    function ChangeItemAmountModule() {
+        _classCallCheck(this, ChangeItemAmountModule);
+
+        var _this = _possibleConstructorReturn(this, (ChangeItemAmountModule.__proto__ || Object.getPrototypeOf(ChangeItemAmountModule)).call(this));
+
+        console.log('Module: ChangeItemAmountModule');
+
+        _this.apiAmountAddItemUrl = '/cart/add_item';
+        _this.apiAmountSubItemUrl = '/cart/sub_item';
+
+        _this.checkForm();
+        _this.changeAmountAddBtnHandler();
+        _this.changeAmountSubBtnHandler();
+        return _this;
+    }
+
+    _createClass(ChangeItemAmountModule, [{
+        key: 'changeAmountAddBtnHandler',
+        value: function changeAmountAddBtnHandler() {
+            var _this2 = this;
+
+            $('.js-add-product').off('click').on('click', function (e) {
+                console.log('changeAmount - Add');
+                _this2.prepareDataHandler(e, _this2.apiAmountAddItemUrl, 'add');
+            });
+        }
+    }, {
+        key: 'changeAmountSubBtnHandler',
+        value: function changeAmountSubBtnHandler() {
+            var _this3 = this;
+
+            $('.js-sub-product').off('click').on('click', function (e) {
+                console.log('changeAmount - Sub');
+                _this3.prepareDataHandler(e, _this3.apiAmountSubItemUrl, 'sub');
+            });
+        }
+    }, {
+        key: 'prepareDataHandler',
+        value: function prepareDataHandler(e, urlAction, action) {
+            var $el = $(e.target),
+                $form = $el.closest('.js-item-form');
+
+            var $qtyInput = $form.find('input.products_quantity');
+            var $currentAmount = $qtyInput.val();
+            console.log($qtyInput);
+
+            if ($currentAmount < 1 || $currentAmount == 1 && action == 'sub') {
+                alertify.log.error('Значение не может быть меньше 1');
+                return;
+            }
+
+            switch (action) {
+                case 'add':
+                    $qtyInput.val(++$currentAmount);
+                    break;
+                case 'sub':
+                    $qtyInput.val(--$currentAmount);
+                    break;
+                case 'set':
+                    break;
+            }
+
+            this.changeAmountItemMethod($form, urlAction);
+        }
+    }, {
+        key: 'changeAmountItemMethod',
+        value: function changeAmountItemMethod($form, urlAction) {
+            if ($form.valid()) {
+                this.post({
+                    data: $form.serialize(),
+                    url: urlAction,
+                    success: function success(response) {
+                        alertify.log.success('Значение поля успешно обновилось');
+                        $form.find('.products_quantity').val(response.item.qty);
+                        $form.find('.td-sum').html((response.item.price * response.item.qty).toFixed(2));
+
+                        $('#cartTotal').html(parseFloat(response.total).toFixed(2) + ' грн');
+                        $('#cartTotal').data('total_sum', response.total);
+                    }
+                });
+            } else {
+                console.log('not valid');
+            }
+        }
+    }, {
+        key: 'checkForm',
+        value: function checkForm() {
+            $('.js-item-form').each(function (index, form) {
+
+                $(form).validate({
+                    rules: {
+                        rowId: {
+                            required: true,
+                            minlength: 10
+                        },
+                        amount: {
+                            required: true,
+                            digits: true,
+                            max: 10000,
+                            min: 1
+                        }
+                    },
+                    ignore: []
+                });
+            });
+        }
+    }]);
+
+    return ChangeItemAmountModule;
+}(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
+
+/***/ }),
+/* 43 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return CreateOrderModule; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+
+
+var CreateOrderModule = function (_ApiModule) {
+    _inherits(CreateOrderModule, _ApiModule);
+
+    function CreateOrderModule() {
+        _classCallCheck(this, CreateOrderModule);
+
+        var _this = _possibleConstructorReturn(this, (CreateOrderModule.__proto__ || Object.getPrototypeOf(CreateOrderModule)).call(this));
+
+        console.log('Module: CreateOrderModule');
+
+        _this.apisendDataUrl = '/orders/create';
+        _this.minOrderAmount = 200;
+
+        _this.createOrderHandler();
+        _this.formValidationHandler();
+        return _this;
+    }
+
+    _createClass(CreateOrderModule, [{
+        key: 'isCartAmountLessThanMin',
+        value: function isCartAmountLessThanMin() {
+            var total_sum = $('#cartTotal').data('total_sum') + "";
+            if (parseInt(total_sum.replace(/,/, '')) < this.minOrderAmount) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }, {
+        key: 'createOrderHandler',
+        value: function createOrderHandler() {
+            var _this2 = this;
+
+            $('#submitCart').off('click').on('click', function () {
+                console.log('createOrderHandler');
+                if (_this2.isCartAmountLessThanMin()) {
+                    console.log('isCartAmountLessThanMin');
+                    Alertify.dialog.alert('Минимальная сумма заказа - 200 грн');
+                    return;
+                }
+                if ($('#create-order-form').valid()) {
+                    _this2.sendDataMethod();
+                    console.log('spiner');
+                    $('#loadToCreateOrder').addClass('create-order');
+                }
+            });
+        }
+    }, {
+        key: 'sendDataMethod',
+        value: function sendDataMethod() {
+            this.post({
+                data: $('#create-order-form').serialize(),
+                url: this.apisendDataUrl,
+                success: function success(response) {
+                    if (response.redirectUrl) {
+                        $('#loadToCreateOrder').remove();
+                        window.location.replace(response.redirectUrl);
+                    }
+                    //todo add broker order
+                }
+            });
+        }
+    }, {
+        key: 'formValidationHandler',
+        value: function formValidationHandler() {
+            $('#create-order-form').validate({
+                rules: {
+                    address: {
+                        minlength: 5,
+                        required: true
+                    },
+                    phone: {
+                        maxlength: 13,
+                        minlength: 10,
+                        required: true
+                    },
+                    note: {
+                        maxlength: 1000
+                    }
+                },
+                messages: {
+                    address: {
+                        minlength: this.minlengthField,
+                        required: this.requiredField
+                    },
+                    phone: {
+                        minlength: this.minlengthField,
+                        maxlength: this.maxlengthField,
+                        required: this.requiredField
+                    }
+                }
+            });
+        }
+    }]);
+
+    return CreateOrderModule;
+}(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
+
+/***/ }),
+/* 44 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MyProfileModule; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__user_data__ = __webpack_require__(45);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__user_password__ = __webpack_require__(46);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+
+
+
+
+var MyProfileModule = function (_ApiModule) {
+    _inherits(MyProfileModule, _ApiModule);
+
+    function MyProfileModule() {
+        _classCallCheck(this, MyProfileModule);
+
+        var _this = _possibleConstructorReturn(this, (MyProfileModule.__proto__ || Object.getPrototypeOf(MyProfileModule)).call(this));
+
+        console.log('Module: MyProfileModule');
+
+        new __WEBPACK_IMPORTED_MODULE_1__user_data__["a" /* UserDataModule */]();
+        new __WEBPACK_IMPORTED_MODULE_2__user_password__["a" /* UserPasswordModule */]();
+
+        _this.initGeocomplete();
+        return _this;
+    }
+
+    return MyProfileModule;
+}(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
+
+/***/ }),
+/* 45 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return UserDataModule; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+
+
+var UserDataModule = function (_ApiModule) {
+    _inherits(UserDataModule, _ApiModule);
+
+    function UserDataModule() {
+        _classCallCheck(this, UserDataModule);
+
+        var _this = _possibleConstructorReturn(this, (UserDataModule.__proto__ || Object.getPrototypeOf(UserDataModule)).call(this));
+
+        console.log('Module: UserDataModule');
+
+        _this.apiUrlUdateUserData = '/api/my_profile/data';
+
+        _this.formUsersDataValidationHandler();
+        _this.submitUserDataHandler();
+        return _this;
+    }
+
+    _createClass(UserDataModule, [{
+        key: 'formUsersDataValidationHandler',
+        value: function formUsersDataValidationHandler() {
+            var validationUsersName = function validationUsersName(value, element) {
+                return this.optional(element) || !/[^a-zA-Zа-яА-Я]+/g.test(value);
+            };
+
+            $.validator.addMethod("checkName", validationUsersName, "Please enter the correct value. Only latin chars");
+            //todo add cyrillic validation
+
+            $('#usersData').validate({
+                rules: {
+                    name: {
+                        maxlength: 250,
+                        minlength: 5,
+                        normalizer: function normalizer(value) {
+                            return $.trim(value);
+                        },
+                        checkName: true
+                    },
+                    fname: {
+                        maxlength: 250,
+                        minlength: 3,
+                        normalizer: function normalizer(value) {
+                            return $.trim(value);
+                        },
+                        checkName: true
+                    },
+                    lname: {
+                        maxlength: 250,
+                        minlength: 3,
+                        normalizer: function normalizer(value) {
+                            return $.trim(value);
+                        },
+                        checkName: true
+                    },
+                    address: {
+                        maxlength: 250,
+                        minlength: 10,
+                        normalizer: function normalizer(value) {
+                            return $.trim(value);
+                        }
+                    },
+                    phone: {
+                        digits: true,
+                        maxlength: 12,
+                        minlength: 10,
+                        normalizer: function normalizer(value) {
+                            return $.trim(value);
+                        }
+                    }
+                }
+            });
+        }
+    }, {
+        key: 'submitUserDataHandler',
+        value: function submitUserDataHandler() {
+            var _this2 = this;
+
+            $('#usersData').on('submit', function (e) {
+                e.preventDefault();
+
+                if ($('#usersData').valid()) {
+                    _this2.sendUserFormData();
+                    alertify.log.info("Changed user's data");
+                }
+            });
+        }
+    }, {
+        key: 'sendUserFormData',
+        value: function sendUserFormData() {
+            console.log('sendUserFormData: ');
+            this.post({
+                data: $('#usersData').serialize(),
+                url: this.apiUrlUdateUserData,
+                success: function success(response) {}
+            });
+        }
+    }]);
+
+    return UserDataModule;
+}(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
+
+/***/ }),
+/* 46 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return UserPasswordModule; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+
+
+var UserPasswordModule = function (_ApiModule) {
+    _inherits(UserPasswordModule, _ApiModule);
+
+    function UserPasswordModule() {
+        _classCallCheck(this, UserPasswordModule);
+
+        var _this = _possibleConstructorReturn(this, (UserPasswordModule.__proto__ || Object.getPrototypeOf(UserPasswordModule)).call(this));
+
+        console.log('Module: UserPasswordModule');
+
+        _this.apiUrlUdateUserPassword = '/api/my_profile/password';
+
+        _this.formUsersPasswordValidationHandler();
+        _this.submitUserPasswordHandler();
+        return _this;
+    }
+
+    _createClass(UserPasswordModule, [{
+        key: 'formUsersPasswordValidationHandler',
+        value: function formUsersPasswordValidationHandler() {
+            var validationUsersPassword = function validationUsersPassword(value, element) {
+                return this.optional(element) || !/[^a-zA-Z0-9]+/g.test(value);
+            };
+
+            $.validator.addMethod("checkPassword", validationUsersPassword, "Please enter the correct value. Only latin chars, numbers");
+
+            $('#usersPassword').validate({
+                rules: {
+                    password: {
+                        maxlength: 50,
+                        minlength: 6,
+                        normalizer: function normalizer(value) {
+                            return $.trim(value);
+                        },
+                        checkPassword: true
+                    },
+                    password_confirmation: {
+                        equalTo: "#password"
+                    }
+                }
+            });
+        }
+    }, {
+        key: 'submitUserPasswordHandler',
+        value: function submitUserPasswordHandler() {
+            var _this2 = this;
+
+            $('#usersPassword').on('submit', function (e) {
+                e.preventDefault();
+
+                if ($('#usersPassword').valid()) {
+                    _this2.sendUserFormPassword();
+                    alertify.log.info("Changed user's password");
+                    _this2.cleanFormFields();
+                }
+            });
+        }
+    }, {
+        key: 'sendUserFormPassword',
+        value: function sendUserFormPassword() {
+            console.log('sendUserFormData: ');
+            this.post({
+                data: $('#usersPassword').serialize(),
+                url: this.apiUrlUdateUserPassword,
+                success: function success(response) {}
+            });
+        }
+    }, {
+        key: 'cleanFormFields',
+        value: function cleanFormFields() {
+            $('#password').val('');
+            $('#passwordConfirmation').val('');
+        }
+    }]);
+
+    return UserPasswordModule;
+}(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
+
+/***/ }),
+/* 47 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ManagersModule; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+
+
+var ManagersModule = function (_ApiModule) {
+    _inherits(ManagersModule, _ApiModule);
+
+    function ManagersModule() {
+        _classCallCheck(this, ManagersModule);
+
+        var _this = _possibleConstructorReturn(this, (ManagersModule.__proto__ || Object.getPrototypeOf(ManagersModule)).call(this));
+
+        console.log('Page: ManagersModule');
+        _this.apiUpdateUrl = '/api/managers';
+        _this.createManagerHandler();
+        return _this;
+    }
+
+    _createClass(ManagersModule, [{
+        key: 'createManagerHandler',
+        value: function createManagerHandler() {
+            var _this2 = this;
+
+            $('#createManagerBtn').off('click').on('click', function (e) {
+                e.preventDefault();
+
+                _this2.createManagerMethod();
+            });
+        }
+    }, {
+        key: 'createManagerMethod',
+        value: function createManagerMethod() {
+            this.post({
+                data: $('#addManagerForm').serialize(),
+                url: this.apiUpdateUrl,
+                success: function success(response) {}
+            });
+        }
+    }]);
+
+    return ManagersModule;
+}(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
+
+/***/ }),
+/* 48 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return UserListModule; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+
+
+var UserListModule = function (_ApiModule) {
+    _inherits(UserListModule, _ApiModule);
+
+    function UserListModule() {
+        _classCallCheck(this, UserListModule);
+
+        var _this = _possibleConstructorReturn(this, (UserListModule.__proto__ || Object.getPrototypeOf(UserListModule)).call(this));
+
+        console.log('Page: UserListModule');
+
+        _this.selectUserHandle();
+        return _this;
+    }
+
+    _createClass(UserListModule, [{
+        key: 'selectUserHandle',
+        value: function selectUserHandle() {
+            $('.js-row.user-item').off('click').on('click', function (e) {
+                // e.preventDefault();
+                // const el = e.target;
+                // const $row = $(el).closest('tr');
+
+            });
+        }
+    }]);
+
+    return UserListModule;
+}(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
+
+/***/ }),
+/* 49 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return EditUserModule; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__add_user__ = __webpack_require__(6);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+
+
+var EditUserModule = function (_AddUserModule) {
+    _inherits(EditUserModule, _AddUserModule);
+
+    function EditUserModule() {
+        _classCallCheck(this, EditUserModule);
+
+        var _this = _possibleConstructorReturn(this, (EditUserModule.__proto__ || Object.getPrototypeOf(EditUserModule)).call(this));
+
+        console.log('Page: EditUserModule');
+
+        _this.apiUpdateUserUrl = '/api/users';
+        return _this;
+    }
+
+    _createClass(EditUserModule, [{
+        key: 'createUserHandler',
+        value: function createUserHandler() {
+            var _this2 = this;
+
+            $('#addUser').off('click').on('click', function (e) {
+                e.preventDefault();
+                console.log('updateUserHandler');
+
+                var user_id = $('#user_id').val();
+                if (user_id > 0) {
+                    _this2.apiUpdateUrl = '';
+                    _this2.apiUpdateUrl = _this2.apiUpdateUserUrl + '/' + user_id;
+                } else {
+                    alertify.log.error('Ошибочные данные пользователя');
+                    return;
+                }
+
+                console.log(_this2.apiUpdateUrl);
+
+                if ($('#addUserForm').valid()) {
+                    _this2.createUserMethod();
+                } else {
+                    console.log('not valid');
+                }
+            });
+        }
+    }]);
+
+    return EditUserModule;
+}(__WEBPACK_IMPORTED_MODULE_0__add_user__["a" /* AddUserModule */]);
+
+/***/ }),
+/* 50 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LoginModule; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+
+
+var LoginModule = function (_ApiModule) {
+    _inherits(LoginModule, _ApiModule);
+
+    function LoginModule() {
+        _classCallCheck(this, LoginModule);
+
+        var _this = _possibleConstructorReturn(this, (LoginModule.__proto__ || Object.getPrototypeOf(LoginModule)).call(this));
+
+        console.log('Page: LoginModule');
+
+        _this.loginBtnHandler();
+        _this.checkForm();
+        _this.submitLoginForEnter();
+        return _this;
+    }
+
+    _createClass(LoginModule, [{
+        key: 'submitLoginForEnter',
+        value: function submitLoginForEnter() {
+            var _this2 = this;
+
+            $('#password').on('keypress', function (e) {
+                if (e.keyCode == 13) {
+                    console.log('enter');
+                    _this2.loginMethod();
+                }
+            });
+        }
+    }, {
+        key: 'loginBtnHandler',
+        value: function loginBtnHandler() {
+            var _this3 = this;
+
+            $('#loginBtn').off('click').on('click', function (e) {
+                e.preventDefault();
+
+                _this3.loginMethod();
+            });
+        }
+    }, {
+        key: 'loginMethod',
+        value: function loginMethod() {
+            console.log('loginBtnHandler');
+            if ($('#loginForm').valid()) {
+                $('#loginForm').submit();
+            } else {
+                console.log('not valid Form');
+            }
+        }
+    }, {
+        key: 'checkForm',
+        value: function checkForm() {
+            $('#loginForm').validate({
+                rules: {
+                    name: {
+                        required: true,
+                        minlength: 3,
+                        normalizer: function normalizer(value) {
+                            return $.trim(value);
+                        }
+
+                    },
+                    password: {
+                        required: true,
+                        minlength: 3,
+                        normalizer: function normalizer(value) {
+                            return $.trim(value);
+                        }
+
+                    }
+                },
+                messages: {
+                    name: {
+                        required: this.requiredField,
+                        minlength: this.minlengthField
+                    },
+                    password: {
+                        required: this.requiredField,
+                        minlength: this.minlengthField
+                    }
+                }
+            });
+        }
+    }]);
+
+    return LoginModule;
+}(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
+
+/***/ }),
+/* 51 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return RegisterModule; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__facebook__ = __webpack_require__(52);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+
+
+
+var RegisterModule = function (_ApiModule) {
+    _inherits(RegisterModule, _ApiModule);
+
+    function RegisterModule() {
+        _classCallCheck(this, RegisterModule);
+
+        var _this = _possibleConstructorReturn(this, (RegisterModule.__proto__ || Object.getPrototypeOf(RegisterModule)).call(this));
+
+        console.log('Page: RegisterModule');
+
+        new __WEBPACK_IMPORTED_MODULE_1__facebook__["a" /* Facebook */]();
+
+        _this.registerBtnHandler();
+        _this.checkForm();
+        return _this;
+    }
+
+    _createClass(RegisterModule, [{
+        key: 'registerBtnHandler',
+        value: function registerBtnHandler() {
+            var _this2 = this;
+
+            $('#registerBtn').off('click').on('click', function (e) {
+                e.preventDefault();
+                FB.AppEvents.logEvent("Register New user");
+                _this2.registerMethod();
+            });
+        }
+    }, {
+        key: 'registerMethod',
+        value: function registerMethod() {
+            if ($('#registerForm').valid()) {
+                $('#registerForm').submit();
+            } else {
+                console.log('not valid Form');
+                alertify.log.error('Ошибка! Проверть данные, которые Вы ввели!');
+            }
+        }
+    }, {
+        key: 'checkForm',
+        value: function checkForm() {
+            $('#registerForm').validate({
+                rules: {
+                    userType: {
+                        required: true
+                    },
+                    fname: {
+                        required: true,
+                        minlength: 5,
+                        normalizer: function normalizer(value) {
+                            return $.trim(value);
+                        }
+                    },
+                    name: {
+                        required: true,
+                        minlength: 3,
+                        normalizer: function normalizer(value) {
+                            return $.trim(value);
+                        }
+                    },
+                    email: {
+                        // required: true,
+                        // email: true,
+                        email: {
+                            depends: function depends(element) {
+                                console.log($(element).val().length);
+                                return $(element).val().length > 0;
+                            }
+                        },
+                        normalizer: function normalizer(value) {
+                            return $.trim(value);
+                        }
+
+                    },
+                    password: {
+                        required: true,
+                        minlength: 4
+                    },
+                    password_confirmation: {
+                        equalTo: "#password"
+                    },
+                    phone: {
+                        required: true,
+                        number: true,
+                        rangelength: [10, 12],
+                        normalizer: function normalizer(value) {
+                            return $.trim(value);
+                        }
+                    },
+                    address: {
+                        required: true,
+                        minlength: 3,
+                        normalizer: function normalizer(value) {
+                            return $.trim(value);
+                        }
+                    }
+                },
+                errorPlacement: function errorPlacement(error, element) {
+                    console.log(element.attr("name"));
+                    if (element.attr("name") == "userType") {
+                        $("#insertErrorMessage").html(error);
+                    } else {
+                        error.insertAfter(element);
+                    }
+                },
+                messages: {
+                    userType: {
+                        required: "Выберите тип покупателя"
+                    },
+                    fname: {
+                        required: this.requiredField,
+                        minlength: this.minlengthField
+                    },
+                    name: {
+                        required: this.requiredField,
+                        minlength: this.minlengthField
+                    },
+                    email: {
+                        // required: this.requiredField,
+                        email: this.emailField
+                    },
+                    password: {
+                        required: this.requiredField,
+                        minlength: this.minlengthField
+                    },
+                    password_confirmation: {
+                        required: this.requiredField,
+                        equalTo: this.equalToField
+                    },
+                    phone: {
+                        rangelength: "Не верное количество символов в номере телефона",
+                        number: "Вводите только цифры!",
+                        required: this.requiredField,
+                        minlength: this.minlengthField
+                    },
+                    address: {
+                        required: this.requiredField,
+                        minlength: this.minlengthField
+                    }
+                }
+            });
+        }
+    }]);
+
+    return RegisterModule;
+}(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
+
+/***/ }),
+/* 52 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Facebook; });
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Facebook = function Facebook() {
+    _classCallCheck(this, Facebook);
+
+    window.fbAsyncInit = function () {
+        FB.init({
+            appId: '386151865185880',
+            xfbml: true,
+            version: 'v2.10'
+        });
+
+        FB.AppEvents.logPageView();
+    };
+
+    (function (d, s, id) {
+        var js,
+            fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) {
+            return;
+        }
+        js = d.createElement(s);js.id = id;
+        js.src = "https://connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+    })(document, 'script', 'facebook-jssdk');
+};
+
+/***/ }),
+/* 53 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ContactsModule; });
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var ContactsModule = function () {
+    function ContactsModule() {
+        _classCallCheck(this, ContactsModule);
+
+        console.log('Page: ContactsModule');
+
+        this.init();
+    }
+
+    _createClass(ContactsModule, [{
+        key: 'init',
+        value: function init() {}
+    }]);
+
+    return ContactsModule;
+}();
+
+/***/ }),
+/* 54 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return CtaModule; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+
+
+var CtaModule = function (_ApiModule) {
+    _inherits(CtaModule, _ApiModule);
+
+    function CtaModule() {
+        _classCallCheck(this, CtaModule);
+
+        var _this = _possibleConstructorReturn(this, (CtaModule.__proto__ || Object.getPrototypeOf(CtaModule)).call(this));
+
+        console.log('Page: CtaModule');
+
+        _this.openCtaModalHandler();
+        _this.closeCtaModalHandler();
+        _this.hideCtaModalHandler();
+        _this.sendBtnHandler();
+        _this.checkForm();
+        return _this;
+    }
+
+    _createClass(CtaModule, [{
+        key: 'openCtaModalHandler',
+        value: function openCtaModalHandler() {
+            $('#cta_modal_open').off('click').on('click', function (e) {
+                e.preventDefault();
+                console.log('Click: CtaModule');
+
+                $('#modal_cta').addClass('open_modal');
+            });
+        }
+    }, {
+        key: 'closeCtaModalHandler',
+        value: function closeCtaModalHandler() {
+            var _this2 = this;
+
+            $('#close_modal').off('click').on('click', function (e) {
+                e.preventDefault();
+                console.log('Click: CtaModule Close');
+
+                _this2.cleanAndHideCtaModalHandler();
+            });
+        }
+    }, {
+        key: 'hideCtaModalHandler',
+        value: function hideCtaModalHandler() {
+            var _this3 = this;
+
+            $('#modal_cta').off('click').on('click', function (e) {
+                e.preventDefault();
+                if (event.target == event.currentTarget) {
+                    console.log('Click: CtaModule Close');
+
+                    _this3.cleanAndHideCtaModalHandler();
+                }
+            });
+        }
+    }, {
+        key: 'sendBtnHandler',
+        value: function sendBtnHandler() {
+            var _this4 = this;
+
+            $('#sendCta').off('click').on('click', function (e) {
+                e.preventDefault();
+                console.log('sendBtnHandler');
+                _this4.sendCtaMethod();
+            });
+        }
+    }, {
+        key: 'sendCtaMethod',
+        value: function sendCtaMethod() {
+
+            if ($('#ctaForm').valid()) {
+                console.log('valid Form');
+                // $('#ctaForm').submit();
+                this.post({
+                    data: $('#ctaForm').serialize(),
+                    url: '/api/send_cta',
+                    success: function success(response) {
+                        alertify.log.success('Значение поля успешно обновилось');
+                    }
+                });
+                this.cleanAndHideCtaModalHandler();
+            } else {
+                console.log('not valid Form');
+            }
+        }
+    }, {
+        key: 'cleanAndHideCtaModalHandler',
+        value: function cleanAndHideCtaModalHandler() {
+
+            $('#modal_cta').removeClass('open_modal');
+            $('#ctaForm input[name="name"]').val('');
+            $('#ctaForm input[name="phone"]').val('');
+        }
+    }, {
+        key: 'checkForm',
+        value: function checkForm() {
+            $('#ctaForm').validate({
+                rules: {
+                    name: {
+                        required: true,
+                        minlength: 3,
+                        normalizer: function normalizer(value) {
+                            return $.trim(value);
+                        }
+                    },
+                    phone: {
+                        required: true,
+                        number: true,
+                        rangelength: [10, 12],
+                        normalizer: function normalizer(value) {
+                            return $.trim(value);
+                        }
+                    }
+                },
+                messages: {
+                    name: {
+                        required: this.requiredField,
+                        minlength: this.minlengthField
+                    },
+                    phone: {
+                        rangelength: "Не верное количество символов в номере телефона",
+                        number: "Вводите только цифры!",
+                        required: this.requiredField,
+                        minlength: this.minlengthField
+                    }
+                }
+            });
+        }
+    }]);
+
+    return CtaModule;
+}(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* ApiModule */]);
+
+/***/ }),
+/* 55 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SliderModule; });
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var SliderModule = function () {
+    function SliderModule() {
+        _classCallCheck(this, SliderModule);
+
+        console.log('Page: SliderModule');
+
+        this.init();
+    }
+
+    _createClass(SliderModule, [{
+        key: 'init',
+        value: function init() {
+            $('.main_slider').flexslider({
+                animation: "slide"
+            });
+        }
+    }]);
+
+    return SliderModule;
+}();
+
+/***/ }),
+/* 56 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
 
 /***/ })
 /******/ ]);

@@ -29,4 +29,14 @@ class SlidersController extends Controller
             ]
         );
     }
+
+    public function edit(Request $request, Slider $slider){
+
+//        dd($slider->where('id',$request->id)->get());
+        return view('admin.sliderCreateNew', [
+                'pageName'=>'Edit the Slide',
+                'slider'=>$slider->where('id',$request->id)->first()
+            ]
+        );
+    }
 }

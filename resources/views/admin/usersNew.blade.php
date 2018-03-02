@@ -16,6 +16,7 @@
         <div class="col-xs-12 col-sm-6 col-md-6  col-lg-6">
 
             <form action="" id="addUserForm">
+                {{ csrf_field() }}
                 <input type="hidden" id="user_id" name="user_id" value="{{ $user->id or ''  }}">
                 <div class="form-group">
                     <label for="InputName">Name</label>
