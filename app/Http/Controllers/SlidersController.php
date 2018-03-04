@@ -26,17 +26,28 @@ class SlidersController extends Controller
     public function create(){
         return view('admin.sliderCreateNew', [
                 'pageName'=>'Create new Slide',
+                'action_url'=>route('admin.sliders.index'),
             ]
         );
     }
 
     public function edit(Request $request, Slider $slider){
 
-//        dd($slider->where('id',$request->id)->get());
+//        dd(route('admin.sliders.index')."/".$request->id);
         return view('admin.sliderCreateNew', [
                 'pageName'=>'Edit the Slide',
+                'action_url'=>route('admin.sliders.index')."/".$request->id,
                 'slider'=>$slider->where('id',$request->id)->first()
             ]
         );
+    }
+
+    public function update(Request $request, Slider $slider){
+        $path = null;
+        if($request->hasFile('img_url')){
+            $path = $request->file('img_url')->move('images_slides',$request->file('img_url')->getClientOriginalName());
+        }
+        $slider->updateSlider($request->all(),$path);
+        return redirect(route('admin.sliders.index'));
     }
 }

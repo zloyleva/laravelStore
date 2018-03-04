@@ -29,7 +29,7 @@
                             <td data-count="{{$loop->iteration}}">{{$loop->iteration}}</td>
                             <td data-id="{{$item->id}}">{{$item->id}}</td>
                             <td data-user="{{$item->name}}">{{$item->name}}</td>
-                            <td><input type="checkbox" checked="{{ $item->show_status }}" disabled></td>
+                            <td><input type="checkbox" @if($item->show_status) checked @endif disabled></td>
                             <td data-status="{{$item->text_title}}">{{$item->text_title}}</td>
                             <td data-created_at="{{$item->created_at}}">{{$item->created_at}}</td>
 

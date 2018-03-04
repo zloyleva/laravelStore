@@ -60,6 +60,7 @@ Route::group( [ 'middleware' => [ 'auth', 'manager' ], 'prefix' => 'admin', 'as'
     Route::post( '/sliders', [ 'as' => 'sliders.store', 'uses' => 'SlidersController@store' ] );
     Route::get( '/sliders/create', [ 'as' => 'sliders.create', 'uses' => 'SlidersController@create' ] );
     Route::get( '/sliders/{id}/edit', [ 'as' => 'sliders.edit', 'uses' => 'SlidersController@edit' ] );
+    Route::post( '/sliders/{id}', [ 'as' => 'sliders.edit', 'uses' => 'SlidersController@update' ] );
 } );
 
 Auth::routes();

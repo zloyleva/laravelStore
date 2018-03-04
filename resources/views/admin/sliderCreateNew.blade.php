@@ -9,7 +9,7 @@
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12  col-lg-12">
 
-                <form action="{{route('admin.sliders.store')}}" id="addUserForm" method="post"
+                <form action="{{ $action_url }}" id="addUserForm" method="post"
                       enctype="multipart/form-data">
                     {{ csrf_field() }}
                     @isset($slider)
