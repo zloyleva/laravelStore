@@ -18,8 +18,9 @@
                             <th class="js-column-order" data-column="flname">User first, last name</th>
                             <th class="js-column-order" data-column="name">Username</th>
                             <th class="js-column-order" data-column="email">Email</th>
-                            <th class="js-column-order" data-column="status">Price type</th>
-                            <th class="js-column-order" data-column="status">Manager</th>
+                            <th class="js-column-order" data-column="price_type">Price type</th>
+                            <th class="js-column-order" data-column="client_type">Client type</th>
+                            <th class="js-column-order" data-column="manager_id">Manager</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -38,7 +39,8 @@
 
                             <td class="js-price_type" data-row="{{$user->price_type}}">{{$priceTypeList[$user->price_type-1]['description']}}</td>
 
-                            <td class="js-phone" data-row="{{$user->manager->id}}">{{$user->manager->name}}</td>
+                            <td class="js-client_type" data-row="{{$user->client_type}}">{{$user->client_type}}</td>
+                            <td class="js-manager_id" data-row="{{$user->manager->id}}">{{$user->manager->name}}</td>
                             <td><a href="{{route('admin.users.index')}}/{{$user->id}}/edit">Edit</a></td>
                         </tr>
                     @endforeach

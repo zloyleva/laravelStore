@@ -29,6 +29,9 @@ class CreateUsersTable extends Migration
             $table->integer('visits')->default(0);
             $table->integer('manager_id')->default(1);
 
+            $table->string('client_comment')->nullable();
+            $table->string('client_type')->nullable();
+
             $table->rememberToken();
             $table->timestamps();
 
