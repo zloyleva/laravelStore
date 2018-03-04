@@ -28,6 +28,8 @@ Route::group( [ 'middleware' => [ 'auth' ] ], function () {
 	Route::post('/cart/add_item', [ 'as'=>'cart_item.add', 'uses'=>'CartController@setCartItemAmount']);
 	Route::post('/cart/sub_item', [ 'as'=>'cart_item.sub', 'uses'=>'CartController@setCartItemAmount']);
 	Route::delete('/cart/item', [ 'as'=>'cart_item.delete', 'uses'=>'CartController@deleteCartItem']);
+
+    Route::get( '/after_registration', [ 'as' => 'after_registration', 'uses' => 'PagesController@after_registration' ] );
 } );
 
 Route::group( [ 'middleware' => [ 'auth' ], 'prefix' => 'orders', 'as' => 'orders.' ], function () {

@@ -83,4 +83,10 @@ class PagesController extends Controller
             'categories'=>$categories,
         ]);
     }
+
+    public function after_registration(){
+        return view('pages.after_registration',[
+            'pageName'=>'Спасибо Вам за регистрацию!',
+        ]);
+    }
 }
