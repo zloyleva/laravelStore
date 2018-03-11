@@ -40,7 +40,7 @@ class PagesController extends Controller
 
     public function load_price(ArrivalGoods $arrivalGoods, PriceType $priceType){
 
-        $arrivals = $arrivalGoods->where('publish', '=', true)->get();
+        $arrivals = $arrivalGoods->where('publish', '=', true)->orderBy('created_at', 'desc')->get();
 
         $title = 'Розничная';
         $price_type = 'price_user';

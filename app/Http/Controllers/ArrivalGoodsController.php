@@ -10,7 +10,7 @@ class ArrivalGoodsController extends Controller
     public function index(ArrivalGoods $arrivalGoods){
         return view('admin.listArrivalGoods',[
             'pageName'=>'Arrival of Goods',
-            'arrivals'=>$arrivalGoods->all()
+            'arrivals'=>$arrivalGoods->orderBy('created_at', 'desc')->get()
         ]);
     }
 
