@@ -9407,6 +9407,16 @@ footer .container .row .section_contacts .works {
   height: auto;
 }
 
+.container.arrival_goods .row div .arrival_item {
+  padding-bottom: 10px;
+  border-top: 1px solid #ddd;
+}
+
+.container.arrival_goods .row div .arrival_item:last-child {
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 10px;
+}
+
 input.error {
   border-color: #f00;
 }

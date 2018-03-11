@@ -63,6 +63,12 @@ Route::group( [ 'middleware' => [ 'auth', 'manager' ], 'prefix' => 'admin', 'as'
     Route::get( '/sliders/create', [ 'as' => 'sliders.create', 'uses' => 'SlidersController@create' ] );
     Route::get( '/sliders/{id}/edit', [ 'as' => 'sliders.edit', 'uses' => 'SlidersController@edit' ] );
     Route::post( '/sliders/{id}', [ 'as' => 'sliders.edit', 'uses' => 'SlidersController@update' ] );
+
+    Route::get( '/arrival', [ 'as' => 'arrival.index', 'uses' => 'ArrivalGoodsController@index' ] );
+    Route::post( '/arrival', [ 'as' => 'arrival.index', 'uses' => 'ArrivalGoodsController@store' ] );
+    Route::get( '/arrival/create', [ 'as' => 'arrival.create', 'uses' => 'ArrivalGoodsController@create' ] );
+    Route::get( '/arrival/{id}/edit', [ 'as' => 'arrival.edit', 'uses' => 'ArrivalGoodsController@edit' ] );
+    Route::post( '/arrival/{id}', [ 'as' => 'arrival.edit', 'uses' => 'ArrivalGoodsController@update' ] );
 } );
 
 Auth::routes();

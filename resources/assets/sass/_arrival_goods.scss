@@ -1,0 +1,14 @@
+.container.arrival_goods{
+  .row{
+    div{
+      .arrival_item{
+        padding-bottom: 10px;
+        border-top: 1px solid #ddd;
+        &:last-child{
+          border-bottom: 1px solid #ddd;
+          margin-bottom: 10px;
+        }
+      }
+    }
+  }
+}

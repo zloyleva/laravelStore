@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ArrivalGoods;
 use App\Models\PriceType;
 use App\Models\Slider;
 use Illuminate\Http\Request;
@@ -37,36 +38,20 @@ class PagesController extends Controller
 	    );
     }
 
-    public function load_price(){
+    public function load_price(ArrivalGoods $arrivalGoods, PriceType $priceType){
 
-        $title = "Розничная";
-        $link = "https://drive.google.com/file/d/1Os0K1gutfWN1ZhIhf9GH-d0FBFWe8GVV/view";
+        $arrivals = $arrivalGoods->where('publish', '=', true)->get();
+
+        $title = 'Розничная';
+        $price_type = 'price_user';
+
         if(Auth::check()){
-            switch (Auth::user()->price_type) {
-                case 1:
-                    $title = "Розничная";
-                    $link = "https://drive.google.com/file/d/1Os0K1gutfWN1ZhIhf9GH-d0FBFWe8GVV/view";
-                    break;
-                case 2:
-                    $title = "Оптовая #3";
-                    $link = "https://drive.google.com/file/d/1eY3Qr2V9T1cCQ2Np8l29NB8YaGzLJ6Yc/view";
-                    break;
-                case 3:
-                    $title = "Оптовая #8";
-                    $link = "https://drive.google.com/file/d/1wqzFY6mhMAwUHCGzlDLWK7koRBxL-rbt/view";
-                    break;
-                case 4:
-                    $title = "Диллерская";
-                    $link = "https://drive.google.com/file/d/18rnfAK5jVSL2FN3yIhgbyFkI5tcRypXr/view";
-                    break;
-                case 5:
-                    $title = "VIP";
-                    $link = "https://drive.google.com/file/d/1IJ6H33ku_1F2ABljlMiqO_0s0D9SGY3Z/view";
-                    break;
-            }
+            $user_price_type = $priceType->where('id', Auth::user()->price_type)->first();
+            $title = $user_price_type->description;
+            $price_type = $user_price_type->type;
         }
 
-        return view('pages.load_price', ['title'=>$title, 'link'=>$link]);
+        return view('pages.load_price', ['pageName'=>'Приходы товара', 'title'=>$title, 'price_type'=>$price_type, 'arrivals'=>$arrivals]);
     }
 
     public function contacts(){
