@@ -47,6 +47,13 @@
     </div>
 </footer>
 
+<div class="scale_image" id="scale_image">
+    <div class="scale_image_content">
+        <div class="control"><span id="close_scale_image">&times;</span></div>
+        <img src="/images/39179.jpeg" alt="">
+    </div>
+</div>
+
 <div class="modal_cta" id="modal_cta">
     <div class="modal_content">
         <div class="control"><span id="close_modal">&times;</span></div>

@@ -1,0 +1,37 @@
+#scale_image{
+  &.show_image_modal{
+    display: flex;
+  }
+  display: none;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 99999;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  .scale_image_content{
+    position: relative;
+    .control{
+      position: absolute;
+      right: 0;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.6);
+      cursor: pointer;
+      #close_scale_image{
+        color: #fff;
+      }
+    }
+  }
+}
+.section_thumbnail{
+  img.product_image{
+    cursor: pointer;
+  }
+}

@@ -1,3 +1,5 @@
+import {ProductImageScaleModule, ScaleImageModule, ScaleProductImageModule} from "./pages/scaleImage";
+
 window.$ = window.jQuery = require('jquery');
 console.log('App was loaded');
 

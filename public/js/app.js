@@ -11143,18 +11143,21 @@ module.exports = __webpack_require__(56);
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__store_pages__ = __webpack_require__(36);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__cart_cart__ = __webpack_require__(39);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__users_my_profile__ = __webpack_require__(44);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__admin_managers__ = __webpack_require__(47);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__admin_users_list__ = __webpack_require__(48);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__admin_add_user__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__admin_edit_user__ = __webpack_require__(49);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__auth_login__ = __webpack_require__(50);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__auth_register__ = __webpack_require__(51);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__pages_contacts__ = __webpack_require__(53);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__pages_CtaModule__ = __webpack_require__(54);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__pages_slider__ = __webpack_require__(55);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__pages_scaleImage__ = __webpack_require__(71);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__store_pages__ = __webpack_require__(36);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__cart_cart__ = __webpack_require__(39);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__users_my_profile__ = __webpack_require__(44);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__admin_managers__ = __webpack_require__(47);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__admin_users_list__ = __webpack_require__(48);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__admin_add_user__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__admin_edit_user__ = __webpack_require__(49);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__auth_login__ = __webpack_require__(50);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__auth_register__ = __webpack_require__(51);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__pages_contacts__ = __webpack_require__(53);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__pages_CtaModule__ = __webpack_require__(54);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__pages_slider__ = __webpack_require__(55);
+
+
 window.$ = window.jQuery = __webpack_require__(1);
 console.log('App was loaded');
 
@@ -11184,40 +11187,40 @@ var page = __webpack_require__(33);
 $(document).ready(function () {
 
     page('/', function () {
-        return new __WEBPACK_IMPORTED_MODULE_11__pages_slider__["a" /* SliderModule */]();
+        return new __WEBPACK_IMPORTED_MODULE_12__pages_slider__["a" /* SliderModule */]();
     });
 
     page('/login', function () {
-        return new __WEBPACK_IMPORTED_MODULE_7__auth_login__["a" /* LoginModule */]();
+        return new __WEBPACK_IMPORTED_MODULE_8__auth_login__["a" /* LoginModule */]();
     });
     page('/register', function () {
-        return new __WEBPACK_IMPORTED_MODULE_8__auth_register__["a" /* RegisterModule */]();
+        return new __WEBPACK_IMPORTED_MODULE_9__auth_register__["a" /* RegisterModule */]();
     });
 
     page('/store*', function () {
-        return new __WEBPACK_IMPORTED_MODULE_0__store_pages__["a" /* PageModule */]();
+        return new __WEBPACK_IMPORTED_MODULE_1__store_pages__["a" /* PageModule */]();
     });
     page('/cart', function () {
-        return new __WEBPACK_IMPORTED_MODULE_1__cart_cart__["a" /* CartModule */]();
+        return new __WEBPACK_IMPORTED_MODULE_2__cart_cart__["a" /* CartModule */]();
     });
     page('/my_profile', function () {
-        return new __WEBPACK_IMPORTED_MODULE_2__users_my_profile__["a" /* MyProfileModule */]();
+        return new __WEBPACK_IMPORTED_MODULE_3__users_my_profile__["a" /* MyProfileModule */]();
     });
     page('/contacts', function () {
-        return new __WEBPACK_IMPORTED_MODULE_9__pages_contacts__["a" /* ContactsModule */]();
+        return new __WEBPACK_IMPORTED_MODULE_10__pages_contacts__["a" /* ContactsModule */]();
     });
 
     page('/admin/managers', function () {
-        return new __WEBPACK_IMPORTED_MODULE_3__admin_managers__["a" /* ManagersModule */]();
+        return new __WEBPACK_IMPORTED_MODULE_4__admin_managers__["a" /* ManagersModule */]();
     });
     page('/admin/users', function () {
-        return new __WEBPACK_IMPORTED_MODULE_4__admin_users_list__["a" /* UserListModule */]();
+        return new __WEBPACK_IMPORTED_MODULE_5__admin_users_list__["a" /* UserListModule */]();
     });
     page('/admin/users/:id/edit', function () {
-        return new __WEBPACK_IMPORTED_MODULE_6__admin_edit_user__["a" /* EditUserModule */]();
+        return new __WEBPACK_IMPORTED_MODULE_7__admin_edit_user__["a" /* EditUserModule */]();
     });
     page('/admin/users/create', function () {
-        return new __WEBPACK_IMPORTED_MODULE_5__admin_add_user__["a" /* AddUserModule */]();
+        return new __WEBPACK_IMPORTED_MODULE_6__admin_add_user__["a" /* AddUserModule */]();
     });
     page('/admin/notes/create', function () {
         return new AddNoteModule();
@@ -11226,7 +11229,7 @@ $(document).ready(function () {
     page();
     page.stop();
 
-    new __WEBPACK_IMPORTED_MODULE_10__pages_CtaModule__["a" /* CtaModule */]();
+    new __WEBPACK_IMPORTED_MODULE_11__pages_CtaModule__["a" /* CtaModule */]();
     // new Facebook();
 });
 
@@ -19439,6 +19442,7 @@ module.exports = Array.isArray || function (arr) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__category__ = __webpack_require__(37);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__searchProduct__ = __webpack_require__(38);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__pages_scaleImage__ = __webpack_require__(71);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -19446,6 +19450,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 
 
 
@@ -19460,6 +19465,7 @@ var PageModule = function (_ApiModule) {
         var _this = _possibleConstructorReturn(this, (PageModule.__proto__ || Object.getPrototypeOf(PageModule)).call(this));
 
         console.log('Page: PageModule');
+        new __WEBPACK_IMPORTED_MODULE_3__pages_scaleImage__["a" /* ProductImageScaleModule */]();
 
         _this.category = new __WEBPACK_IMPORTED_MODULE_1__category__["a" /* CategoryModule */]();
         if ($('#js-searchProductForm').length > 0) {
@@ -21088,6 +21094,94 @@ var SliderModule = function () {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 57 */,
+/* 58 */,
+/* 59 */,
+/* 60 */,
+/* 61 */,
+/* 62 */,
+/* 63 */,
+/* 64 */,
+/* 65 */,
+/* 66 */,
+/* 67 */,
+/* 68 */,
+/* 69 */,
+/* 70 */,
+/* 71 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ProductImageScaleModule; });
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var ProductImageScaleModule = function () {
+    function ProductImageScaleModule() {
+        _classCallCheck(this, ProductImageScaleModule);
+
+        console.log('Page: ProductImageScaleModule');
+
+        this.openImageModalHandler();
+        this.closeImageModalHandler();
+        this.closeImageModalAllHandler();
+    }
+
+    _createClass(ProductImageScaleModule, [{
+        key: 'openImageModalHandler',
+        value: function openImageModalHandler() {
+            var _this = this;
+
+            $('.product_image').off('click').on('click', function (e) {
+                e.preventDefault();
+                console.log('Click: product_image');
+
+                var src = $(e.target).attr('src');
+                console.log(src);
+                _this.showImageModal(src);
+            });
+        }
+    }, {
+        key: 'showImageModal',
+        value: function showImageModal(src) {
+            $('#scale_image').addClass('show_image_modal');
+            $('#scale_image .scale_image_content img').attr('src', src);
+        }
+    }, {
+        key: 'closeImageModalHandler',
+        value: function closeImageModalHandler() {
+            var _this2 = this;
+
+            $('#close_scale_image').off('click').on('click', function (e) {
+                e.preventDefault();
+                console.log('Click: Close');
+                _this2.closeImageMethod();
+            });
+        }
+    }, {
+        key: 'closeImageModalAllHandler',
+        value: function closeImageModalAllHandler() {
+            var _this3 = this;
+
+            $('#scale_image').off('click').on('click', function (e) {
+                e.preventDefault();
+                console.log('Click: Close');
+                _this3.closeImageMethod();
+            });
+        }
+    }, {
+        key: 'closeImageMethod',
+        value: function closeImageMethod() {
+            $('#scale_image').removeClass('show_image_modal');
+            $('#scale_image .scale_image_content img').attr('src');
+        }
+    }]);
+
+    return ProductImageScaleModule;
+}();
 
 /***/ })
 /******/ ]);
