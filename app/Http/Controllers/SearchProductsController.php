@@ -44,19 +44,33 @@ class SearchProductsController extends Controller
                 break;
         }
 
+        $selectStatus = [
+            'default' => 'selected',
+            'asc'=>'',
+            'desc'=>'',
+        ];
+
+        if(isset($request->sort_products) && strlen($request->sort_products) > 2){
+            $searchParams = ['sort_products'=>$request->sort_products];
+            $selectStatus['default'] = '';
+            $selectStatus[$request->sort_products] = 'selected';
+        }else{
+            $searchParams = [];
+        }
 
 	    return view('store.index', [
 			    'pageName'=>$pageName,
 			    'categories'=>$categories,
 			    'products'=>$product->listProducts($request, $uploadPrice),
 			    'breadcrumbs'=>$category->getCategoryBreadCrumbs($collection1, $request->searchData),
-                'searchParams'=>[
+                'searchParams'=>array_merge([
                     'inputData'=>$request->input('inputData'),
                     $request->input('inputData')=>$request->input('name')
-                ],
+                ],$searchParams),
                 'priceTypeList' => $priceType->get(),
                 'sku_checked'=>$sku_checked,
                 'name_checked'=>$name_checked,
+                'selectStatus'=>$selectStatus
 		    ]
 	    );
     }

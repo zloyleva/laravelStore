@@ -28,15 +28,28 @@ class ProductsController extends Controller
 		$categories = $category->categoryHandler($collection,$parent_id,$slug);
 		$request->searchData = $category->getSearchCategory()??null;
 
+		$selectStatus = [
+		    'default' => 'selected',
+            'asc'=>'',
+            'desc'=>'',
+        ];
+
+        if(isset($request->sort_products) && strlen($request->sort_products) > 2){
+            $searchParams = ['sort_products'=>$request->sort_products];
+            $selectStatus['default'] = '';
+            $selectStatus[$request->sort_products] = 'selected';
+        }
+
 		return view('store.index', [
 				'pageName'=>'Магазин',
 				'categories'=>$categories,
 				'products'=>$product->listProducts($request, $uploadPrice),
 				'breadcrumbs'=>$category->getCategoryBreadCrumbs($collection1, $request->searchData),
-                'searchParams'=>[],
                 'priceTypeList' => $priceType->get(),
                 'sku_checked'=>false,
                 'name_checked'=>true,
+                'searchParams'=>$searchParams??'',
+                'selectStatus'=>$selectStatus
 			]
 		);
 	}

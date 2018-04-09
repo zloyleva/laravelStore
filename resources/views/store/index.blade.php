@@ -17,6 +17,20 @@
                     {!! $categories !!}
                 </ul>
             </div>
+
+            <div class="col-sm-12 col-md-8 col-lg-8 sort_products_container">
+                <form id="sort_products_form" method="get">
+                    <label for="sort_products" class="col-sm-3 control-label">Сортировать по цене</label>
+                    <div class="col-sm-9">
+                        <select class="form-control" id="sort_products" name="sort_products">
+                            <option disabled="disabled" {{$selectStatus['default']}}>выбрать тип сортировки</option>
+                            <option value="asc" {{$selectStatus['asc']}}>от дешевых к дорогим</option>
+                            <option value="desc" {{$selectStatus['desc']}}>от дорогих к дешевым</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+
             <div class="col-sm-12 col-md-8 col-lg-8">
                 @forelse( $products as $product)
                     <div id="{{$product->id}}" class="js-row product_item ">

@@ -2,12 +2,14 @@ import {ApiModule} from '../api';
 import {CategoryModule} from './category';
 import {SearchProductModule} from './searchProduct';
 import {ProductImageScaleModule} from '../pages/scaleImage';
+import {SortProdutsModule} from '../pages/sortProducts';
 
 export class PageModule extends ApiModule {
     constructor() {
         super();
         console.log('Page: PageModule');
         new ProductImageScaleModule();
+        new SortProdutsModule();
 
         this.category = new CategoryModule();
         if ($('#js-searchProductForm').length > 0) {
