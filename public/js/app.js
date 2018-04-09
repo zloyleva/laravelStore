@@ -19824,60 +19824,81 @@ var SortProdutsModule = function (_ApiModule) {
         console.log('Page: SortProdutsModule');
 
         _this.onchangeSelectHandler();
+        _this.onblurSelectHandler();
         return _this;
     }
 
     _createClass(SortProdutsModule, [{
         key: 'onchangeSelectHandler',
         value: function onchangeSelectHandler() {
+            var _this2 = this;
+
             $('#sort_products').on('change', function (e) {
-                console.log('onchangeSelectHandler');
-                var $form = $('#sort_products_form');
-                var url = window.location.search;
+                e.preventDefault();
 
-                var searchParams = new URLSearchParams(url);
-                searchParams.delete("sort_products");
+                _this2.onchangeSelectMethod();
+            });
+        }
+    }, {
+        key: 'onblurSelectHandler',
+        value: function onblurSelectHandler() {
+            var _this3 = this;
 
-                if (url.indexOf('?') !== -1) {
-                    var searchArray = url.substr(1).split('&');
-                    var _iteratorNormalCompletion = true;
-                    var _didIteratorError = false;
-                    var _iteratorError = undefined;
+            $('#sort_products').on('blur', function (e) {
+                e.preventDefault();
 
-                    try {
-                        for (var _iterator = searchArray[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                            var itemArray = _step.value;
+                _this3.onchangeSelectMethod();
+            });
+        }
+    }, {
+        key: 'onchangeSelectMethod',
+        value: function onchangeSelectMethod() {
+            console.log('onchangeSelectHandler');
+            var $form = $('#sort_products_form');
+            var url = window.location.search;
 
-                            console.log(itemArray);
-                            var item = itemArray.split('=');
-                            if (item[0] === 'sort_products') {
-                                continue;
-                            }
+            var searchParams = new URLSearchParams(url);
+            searchParams.delete("sort_products");
 
-                            var inputField = document.createElement("input");
-                            inputField.type = "hidden";
-                            inputField.name = item[0];
-                            inputField.value = decodeURIComponent(item[1]);
-                            $form.append(inputField);
+            if (url.indexOf('?') !== -1) {
+                var searchArray = url.substr(1).split('&');
+                var _iteratorNormalCompletion = true;
+                var _didIteratorError = false;
+                var _iteratorError = undefined;
+
+                try {
+                    for (var _iterator = searchArray[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                        var itemArray = _step.value;
+
+                        console.log(itemArray);
+                        var item = itemArray.split('=');
+                        if (item[0] === 'sort_products') {
+                            continue;
                         }
-                    } catch (err) {
-                        _didIteratorError = true;
-                        _iteratorError = err;
+
+                        var inputField = document.createElement("input");
+                        inputField.type = "hidden";
+                        inputField.name = item[0];
+                        inputField.value = decodeURIComponent(item[1]);
+                        $form.append(inputField);
+                    }
+                } catch (err) {
+                    _didIteratorError = true;
+                    _iteratorError = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion && _iterator.return) {
+                            _iterator.return();
+                        }
                     } finally {
-                        try {
-                            if (!_iteratorNormalCompletion && _iterator.return) {
-                                _iterator.return();
-                            }
-                        } finally {
-                            if (_didIteratorError) {
-                                throw _iteratorError;
-                            }
+                        if (_didIteratorError) {
+                            throw _iteratorError;
                         }
                     }
                 }
+            }
 
-                $form.submit();
-            });
+            $form.submit();
         }
     }]);
 
