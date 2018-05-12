@@ -1,5 +1,19 @@
 <form action="" class="addProductToCart">
     <input type="hidden" name="productId" value="{{$product->id}}">
+    <div class="your_price_desc">Ваш тип цены:
+        <b><i>
+        @guest
+            Розничная
+        @endguest
+        @auth
+            @foreach($priceTypeList as $item)
+                @if($item->id == Auth::user()->price_type)
+                    {{ $item->description }}
+                @endif
+            @endforeach
+        @endauth
+        </i></b>
+    </div>
     <div class=" {{(Auth::check() && Auth::user()->price_type != 1)?'text-line-through ':'product_price'}}"
          data-price_user="{{$product->price_user}}">
         {{$product->roundNumber($product->price_user)}} грн
