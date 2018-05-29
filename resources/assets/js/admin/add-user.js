@@ -101,7 +101,7 @@ export class AddUserModule extends ApiModule {
                 manager_id: {
                     required: true,
                     digits: true,
-                    max: 20,
+                    max: 2000,
                     min: 1,
                 },
             },
