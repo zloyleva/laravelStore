@@ -11,6 +11,7 @@ Route::get( '/how_to_buy', [ 'as' => 'how_to_buy', 'uses' => 'PagesController@ho
 Route::get( '/delivery', [ 'as' => 'delivery', 'uses' => 'PagesController@delivery' ] );
 Route::get( '/load_price', [ 'as' => 'load_price', 'uses' => 'PagesController@load_price' ] );
 Route::get( '/contacts', [ 'as' => 'contacts', 'uses' => 'PagesController@contacts' ] );
+Route::get( '/about_us', [ 'as' => 'about_us', 'uses' => 'PagesController@about_us' ] );
 Route::get( '/site_map', [ 'as' => 'site_map', 'uses' => 'PagesController@site_map' ] );
 
 Route::get( '/store', [ 'as' => 'store', 'uses' => 'ProductsController@store' ] );

@@ -17,6 +17,11 @@ use App\Http\Requests\Product\ProductSearchRequest;
 
 class PagesController extends Controller
 {
+    /**
+     * @param Category $category
+     * @param Slider $slider
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function home(Category $category, Slider $slider){
         $collection = $collection1 = $category->collectCategories();
         $parent_id = 0;
@@ -29,6 +34,10 @@ class PagesController extends Controller
         ]);
     }
 
+    /**
+     * @param PriceType $price_type
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function myProfile(PriceType $price_type){
 	    return view('store.my_profile', [
 			    'pageName'=>'My profile',
@@ -38,6 +47,11 @@ class PagesController extends Controller
 	    );
     }
 
+    /**
+     * @param ArrivalGoods $arrivalGoods
+     * @param PriceType $priceType
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function load_price(ArrivalGoods $arrivalGoods, PriceType $priceType){
 
         $arrivals = $arrivalGoods->where('publish', '=', true)->orderBy('created_at', 'desc')->get();
@@ -54,10 +68,21 @@ class PagesController extends Controller
         return view('pages.load_price', ['pageName'=>'Приходы товара', 'title'=>$title, 'price_type'=>$price_type, 'arrivals'=>$arrivals]);
     }
 
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function contacts(){
         return view('pages.contacts');
     }
 
+    public function about_us(){
+        return view('pages.about_us');
+    }
+
+    /**
+     * @param Category $category
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function site_map(Category $category){
         $collection = $collection1 = $category->collectCategories();
         $parent_id = 0;
@@ -69,6 +94,9 @@ class PagesController extends Controller
         ]);
     }
 
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function after_registration(){
         return view('pages.after_registration',[
             'pageName'=>'Спасибо Вам за регистрацию!',
