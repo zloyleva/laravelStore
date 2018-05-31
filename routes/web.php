@@ -10,6 +10,7 @@ Route::get( '/', [ 'as' => 'home', 'uses' => 'PagesController@home' ] );
 Route::get( '/how_to_buy', [ 'as' => 'how_to_buy', 'uses' => 'PagesController@howToBuy' ] );
 Route::get( '/delivery', [ 'as' => 'delivery', 'uses' => 'PagesController@delivery' ] );
 Route::get( '/load_price', [ 'as' => 'load_price', 'uses' => 'PagesController@load_price' ] );
+Route::get( '/sales_price', [ 'as' => 'sales_price', 'uses' => 'PagesController@sales_price' ] );
 Route::get( '/contacts', [ 'as' => 'contacts', 'uses' => 'PagesController@contacts' ] );
 Route::get( '/about_us', [ 'as' => 'about_us', 'uses' => 'PagesController@about_us' ] );
 Route::get( '/site_map', [ 'as' => 'site_map', 'uses' => 'PagesController@site_map' ] );
@@ -66,10 +67,16 @@ Route::group( [ 'middleware' => [ 'auth', 'manager' ], 'prefix' => 'admin', 'as'
     Route::post( '/sliders/{id}', [ 'as' => 'sliders.edit', 'uses' => 'SlidersController@update' ] );
 
     Route::get( '/arrival', [ 'as' => 'arrival.index', 'uses' => 'ArrivalGoodsController@index' ] );
-    Route::post( '/arrival', [ 'as' => 'arrival.index', 'uses' => 'ArrivalGoodsController@store' ] );
+    Route::post( '/arrival', [ 'as' => 'arrival.store', 'uses' => 'ArrivalGoodsController@store' ] );
     Route::get( '/arrival/create', [ 'as' => 'arrival.create', 'uses' => 'ArrivalGoodsController@create' ] );
     Route::get( '/arrival/{id}/edit', [ 'as' => 'arrival.edit', 'uses' => 'ArrivalGoodsController@edit' ] );
     Route::post( '/arrival/{id}', [ 'as' => 'arrival.edit', 'uses' => 'ArrivalGoodsController@update' ] );
+
+    Route::get( '/sales', [ 'as' => 'sales.index', 'uses' => 'SalesController@index' ] );
+    Route::get( '/sales/create', [ 'as' => 'sales.create', 'uses' => 'SalesController@create' ] );
+    Route::post( '/sales', [ 'as' => 'sales.store', 'uses' => 'SalesController@store' ] );
+    Route::get( '/sales/{id}/edit', [ 'as' => 'sales.edit', 'uses' => 'SalesController@edit' ] )->where('id', '[0-9]+');
+    Route::post( '/sales/{id}', [ 'as' => 'sales.edit', 'uses' => 'SalesController@update' ] )->where('id', '[0-9]+');
 } );
 
 Auth::routes();

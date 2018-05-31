@@ -79,9 +79,6 @@ mix_watch: #run mix in watch
 clear_cache: #clear laravel cache
 	@sudo docker exec -it $(docker_name) bash -c 'php artisan cache:clear && php artisan view:clear'
 
-clear_log: #clear laravel log
-	@sudo echo > storage/logs/laravel.log
-
 connect: #connect to container bash
 	@sudo docker exec -it $(docker_name) bash
 
@@ -91,3 +88,5 @@ queue_product: #run
 start_queue: #start queue worker
 	@sudo docker exec -it $(docker_name) bash -c 'php artisan queue:work'
 
+clean_log:
+	@sudo cat /dev/null > storage/logs/laravel.log;

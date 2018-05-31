@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ArrivalGoods;
 use App\Models\PriceType;
+use App\Models\Sale;
 use App\Models\Slider;
 use Illuminate\Http\Request;
 use App\Models\Product;
@@ -66,6 +67,27 @@ class PagesController extends Controller
         }
 
         return view('pages.load_price', ['pageName'=>'Приходы товара', 'title'=>$title, 'price_type'=>$price_type, 'arrivals'=>$arrivals]);
+    }
+
+    /**
+     * @param Sale $sale
+     * @param PriceType $priceType
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function sales_price(Sale $sale, PriceType $priceType){
+
+        $sales = $sale->where('publish', '=', true)->orderBy('created_at', 'desc')->get();
+
+        $title = 'Розничная';
+        $price_type = 'price_user';
+
+        if(Auth::check()){
+            $user_price_type = $priceType->where('id', Auth::user()->price_type)->first();
+            $title = $user_price_type->description;
+            $price_type = $user_price_type->type;
+        }
+
+        return view('pages.sale_price', ['pageName'=>'Акции на товары', 'title'=>$title, 'price_type'=>$price_type, 'sales'=>$sales]);
     }
 
     /**
