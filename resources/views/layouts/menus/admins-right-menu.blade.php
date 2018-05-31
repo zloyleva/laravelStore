@@ -5,6 +5,7 @@
     <li><a href="{{ route('admin.managers') }}">Managers list</a></li>
     <li><a href="{{ route('admin.sliders.index') }}">Slides list</a></li>
     <li><a href="{{ route('admin.arrival.index') }}">Arrivals list</a></li>
+    <li><a href="{{ route('admin.sales.index') }}">Sales list</a></li>
 
     <li>
         <a href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();">Logout</a>
