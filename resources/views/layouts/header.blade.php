@@ -44,7 +44,7 @@
             </div>
             <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 logo_description_section">
-                    <h3 class="logo-description">Самый крупный в Запорожье супермаркет канцелярии, школьной продукции, детских игрушек и новогодних товаров</h3>
+                    <h3 class="logo-description">Самый крупный в Запорожье супермаркет канцелярии, школьной продукции, детских игрушек, сувениров, кожгалантереи, новогодних товаров, бижутерии</h3>
                 </div>
             </div>
 
@@ -72,6 +72,7 @@
                         <li><a href="{{route('sales_price')}}"><i class="fa fa-usd" aria-hidden="true"></i> Акции</a></li>
                         <li><a href="{{route('contacts')}}"><i class="fa fa-map" aria-hidden="true"></i> Контакты</a></li>
                         <li><a href="{{route('about_us')}}"><i class="fa fa-users" aria-hidden="true"></i> О нас</a></li>
+                        <li><a href="{{route('pay')}}"><i class="fa fa-truck" aria-hidden="true"></i> Доставка/Оплата</a></li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->

@@ -31,7 +31,7 @@
         <!-- Start Open Graph Meta data -->
         <meta property="og:title" content="Интернет магазин канцелярии, школьной продукции, детских игрушек" />
         <meta property="og:type" content="article" />
-        <meta property="og:description" content="Самый крупный в Запорожье супермаркет-склад канцелярии, школьной продукции, детских игрушек и новогодних товаров"/>
+        <meta property="og:description" content="Самый крупный в Запорожье супермаркет канцелярии, школьной продукции, детских игрушек, сувениров, кожгалантереи, новогодних товаров, бижутерии"/>
         <meta property="og:url" content="{{ url()->current() }}" />
         <meta property="og:image" content="{{url('/')}}/images_service/logo.png" />
         <!-- End Open Graph Meta data -->

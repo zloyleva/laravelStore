@@ -97,8 +97,18 @@ class PagesController extends Controller
         return view('pages.contacts');
     }
 
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function about_us(){
         return view('pages.about_us');
+    }
+
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function pay(){
+        return view('pages.pay');
     }
 
     /**

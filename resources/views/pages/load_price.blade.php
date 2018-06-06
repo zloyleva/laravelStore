@@ -9,7 +9,7 @@
         <div class="row">
             <div class="col-sm-12 col-md-12 col-lg-12">
 
-                <h3>Ваш тип цены: {{$title}}</h3>
+                <h3>Тип цены: {{$title}}</h3>
 
                 @forelse($arrivals as $arrival)
                     <div class="arrival_item">

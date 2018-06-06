@@ -13,6 +13,7 @@ Route::get( '/load_price', [ 'as' => 'load_price', 'uses' => 'PagesController@lo
 Route::get( '/sales_price', [ 'as' => 'sales_price', 'uses' => 'PagesController@sales_price' ] );
 Route::get( '/contacts', [ 'as' => 'contacts', 'uses' => 'PagesController@contacts' ] );
 Route::get( '/about_us', [ 'as' => 'about_us', 'uses' => 'PagesController@about_us' ] );
+Route::get( '/pay', [ 'as' => 'pay', 'uses' => 'PagesController@pay' ] );
 Route::get( '/site_map', [ 'as' => 'site_map', 'uses' => 'PagesController@site_map' ] );
 
 Route::get( '/store', [ 'as' => 'store', 'uses' => 'ProductsController@store' ] );

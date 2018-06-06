@@ -1,6 +1,6 @@
 <form action="" class="addProductToCart">
     <input type="hidden" name="productId" value="{{$product->id}}">
-    <div class="your_price_desc">Ваш тип цены:
+    <div class="your_price_desc">Тип цены:
         <b><i>
         @guest
             Розничная
