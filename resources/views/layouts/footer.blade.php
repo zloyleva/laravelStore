@@ -30,7 +30,7 @@
                 <h4>Контакты</h4>
                 <div>г. Запорожье, ул. Деповская 72</div>
                 <div class="info-phones">
-                    <a href="tel:0617699546"><i class="fa fa-phone" aria-hidden="true"></i> (061) 769 95 46</a>
+                    <a href="tel:0617699546"><i class="fa fa-phone" aria-hidden="true"></i> (061) 769 62 54</a>
                     <a href="tel:0676180545"><img src="{{ url('/') }}/images_service/kyivstar.png" alt=""> (067) 618 05
                         45</a>
                 </div>
