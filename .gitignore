@@ -16,3 +16,6 @@ composer.lock
 docker.log
 /storage/orders/*.json
 public/images_slides/*
+
+public/images/*
+!public/images/no-image.png

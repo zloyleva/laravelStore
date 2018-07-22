@@ -18,7 +18,7 @@ class UserRoutsTest extends TestCase
     public function testIndexPage()
     {
         $this->createEnvironment(['role' => $this->role], true);
-        $this->get('/')->assertStatus(302);
+        $this->get('/')->assertStatus(200);
     }
 
     public function testStorePage()
@@ -119,9 +119,9 @@ class UserRoutsTest extends TestCase
         $this->get('/admin/managers')->assertStatus(302);
     }
 
-    public function testAdminGetFilePage()
-    {
-        $this->createEnvironment(['role' => $this->role], true);
-        $this->get('/admin/get_file')->assertStatus(302);
-    }
+//    public function testAdminGetFilePage()
+//    {
+//        $this->createEnvironment(['role' => $this->role], true);
+//        $this->get('/get_file')->assertStatus(302);
+//    }
 }

@@ -7,8 +7,8 @@
 */
 
 Route::get( '/', [ 'as' => 'home', 'uses' => 'PagesController@home' ] );
-Route::get( '/how_to_buy', [ 'as' => 'how_to_buy', 'uses' => 'PagesController@howToBuy' ] );
-Route::get( '/delivery', [ 'as' => 'delivery', 'uses' => 'PagesController@delivery' ] );
+//Route::get( '/how_to_buy', [ 'as' => 'how_to_buy', 'uses' => 'PagesController@howToBuy' ] );
+//Route::get( '/delivery', [ 'as' => 'delivery', 'uses' => 'PagesController@delivery' ] );
 Route::get( '/load_price', [ 'as' => 'load_price', 'uses' => 'PagesController@load_price' ] );
 Route::get( '/sales_price', [ 'as' => 'sales_price', 'uses' => 'PagesController@sales_price' ] );
 Route::get( '/contacts', [ 'as' => 'contacts', 'uses' => 'PagesController@contacts' ] );
