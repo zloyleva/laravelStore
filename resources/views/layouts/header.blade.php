@@ -23,6 +23,12 @@
                     </a>
                 </div>
                 <div class="col-xs-12 col-sm-7 col-md-4 col-lg-4 contact_section">
+                    <div class="grafik" style="color: #000;">
+                        <h3>График работы супермаркета:</h3>
+                        <p>понедельник - суббота 9:00 - 19:00</p>
+                        <p>воскресенье - 9:00- 17:00</p>
+                    </div>
+                    <hr>
                     <div class="info-phones">
                         <a href="tel:0617699546"><i class="fa fa-phone" aria-hidden="true"></i> (061) 769 62 54</a>
                         <a href="tel:0676180545"><img src="{{ url('/') }}/images_service/kyivstar.png" alt=""> (067) 618 05 45</a>
