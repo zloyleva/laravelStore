@@ -35,7 +35,12 @@
                             <td data-manager="{{$item->manager}}">{{$item->manager}}</td>
                             <td data-price_type="{{$item->price_type}}">{{$item->description}}</td>
                             <td data-total="{{$item->total}}">{{$item->total}}</td>
-                            <td><a href="/admin/orders/{{$item->id}}">Details</a></td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a class="btn btn-success" href="/admin/orders/{{$item->id}}">Детали</a>
+                                    <a class="btn btn-danger" href="/admin/orders/{{$item->id}}/print">Отправить в 1С</a>
+                                </div>
+                            </td>
                         </tr>
                         @endforeach
                     </tbody>

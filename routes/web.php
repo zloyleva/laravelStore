@@ -45,6 +45,8 @@ Route::group( [ 'middleware' => [ 'auth', 'manager' ], 'prefix' => 'admin', 'as'
 	Route::get( '/orders', [ 'as' => 'ordersList', 'uses' => 'AdminDashboardController@listOrders' ] );
 	Route::get( '/orders/{id}', [ 'as' => 'ordersShow', 'uses' => 'AdminDashboardController@showOrder' ] );
 
+    Route::get( '/orders/{id}/print', [ 'as' => 'print', 'uses' => 'OrdersController@print' ] )->where('id', '[0-9]+');
+
 	Route::get( '/products', [ 'as' => 'addProducts', 'uses' => 'AdminDashboardController@addProducts' ] );
 
 	Route::get( '/users', [ 'as' => 'users.index', 'uses' => 'AdminDashboardController@usersList' ] );

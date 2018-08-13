@@ -83,4 +83,26 @@ class OrdersController extends Controller
         }
         return redirect('/');
     }
+
+    /**
+     * @param $id
+     * @param Order $order
+     * @param OrderList $list
+     * @param User $user
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function print($id, Order $order, OrderList $list, User $user){
+
+        $currentOrder = $order->where('id', $id)->first();
+        $currentList = $list->where('order_id', $id)->get();
+        $result = [
+            'order_id' => $currentOrder->id,
+            'orderList' => $currentList,
+            'orderInstance' => $currentOrder,
+        ];
+        $orderOwner = $user->where('id', $currentOrder->user_id)->first();
+        $order->createOrderFile($orderOwner, $result);
+
+        return redirect()->route('admin.ordersList');
+    }
 }
