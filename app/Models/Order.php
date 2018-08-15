@@ -85,7 +85,7 @@ class Order extends Model
                 'dalivery'=>$result['orderInstance']['address'],
                 'phone'=>$result['orderInstance']['phone'],
                 'note'=>$result['orderInstance']['note'],
-                'total'=>$result['orderInstance']['total'],
+                'total'=>strval($result['orderInstance']['total']),
                 'date'=>$result['orderInstance']['created_at']->toDateTimeString(),
             ],
             'products'=>[]
@@ -95,7 +95,7 @@ class Order extends Model
             $jsonOrder['products'][] = [
                 'sku'=>$product->id,
                 'name'=>$product->name,
-                'qty'=>$product->qty,
+                'qty'=>strval($product->qty),
                 'price'=>$product->price,
                 'total'=>$product->total,
             ];
@@ -108,7 +108,7 @@ class Order extends Model
         try{
             Storage::disk('orders_dir')->put($orderFileName, $dataToJson);
 
-            Storage::disk('ftp')->put('/orders/'.$orderFileName, $dataToJson);
+//            Storage::disk('ftp')->put('/orders/'.$orderFileName, $dataToJson);
         }catch (\Exception $e){
 
         }
