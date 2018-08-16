@@ -93,7 +93,7 @@ class Order extends Model
 
         foreach ($result['orderList'] as $product){
             $jsonOrder['products'][] = [
-                'sku'=>$product->sku,
+                'sku'=>$product->sku??$product->id,
                 'name'=>$product->name,
                 'qty'=>strval($product->qty),
                 'price'=>$product->price,
