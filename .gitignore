@@ -19,3 +19,6 @@ public/images_slides/*
 
 public/images/*
 !public/images/no-image.png
+
+_config.yml
+resources/assets/js/facebook.js
