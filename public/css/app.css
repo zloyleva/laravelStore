@@ -9480,6 +9480,10 @@ footer .container .row .section_contacts .works {
   margin-bottom: 20px;
 }
 
+.first_time {
+  background-color: rgba(0, 0, 0, 0.75);
+}
+
 input.error {
   border-color: #f00;
 }
