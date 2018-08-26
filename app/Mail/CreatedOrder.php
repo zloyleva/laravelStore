@@ -35,6 +35,7 @@ class CreatedOrder extends Mailable
         $data = $this->order->listOrderDataForUser($this);
 
         return $this->from('domkanczap@gmail.com')
+            ->subject("Новый заказ с сайта dom-kanc.com.ua #{$this->id}")
             ->view('emails.orders.created',[
                 'order' => $data
             ]);
