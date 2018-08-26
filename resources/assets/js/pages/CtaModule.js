@@ -10,6 +10,17 @@ export class CtaModule extends ApiModule {
         this.hideCtaModalHandler();
         this.sendBtnHandler();
         this.checkForm();
+
+        this.closeFirstVisitModal();
+    }
+
+    closeFirstVisitModal(){
+        $('.close_first_time').off('click').on('click', e=>{
+            e.preventDefault();
+            console.log('Click: close_first_time');
+
+            $('#first_time').css('display','none');
+        });
     }
 
     openCtaModalHandler(){
