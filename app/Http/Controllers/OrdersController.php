@@ -19,44 +19,56 @@ class OrdersController extends Controller
 	 */
 	public function __construct()
 	{
-		$this->middleware('auth');
+
 	}
 
-	/**
-	 * @param Request $request
-	 * @param Order $order
-	 * @param OrderList $orderList
-	 *
-	 * @return \Illuminate\Http\JsonResponse|string
-	 */
+    /**
+     * @param Request $request
+     * @param Order $order
+     * @param OrderList $orderList
+     * @param User $user
+     * @return \Illuminate\Http\JsonResponse
+     */
 	public function createOrder(Request $request, Order $order, OrderList $orderList, User $user){
 
-		if(Auth::check()){
-			$result = $order->createOrder($request,Auth::user()->id);
-			$request->session()->forget('cart');
+        $currentUserId = $this->getIdsOfCurrentUser($request);
+        $result = $order->createOrder($request,$currentUserId, $orderList);
+        $request->session()->forget('cart');
 
-			$orderList->createOrderList($result);
-
-            /**
-             * todo need to move to own Class
-             */
+        /**
+         * todo need to move to own Class
+         */
+        if(Auth::check()){
             $sendTo = $user->find(Auth::user()->id);
             Mail::to($sendTo)->send(new CreatedOrder($result['order_id'], $order));
+        }
 
-            Log::info('send mail');
+        Log::info('send mail');
 
-            $order->createOrderFile(Auth::user(), $result);
+        $order->createOrderFile($currentUserId, $result, $user);
 
-			return $this->jsonResponse([
-				'result'=>$result,
-				'message'=>'order Created',
-				'redirectUrl'=>route('orders.list'),
-			]);
-		}
-		return 'error to create Order';
+        return $this->jsonResponse([
+            'result'=>$result,
+            'message'=>'order Created',
+            'redirectUrl'=>route('orders.list'),
+        ]);
 	}
 
-	/**
+    /**
+     * @param $request
+     * @return \Illuminate\Contracts\Auth\Authenticatable|null
+     */
+    private function getIdsOfCurrentUser($request){
+        if(!$currentUser = auth('api')->user()){
+            $currentUser = $request->user_ids;
+        }else{
+            $currentUser = $currentUser->id;
+        }
+        return $currentUser;
+    }
+
+
+    /**
 	 * @param Request $request
 	 * @param Order $orders
 	 *

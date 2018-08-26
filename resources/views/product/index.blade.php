@@ -3,9 +3,6 @@
 @section('content')
 
     <div class="container">
-        <h1></h1>
-    </div>
-    <div class="container">
 
         <div class="row">
             <div id="category_menu" class="col-sm-12 col-md-4 col-lg-4">
@@ -20,7 +17,7 @@
                             <img class="product_image" src="{{$product->image}}" alt="">
                         </div>
                         <div class="col-sm-6 col-md-6 col-lg-6 section_meta">
-                            <h3 class="product_name">{{$product->name}}</h3>
+                            <h1 class="product_name">{{$product->name}}</h1>
                             @include('product.section.product-info', ['product'=>$product])
 
                             <div class="section_buy">

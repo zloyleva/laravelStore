@@ -1,5 +1,8 @@
 <form action="" class="addProductToCart">
     <input type="hidden" name="productId" value="{{$product->id}}">
+    @if(isset($_COOKIE['user_ids']))
+    <input type="hidden" name="user_ids" value="{{$_COOKIE['user_ids']}}">
+    @endif
     <div class="your_price_desc">Тип цены:
         <b><i>
         @guest

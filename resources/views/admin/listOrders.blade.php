@@ -28,12 +28,12 @@
                         <tr>
                             <td data-count="{{$loop->iteration}}">{{$loop->iteration}}</td>
                             <td data-id="{{$item->id}}">{{$item->id}}</td>
-                            <td data-user="{{$item->name}}">{{$item->name}}</td>
+                            <td data-user="{{$item->name}}">{{$item->name??"Незарегистрированный"}}</td>
                             <td>{{$item->fname}} {{$item->lname}}</td>
                             <td data-created_at="{{$item->created_at}}">{{$item->created_at}}</td>
                             <td data-status="{{$item->status}}">{{$item->status}}</td>
-                            <td data-manager="{{$item->manager}}">{{$item->manager}}</td>
-                            <td data-price_type="{{$item->price_type}}">{{$item->description}}</td>
+                            <td data-manager="{{$item->manager}}">{{$item->manager??"Неуказан"}}</td>
+                            <td data-price_type="{{$item->price_type}}">{{$item->description??"Розничная"}}</td>
                             <td data-total="{{$item->total}}">{{$item->total}}</td>
                             <td>
                                 <div class="btn-group" role="group">

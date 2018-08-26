@@ -9590,12 +9590,12 @@ a:hover {
   border-radius: 5px;
 }
 
-.container .product_item .section_meta h3.product_name {
+.container .product_item .section_meta h1.product_name {
   margin-top: 0;
   font-size: 22px;
 }
 
-.container .product_item .section_meta h3.product_name a:hover {
+.container .product_item .section_meta h1.product_name a:hover {
   text-decoration: none;
 }
 

@@ -19,17 +19,17 @@ class ProductsController extends Controller
      * @param UploadPrice $uploadPrice
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-	public function store(Product $product, Request $request, Category $category, PriceType $priceType, UploadPrice $uploadPrice){
+    public function store(Product $product, Request $request, Category $category, PriceType $priceType, UploadPrice $uploadPrice){
 
-		$slug = $request->slug;
-		$collection = $collection1 = $category->collectCategories();
-		$parent_id = 0;
+        $slug = $request->slug;
+        $collection = $collection1 = $category->collectCategories();
+        $parent_id = 0;
 
-		$categories = $category->categoryHandler($collection,$parent_id,$slug);
-		$request->searchData = $category->getSearchCategory()??null;
+        $categories = $category->categoryHandler($collection,$parent_id,$slug);
+        $request->searchData = $category->getSearchCategory()??null;
 
-		$selectStatus = [
-		    'default' => 'selected',
+        $selectStatus = [
+            'default' => 'selected',
             'asc'=>'',
             'desc'=>'',
         ];
@@ -40,23 +40,30 @@ class ProductsController extends Controller
             $selectStatus[$request->sort_products] = 'selected';
         }
 
-		return view('store.index', [
-				'pageName'=>'Магазин',
-				'categories'=>$categories,
-				'products'=>$product->listProducts($request, $uploadPrice),
-				'breadcrumbs'=>$category->getCategoryBreadCrumbs($collection1, $request->searchData),
+        $header_title = null;
+        if($slug && $currentCategory = $category->where('slug', $slug)->first()){
+            $header_title = "Категория товаров: {$currentCategory->name}";
+        }
+
+
+        return view('store.index', [
+                'pageName'=> $header_title??"Магазин",
+                'categories'=>$categories,
+                'products'=>$product->listProducts($request, $uploadPrice),
+                'breadcrumbs'=>$category->getCategoryBreadCrumbs($collection1, $request->searchData),
                 'priceTypeList' => $priceType->get(),
                 'sku_checked'=>false,
                 'name_checked'=>true,
                 'searchParams'=>$searchParams??'',
-                'selectStatus'=>$selectStatus
-			]
-		);
-	}
+                'selectStatus'=>$selectStatus,
+                'header_title'=>$header_title,
+            ]
+        );
+    }
 
-	public function showProduct(Request $request, Product $product, Category $category, PriceType $priceType){
+    public function showProduct(Request $request, Product $product, Category $category, PriceType $priceType){
 
-	    $productSlug = $request->slug;
+        $productSlug = $request->slug;
         $collection = $collection1 = $category->collectCategories();
         $parent_id = 0;
 
@@ -70,7 +77,9 @@ class ProductsController extends Controller
                     'title'=>$getProduct->name,
                     'description'=>(count($getProduct->description)>3)?$getProduct->description:$getProduct->name,
                     'image'=>url('/') . $getProduct->image
-                ]
+                ],
+                'header_title' => "Товары: " . $getProduct->name,
+                'header_description'=>(count($getProduct->description)>3)?$getProduct->description:$getProduct->name,
             ]
         );
     }

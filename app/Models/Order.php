@@ -32,9 +32,12 @@ class Order extends Model
     }
 
     /**
-     * Create new Order
+     * @param $request
+     * @param $userId
+     * @param \App\Models\OrderList $orderList
+     * @return array
      */
-    public function createOrder($request, $userId)
+    public function createOrder($request, $userId, OrderList $orderList)
     {
 
         Cart::restore($userId);
@@ -42,11 +45,17 @@ class Order extends Model
 
         $orderInstance = Order::create([
             'user_id' => $userId,
-            'status' => 'pending',
+            'status' => 'В ожидании',
             'phone' => $request->phone,
             'address' => $request->address,
             'total' => filter_var(Cart::total(), FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION),
             'note' => $request->note
+        ]);
+
+        $orderList->createOrderList([
+            'order_id' => $orderInstance->id,
+            'orderList' => $itemsList,
+            'orderInstance' => $orderInstance,
         ]);
 
         Cart::destroy();
@@ -57,6 +66,9 @@ class Order extends Model
         ];
     }
 
+    /**
+     * @return mixed
+     */
     public function showOrdersAdmin()
     {
         return $this
@@ -68,6 +80,10 @@ class Order extends Model
             ->paginate(20);
     }
 
+    /**
+     * @param $request
+     * @return Order|\Illuminate\Database\Eloquent\Builder|Model|null|object
+     */
     public function listOrderDataForUser($request)
     {
         return $this->with('orderListItems')->where('id', '=', $request->id)->first();
@@ -77,11 +93,17 @@ class Order extends Model
      * @param $user
      * @param $result
      */
-    public function createOrderFile(User $user, $result){
+    public function createOrderFile($currentUserId, $result, User $user){
+
+        if($findUser = $user->where('id', $currentUserId)->first()){
+            $userName = $findUser->getName();
+            $userEmail = $findUser->getEmail();
+        }
+
         $jsonOrder = [
             'user'=>[
-                'name'=>$user->getName(),
-                'email'=>$user->getEmail(),
+                'name'=>$userName??"Неуказанно",
+                'email'=>$userEmail??"Неуказанно",
                 'dalivery'=>$result['orderInstance']['address'],
                 'phone'=>$result['orderInstance']['phone'],
                 'note'=>$result['orderInstance']['note'],
@@ -108,7 +130,7 @@ class Order extends Model
         try{
             Storage::disk('orders_dir')->put($orderFileName, $dataToJson);
 
-            Storage::disk('ftp')->put('/orders/'.$orderFileName, $dataToJson);
+//            Storage::disk('ftp')->put('/orders/'.$orderFileName, $dataToJson);
         }catch (\Exception $e){
 
         }

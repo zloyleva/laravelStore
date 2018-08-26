@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
 use Gloudemans\Shoppingcart\Facades\Cart;
+use Illuminate\Support\Facades\DB;
 
 class CartController extends Controller
 {
@@ -23,22 +24,18 @@ class CartController extends Controller
     /**
      * @param AddProductToCartRequest $request
      * @param Product $product
+     * @param PriceType $priceType
      * @return \Illuminate\Http\JsonResponse
      */
 	public function addToCart(AddProductToCartRequest $request,Product $product, PriceType $priceType){
 
-		if(!Auth::check()){
-			return $this->jsonResponse(['message' => 'Error user data']);//user error
-		}
-
+		$currentUser = $this->getIdsOfCurrentUser($request);
 		$getProduct = $product->find($request->productId);
-        $getAllPriceTypes = $priceType->get();
+        $price_type = $this->getPriceTypeOfCurrentUser($priceType);
 
-		$price_type = $getAllPriceTypes[Auth::user()->price_type-1]['type']??'price_user';
-
-		Cart::restore(Auth::user()->id);
+		Cart::restore($currentUser);
 		Cart::add($getProduct->sku, $getProduct->name, $request->qty, $getProduct->$price_type);
-		Cart::store(Auth::user()->id);
+		Cart::store($currentUser);
 
 		return $this->jsonResponse($getProduct);//Todo set return data
 	}
@@ -50,7 +47,9 @@ class CartController extends Controller
 	 */
 	public function deleteCart(Request $request){
 
-		Cart::restore(Auth::user()->id);
+        $currentUser = $this->getIdsOfCurrentUser($request);
+
+        Cart::restore($currentUser);
 		$request->session()->forget('cart');
 		if(!$request->session()->has('cart')){
 			return $this->jsonResponse(['html' => $this->getHtmlEmptyCart()]);
@@ -65,9 +64,11 @@ class CartController extends Controller
 	 */
 	public function deleteCartItem(Request $request){
 
-		Cart::restore(Auth::user()->id);
+        $currentUser = $this->getIdsOfCurrentUser($request);
+
+        Cart::restore($currentUser);
 		Cart::remove($request->rowId);
-		Cart::store(Auth::user()->id);
+		Cart::store($currentUser);
 
 		if(Cart::count() > 0){
 			return $this->jsonResponse([
@@ -86,9 +87,11 @@ class CartController extends Controller
 	 */
 	public function setCartItemAmount(Request $request){
 
-		Cart::restore(Auth::user()->id);
+        $currentUser = $this->getIdsOfCurrentUser($request);
+
+		Cart::restore($currentUser);
 		Cart::update($request->rowId, $request->amount);
-		Cart::store(Auth::user()->id);
+		Cart::store($currentUser);
 
 		if(Cart::count() > 0 && Cart::get($request->rowId)){
 			return $this->jsonResponse([
@@ -107,19 +110,59 @@ class CartController extends Controller
         if(Auth::check()){
             $identifcator = Auth::user()->id;
         }else {
-            $identifcator = '';
+            $identifcator = $request->cookie('user_ids');
         }
 
-        Cart::restore($identifcator);
-        Cart::store($identifcator);
+        $stored = DB::table('shoppingcart')->where('identifier', $identifcator)->first();
+        $productsInCart = $stored?unserialize($stored->content):collect([]);
 
         return view('store.cart',[
             'request'=>$request->session()->get('laravel_session'),
-            'productsInCart'=>Cart::content(),
+            'productsInCart'=>$productsInCart,
             'cart' => $request->session()->get('cart'),
             'user'=>Auth::user(),
-            'totalSum'=>preg_replace('/,/', '', Cart::total())
+            'totalSum'=>preg_replace('/,/', '', $this->total($productsInCart))
         ]);
     }
 
+    /**
+     * @param $content
+     * @return mixed
+     */
+    private function total($content)
+    {
+        $total = $content->reduce(function ($total, $cartItem) {
+            return $total + ($cartItem->qty * $cartItem->priceTax);
+        }, 0);
+
+        return $total;
+    }
+
+
+    /**
+     * @param $request
+     * @return \Illuminate\Contracts\Auth\Authenticatable|null
+     */
+    private function getIdsOfCurrentUser($request){
+        if(!$currentUser = auth('api')->user()){
+            $currentUser = $request->user_ids;
+        }else{
+            $currentUser = $currentUser->id;
+        }
+        return $currentUser;
+    }
+
+    /**
+     * @param $priceType
+     * @return string
+     */
+    private function getPriceTypeOfCurrentUser($priceType){
+        if(!$currentUser = auth('api')->user()){
+            $price_type = 'price_user';
+        }else{
+            $getAllPriceTypes = $priceType->get();
+            $price_type = $getAllPriceTypes[$currentUser->price_type-1]['type']??'price_user';
+        }
+        return $price_type;
+    }
 }
