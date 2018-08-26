@@ -10,23 +10,23 @@
                 <dd>{{$order->id}}</dd>
             </dl>
             <dl class="dl-horizontal">
-                <dt>Status</dt>
+                <dt>Статус заказа</dt>
                 <dd>{{$order->status}}</dd>
             </dl>
             <dl class="dl-horizontal">
-                <dt>Created date</dt>
+                <dt>Дата создания</dt>
                 <dd>{{$order->created_at}}</dd>
             </dl>
             <dl class="dl-horizontal">
-                <dt>Total</dt>
-                <dd>$ {{$order->total}}</dd>
+                <dt>Итогвая сумма</dt>
+                <dd>{{$order->total}}грн</dd>
             </dl>
             <dl class="dl-horizontal">
-                <dt>Address</dt>
+                <dt>Адрес доставки</dt>
                 <dd>{{$order->address}}</dd>
             </dl>
             <dl class="dl-horizontal">
-                <dt>Note</dt>
+                <dt>Заметки</dt>
                 <dd>{{$order->note}}</dd>
             </dl>
         </div>
@@ -38,10 +38,10 @@
                 <thead>
                 <tr>
                     <th>SKU</th>
-                    <th>Product</th>
-                    <th>Qty</th>
-                    <th>Price</th>
-                    <th>Subtotal</th>
+                    <th>Название</th>
+                    <th>К-во</th>
+                    <th>Цена</th>
+                    <th>Сумма</th>
                 </tr>
                 </thead>
 
@@ -55,8 +55,8 @@
                             <p><strong>{{$row->name}}</strong></p>
                         </td>
                         <td>{{$row->qty}}</td>
-                        <td>$ {{$row->price}}</td>
-                        <td>$ {{$row->total}}</td>
+                        <td>{{$row->price}}</td>
+                        <td>{{$row->total}}</td>
                     </tr>
 
                 @endforeach
@@ -66,8 +66,8 @@
                 <tfoot>
                 <tr>
                     <td colspan="3">&nbsp;</td>
-                    <td>Total</td>
-                    <td>$ {{$order->total}}</td>
+                    <td>Итогвая сумма</td>
+                    <td>{{$order->total}}грн</td>
                 </tr>
                 </tfoot>
             </table>

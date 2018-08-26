@@ -1,2 +1,11 @@
 User-agent: *
-Disallow:
+Disallow: /images/
+Disallow: /images_service/
+Disallow: /images_slides/
+Disallow: /admin
+Disallow: /login
+Disallow: /register
+Disallow: /get_updates
+Disallow: /queue_method
+
+Sitemap: httр://localhost/sitemap.xml

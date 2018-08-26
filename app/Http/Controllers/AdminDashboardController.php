@@ -18,6 +18,9 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
 
+use Spatie\Sitemap\Sitemap;
+use Spatie\Sitemap\Tags\Url;
+
 class AdminDashboardController extends Controller
 {
     /**
@@ -131,11 +134,38 @@ class AdminDashboardController extends Controller
         dispatch($jobUploadPrice);
     }
 
+    /**
+     * @param User $user
+     */
     public function sendEmail(User $user)
     {
 
         $sendTo = $user->find(2);
 
         Mail::to($sendTo)->send(new CreatedOrder());
+    }
+
+    /**
+     * @param Category $category
+     */
+    public function sitemap(Category $category){
+
+        $path = public_path('sitemap.xml');
+
+        $site_map = Sitemap::create();
+
+        $site_map->add(Url::create(route('home')));
+        $site_map->add(Url::create(route('load_price')));
+        $site_map->add(Url::create(route('sales_price')));
+        $site_map->add(Url::create(route('contacts')));
+        $site_map->add(Url::create(route('about_us')));
+        $site_map->add(Url::create(route('pay')));
+        $site_map->add(Url::create(route('store')));
+
+        foreach ($category->all() as $item){
+            $site_map->add(Url::create(route('store') . "/category/{$item->slug}" ));
+        }
+
+        $site_map->writeToFile($path);
     }
 }

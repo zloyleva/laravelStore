@@ -11,19 +11,19 @@
                 <h4>Клиент</h4>
                 <dl class="dl-horizontal">
                     <dt>Имя Фамилия</dt>
-                    <dd>{{$order->user->fname}} {{$order->user->fname}}</dd>
+                    <dd>{{$order->user->fname??"Неуказанно"}} {{$order->user->lname??"Неуказанно"}}</dd>
                 </dl>
                 <dl class="dl-horizontal">
                     <dt>Логин</dt>
-                    <dd>{{$order->user->name}}</dd>
+                    <dd>{{$order->user->name??"Неуказанно"}}</dd>
                 </dl>
                 <dl class="dl-horizontal">
                     <dt>Email</dt>
-                    <dd>{{$order->user->email}}</dd>
+                    <dd>{{$order->user->email??"Неуказанно"}}</dd>
                 </dl>
                 <dl class="dl-horizontal">
                     <dt>Phone</dt>
-                    <dd>{{$order->user->phone}}</dd>
+                    <dd>{{$order->user->phone??"Неуказанно"}}</dd>
                 </dl>
                 <hr>
             </div>

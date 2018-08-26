@@ -71,11 +71,13 @@ export class PageModule extends ApiModule {
 
     addProductToCartBtnHandler() {
         $('.js-add_to_cart').off('click').on('click', e => {
-            if (this.apiToken == null) {
-                Alertify.dialog.alert("<p>Для того чтобы положить товар в корзину</p>Вам необходимо войти в магазин</p>" +
-                    "<a href='/login'>Перейти к странице входа <i class='fa fa-sign-in' aria-hidden='true'></i></a>");
-                return;
-            }
+            console.log( this.user_ids);
+            // if ( !this.apiToken && !this.user_ids) {
+            //     console.log(this.apiToken, this.user_ids);
+            //     Alertify.dialog.alert("<p>Для того чтобы положить товар в корзину</p>Вам необходимо быть зарегистрированным в нашем магазине</p>" +
+            //         "<a href='/login'>Перейти к странице входа <i class='fa fa-sign-in' aria-hidden='true'></i></a>");
+            //     return;
+            // }
 
             const $el = $(e.target),
                 $form = $el.closest('form.addProductToCart');

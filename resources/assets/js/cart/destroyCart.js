@@ -18,7 +18,9 @@ export class DestroyCartModule extends ApiModule {
 
     clearCartMethod(){
         this.delete({
-            data: {},
+            data: {
+                user_ids: this.user_ids
+            },
             url: this.apiDeleteCartUrl,
             success: response => {
                 $('.js-cart-content').html('<div class="row empty-cart"><div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">'+response.html+'</div></div>');

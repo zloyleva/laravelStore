@@ -27,6 +27,9 @@
                             <div class="table-row-cart table-item">
                                 <form action="" class="js-item-form">
                                     <input type="hidden" name="rowId" value="{{$row->rowId}}">
+                                    @if(isset($_COOKIE['user_ids']))
+                                        <input type="hidden" name="user_ids" value="{{$_COOKIE['user_ids']}}">
+                                    @endif
                                     <div class="td-item">{{$loop->iteration}}</div>
                                     <div class="td-sku">{{$row->id}}</div>
                                     <div class="td-name">{{$row->name}}</div>
@@ -61,15 +64,18 @@
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <form id="create-order-form" class="" action="{{route('orders.list')}}" method="get">
                         <input type="hidden" name="status" value="setOrder">
+                        @if(isset($_COOKIE['user_ids']))
+                            <input type="hidden" name="user_ids" value="{{$_COOKIE['user_ids']}}">
+                        @endif
                         <div class="form-group">
                             <label>Введите адресс доставки <sup>*</sup></label>
-                            <input id="address" name="address" type="text" class="form-control" value="{{$user->address}}" placeholder="Введите адресс доставки"/>
+                            <input id="address" name="address" type="text" class="form-control" value="{{$user->address or ''}}" placeholder="Введите адресс доставки"/>
                             {{--https://developers.google.com/places/web-service/policies--}}
                             <img src="https://developers.google.com/places/documentation/images/powered-by-google-on-white.png">
                         </div>
                         <div class="form-group">
                             <label>Введите Ваш телефон(для связи) <sup>*</sup></label>
-                            <input class="form-control" type="phone" id="phone" name="phone" value="{{$user->phone}}"
+                            <input class="form-control" type="phone" id="phone" name="phone" value="{{$user->phone or ''}}"
                                    placeholder="Телефон в формате (099)1234567">
                         </div>
                         <div class="form-group">

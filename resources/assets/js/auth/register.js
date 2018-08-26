@@ -1,12 +1,12 @@
 import {ApiModule} from '../api';
-import {Facebook} from '../facebook';
+// import {Facebook} from '../facebook';
 
 export class RegisterModule extends ApiModule {
     constructor() {
         super();
         console.log('Page: RegisterModule');
 
-        new Facebook();
+        // new Facebook();
 
         this.registerBtnHandler();
         this.checkForm();
@@ -15,7 +15,7 @@ export class RegisterModule extends ApiModule {
     registerBtnHandler(){
         $('#registerBtn').off('click').on('click', e => {
            e.preventDefault();
-            FB.AppEvents.logEvent("Register New user");
+            // FB.AppEvents.logEvent("Register New user");
            this.registerMethod();
         });
     }

@@ -3,6 +3,7 @@ export class ApiModule {
         console.log('ApiModule');
 
         this.apiToken = this.readCookie('API-TOKEN');
+        this.user_ids = this.readCookie('user_ids');
         this.googleApiKey = 'AIzaSyCFTgptWkyzCm-Js4fLEz0X0R4H_NRtFtE';
 
         // set Validation Messages
