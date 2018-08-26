@@ -7,3 +7,5 @@ Disallow: /login
 Disallow: /register
 Disallow: /get_updates
 Disallow: /queue_method
+
+Sitemap: httр://localhost/sitemap.xml

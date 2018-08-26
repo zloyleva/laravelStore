@@ -93,4 +93,5 @@ Route::get('/postSendMessage', 'TelegramController@postSendMessage');
 
 Route::get( '/get_file', [ 'as' => 'get_file', 'uses' => 'AdminDashboardController@getFile' ] );
 Route::get( '/queue_method', [ 'as' => 'get_file', 'uses' => 'AdminDashboardController@queueMethod' ] );
+Route::get( '/make_sitemap', [ 'as' => 'get_file', 'uses' => 'AdminDashboardController@sitemap' ] );
 

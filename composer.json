@@ -10,7 +10,9 @@
         "gloudemans/shoppingcart": "^2.4",
         "irazasyed/telegram-bot-sdk": "^2.2",
         "laravel/framework": "5.5.*",
-        "laravel/tinker": "~1.0"
+        "laravel/tinker": "~1.0",
+        "nesbot/carbon": "^1.33",
+        "spatie/laravel-sitemap": "^3.3"
     },
     "require-dev": {
         "filp/whoops": "~2.0",
