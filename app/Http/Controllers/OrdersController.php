@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Models\User;
 use App\Mail\CreatedOrder;
 use Illuminate\Support\Facades\Log;
+use Telegram\Bot\Laravel\Facades\Telegram;
 
 class OrdersController extends Controller
 {
@@ -43,10 +44,23 @@ class OrdersController extends Controller
             Mail::to($sendTo)->send(new CreatedOrder($result['order_id'], $order));
         }
 
-        Log::info('send mail');
-
         $order->createOrderFile($currentUserId, $result, $user);
 
+        Log::info("Order was create #{{$result['order_id']}}");
+
+        $message = "Создан новый заказ №{$result['order_id']}.\n";
+        $message .= "Телефон: {$result['orderInstance']['phone']}\n";
+        $message .= "Адрес: {$result['orderInstance']['address']}\n";
+        $message .= "Итого: {$result['orderInstance']['total']}\n";
+
+        Telegram::sendMessage([
+            'chat_id' => env('GROUP_ID2'),
+            'text' => $message,
+            'parse_mode'=>'HTML'
+        ]);
+
+
+        //Redirect to THNX page + eCommerce stat
         return $this->jsonResponse([
             'result'=>$result,
             'message'=>'order Created',
