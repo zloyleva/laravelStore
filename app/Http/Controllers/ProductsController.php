@@ -64,11 +64,12 @@ class ProductsController extends Controller
     public function showProduct(Request $request, Product $product, Category $category, PriceType $priceType){
 
         $productSlug = $request->slug;
+        $getProduct = $product->getProduct($productSlug);
         $collection = $collection1 = $category->collectCategories();
         $parent_id = 0;
 
         $categories = $category->categoryHandler($collection,$parent_id,'');
-        $getProduct = $product->getProduct($productSlug);
+
         return view('product.index', [
                 'categories'=>$categories,
                 'product'=>$getProduct,

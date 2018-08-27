@@ -122,6 +122,6 @@ class Product extends Model
     }
 
     public function getProduct($slug){
-        return $this->where('slug',$slug)->first();
+        return $this->where('slug',$slug)->firstOrFail();
     }
 }
