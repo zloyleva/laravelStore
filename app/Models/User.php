@@ -79,8 +79,6 @@ class User extends Authenticatable
 
         $user = $this->where('id', $data['user_id'])->firstOrFail();
 
-
-
         $args = [
             'name' => $data['name'],
             'fname' => $data['fname'] ?? 'Unnamed',
@@ -99,8 +97,6 @@ class User extends Authenticatable
             $args['password'] = bcrypt($data['password']);
         }
 
-        $user->fill($args);
-
-        return $user->save();
+        return $user->update($args);
     }
 }
