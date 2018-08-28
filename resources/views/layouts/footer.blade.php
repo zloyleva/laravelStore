@@ -95,7 +95,8 @@
                         <p>Для того чтобы получить оптовую цену на товары, Вам нужно зарегистрироваться в нашем магазине</p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default close_first_time" data-dismiss="modal">Закрыть</button>
+                        {{--<button type="button" class="btn btn-default close_first_time" data-dismiss="modal">Закрыть</button>--}}
+                        <a href="/" class="btn btn-default close_first_time">Закрыть</a>
                         <a href="/register" type="button" class="btn btn-primary">Зарегистрироваться</a>
                     </div>
                 </div><!-- /.modal-content -->
