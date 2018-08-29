@@ -20323,7 +20323,17 @@ var CreateOrderModule = function (_ApiModule) {
                 url: this.apisendDataUrl,
                 success: function success(response) {
                     if (response.redirectUrl) {
+                        console.log(response);
+
+                        ga('require', 'ecommerce');
+                        ga('ecommerce:addTransaction', response.transaction);
+                        response.jsonOrder.forEach(function (el) {
+                            ga('ecommerce:addItem', el);
+                        });
+                        ga('ecommerce:send');
+
                         $('#loadToCreateOrder').remove();
+
                         window.location.replace(response.redirectUrl);
                     }
                     //todo add broker order

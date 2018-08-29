@@ -43,7 +43,17 @@ export class CreateOrderModule extends ApiModule {
             url: this.apisendDataUrl,
             success: response => {
                 if(response.redirectUrl){
+                    console.log(response);
+
+                    ga('require', 'ecommerce');
+                    ga('ecommerce:addTransaction', response.transaction);
+                    response.jsonOrder.forEach(el => {
+                        ga('ecommerce:addItem', el);
+                    });
+                    ga('ecommerce:send');
+
                     $('#loadToCreateOrder').remove();
+
                     window.location.replace(response.redirectUrl);
                 }
                 //todo add broker order
