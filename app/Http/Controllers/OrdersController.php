@@ -39,9 +39,12 @@ class OrdersController extends Controller
         /**
          * todo need to move to own Class
          */
+        $redirectUrl = route('store');
         if(Auth::check()){
             $sendTo = $user->find(Auth::user()->id);
             Mail::to($sendTo)->send(new CreatedOrder($result['order_id'], $order));
+
+            $redirectUrl = route('orders.list');
         }
 
         $order->createOrderFile($currentUserId, $result, $user);
@@ -60,11 +63,33 @@ class OrdersController extends Controller
         ]);
 
 
+        //to JS
+        $jsonOrder = [];
+        $transaction = [
+            'id'=> $result['order_id'],                     // Transaction ID.
+            'affiliation' => 'Dom Kanc',                    // Affiliation or store name.
+            'revenue' => $result['orderInstance']['total'], // Grand Total.
+        ];
+
+        foreach ($result['orderList'] as $product){
+            $jsonOrder[] = [
+                'id' => $result['order_id'],
+                'name' => $product->name,
+                'sku' => $product->sku??$product->id,
+                'category' => $product->category_id,
+                'price' => $product->price,
+                'quantity' => strval($product->qty),
+            ];
+        }
+
         //Redirect to THNX page + eCommerce stat
         return $this->jsonResponse([
             'result'=>$result,
             'message'=>'order Created',
-            'redirectUrl'=>route('orders.list'),
+            'redirectUrl'=>$redirectUrl,
+
+            'transaction'=>$transaction,
+            'jsonOrder'=>$jsonOrder,
         ]);
 	}
 
