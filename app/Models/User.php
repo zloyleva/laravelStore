@@ -93,7 +93,7 @@ class User extends Authenticatable
         if($data['role']){
             $args['role'] = $data['role'];
         }
-        if(isset($data['password']) && strlen($data['password'])>6){
+        if(isset($data['password']) && strlen($data['password'])>5){
             $args['password'] = bcrypt($data['password']);
         }
 
