@@ -93,9 +93,9 @@ class Order extends Model
      * @param $user
      * @param $result
      */
-    public function createOrderFile($currentUserId, $result, $user){
+    public function createOrderFile($currentUserId, $result, $user=null){
 
-        if($findUser = $user->where('id', $currentUserId)->first()){
+        if($user && ($findUser = $user->where('id', $currentUserId)->first() ) ){
             $userName = $findUser->getName();
             $userEmail = $findUser->getEmail();
         }
