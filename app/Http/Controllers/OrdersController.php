@@ -40,7 +40,7 @@ class OrdersController extends Controller
          * todo need to move to own Class
          */
         $redirectUrl = route('store');
-        if(Auth::check()){
+        if(Auth::check() && !!filter_var(Auth::user()->email) ){
             $sendTo = $user->find(Auth::user()->id);
             Mail::to($sendTo)->send(new CreatedOrder($result['order_id'], $order));
 
