@@ -27,7 +27,7 @@ export class UserDataModule extends ApiModule {
                     normalizer: function (value) {
                         return $.trim(value);
                     },
-                    checkName: true
+                    // checkName: true
                 },
                 fname: {
                     maxlength: 250,
@@ -35,7 +35,7 @@ export class UserDataModule extends ApiModule {
                     normalizer: function (value) {
                         return $.trim(value);
                     },
-                    checkName: true
+                    // checkName: true
                 },
                 lname: {
                     maxlength: 250,
@@ -43,7 +43,7 @@ export class UserDataModule extends ApiModule {
                     normalizer: function (value) {
                         return $.trim(value);
                     },
-                    checkName: true
+                    // checkName: true
                 },
                 address: {
                     maxlength: 250,

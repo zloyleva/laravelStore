@@ -32,32 +32,32 @@ export class RegisterModule extends ApiModule {
     checkForm() {
         $('#registerForm').validate({
             rules: {
-                userType: {
-                    required: true,
-                },
+                // userType: {
+                //     required: true,
+                // },
                 fname: {
-                    required: true,
+                    // required: true,
                     minlength: 5,
                     normalizer: function (value) {
                         return $.trim(value);
                     }
                 },
                 name: {
-                    required: true,
+                    // required: true,
                     minlength: 3,
                     normalizer: function (value) {
                         return $.trim(value);
                     }
                 },
                 email: {
-                    // required: true,
-                    // email: true,
-                    email: {
-                        depends: function(element) {
-                            console.log($(element).val().length);
-                            return $(element).val().length > 0;
-                        }
-                    },
+                    required: true,
+                    email: true,
+                    // email: {
+                    //     depends: function(element) {
+                    //         console.log($(element).val().length);
+                    //         return $(element).val().length > 0;
+                    //     }
+                    // },
                     normalizer: function (value) {
                         return $.trim(value);
                     }
@@ -65,13 +65,13 @@ export class RegisterModule extends ApiModule {
                 },
                 password: {
                     required: true,
-                    minlength: 4,
+                    minlength: 6,
                 },
                 password_confirmation: {
                     equalTo: "#password"
                 },
                 phone: {
-                    required: true,
+                    // required: true,
                     number: true,
                     rangelength: [10, 12],
                     normalizer: function (value) {
@@ -79,7 +79,7 @@ export class RegisterModule extends ApiModule {
                     }
                 },
                 address: {
-                    required: true,
+                    // required: true,
                     minlength: 3,
                     normalizer: function (value) {
                         return $.trim(value);
@@ -95,19 +95,19 @@ export class RegisterModule extends ApiModule {
                 }
             },
             messages: {
-                userType: {
-                    required: "Выберите тип покупателя",
-                },
+                // userType: {
+                //     required: "Выберите тип покупателя",
+                // },
                 fname: {
-                    required: this.requiredField,
+                    // required: this.requiredField,
                     minlength: this.minlengthField
                 },
                 name: {
-                    required: this.requiredField,
+                    // required: this.requiredField,
                     minlength: this.minlengthField
                 },
                 email: {
-                    // required: this.requiredField,
+                    required: this.requiredField,
                     email: this.emailField
                 },
                 password: {
@@ -121,11 +121,11 @@ export class RegisterModule extends ApiModule {
                 phone: {
                     rangelength: "Не верное количество символов в номере телефона",
                     number: "Вводите только цифры!",
-                    required: this.requiredField,
+                    // required: this.requiredField,
                     minlength: this.minlengthField
                 },
                 address: {
-                    required: this.requiredField,
+                    // required: this.requiredField,
                     minlength: this.minlengthField
                 },
             }
