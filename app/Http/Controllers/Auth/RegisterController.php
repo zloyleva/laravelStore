@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Http\Requests\Auth\RegisterRequest;
 use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
@@ -51,12 +52,12 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => 'required|string|min:6|max:255|unique:users',
-//            'email' => 'email|max:255|unique:users',
+//            'name' => 'required|string|min:6|max:255|unique:users',
+            'email' => 'email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
-            'fname' => 'required|string|min:3|max:255',
-            'phone' => 'required|string|min:10|max:12',
-            'address' => 'required|string|min:3|max:255',
+//            'fname' => 'required|string|min:3|max:255',
+//            'phone' => 'required|string|min:10|max:12',
+//            'address' => 'required|string|min:3|max:255',
         ]);
     }
 
@@ -68,16 +69,16 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-//        dd($data);
         return User::create([
-            'name' => $data['name'],
-            'email' => $data['email']?$data['email']:$data['name'],
+            'name' => (isset($data['name']) && $data['name'])?$data['name']:$data['email'],
+            'email' => $data['email'],
             'password' => bcrypt($data['password']),
 
-            'fname' => $data['fname'],
-            'phone' => $data['phone'],
-            'address' => $data['address'],
-            'client_type' => $data['userType'],
+            'fname' => $data['fname']??'Без имени',
+            'fname' => $data['lname']??'Без имени',
+            'phone' => $data['phone']??null,
+            'address' => $data['address']??null,
+            'client_type' => $data['userType']??'Покупки для себя'
         ]);
     }
 
@@ -87,7 +88,7 @@ class RegisterController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function register(Request $request)
+    public function register(RegisterRequest $request)
     {
         $this->validator($request->all())->validate();
 
@@ -99,7 +100,7 @@ class RegisterController extends Controller
             $message .= "Тип покупателя <b>{$request->userType}</b>\n";
             $message .= "ФИО <b>{$user->fname}</b>\n";
             $message .= "Логин <b>{$user->name}</b>\n";
-            $message .= "Пароль <b>{$request->password}</b>\n";
+//            $message .= "Пароль <b>{$request->password}</b>\n";
             $message .= "Телефон <b>{$user->phone}</b>\n";
             $message .= "Город <b>{$user->address}</b>\n";
             $message .= "Email <b>{$user->email}</b>\n";

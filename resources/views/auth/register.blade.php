@@ -11,49 +11,17 @@
                         <form class="form-horizontal" method="POST" action="{{ route('register') }}" id="registerForm">
                             {{ csrf_field() }}
 
-                            <div class="form-group">
-                                <div class="col-md-6 col-md-offset-4 select_user_type">
-                                    <div class="radio_item">
-                                        <input id="salesForSelf" type="radio" name="userType" value="Покупки для себя">
-                                        <label for="salesForSelf">Покупки для себя</label>
-                                    </div>
-                                    <div class="radio_item">
-                                        <input id="salesForUr" type="radio" name="userType" value="Юридическое лицо">
-                                        <label for="salesForUr">Юридическое лицо</label>
-                                    </div>
-                                    <div class="radio_item">
-                                        <input id="salesForOpt" type="radio" name="userType" value="Оптовый покупатель">
-                                        <label for="salesForOpt">Оптовый покупатель</label>
-                                    </div>
-                                    <div id="insertErrorMessage"></div>
-                                </div>
-                            </div>
 
-                            <div class="form-group{{ $errors->has('fname') ? ' has-error' : '' }}">
-                                <label for="fname" class="col-md-4 control-label">ФИО*</label>
+                            <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
+                                <label for="email" class="col-md-4 control-label">E-Mail*</label>
 
                                 <div class="col-md-6">
-                                    <input id="fname" type="text" class="form-control" name="fname"
-                                           value="{{ old('fname') }}" required autofocus>
+                                    <input id="email" type="email" class="form-control" name="email"
+                                           value="{{ old('email') }}">
 
-                                    @if ($errors->has('fname'))
+                                    @if ($errors->has('email'))
                                         <span class="help-block">
-                                        <strong>{{ $errors->first('fname') }}</strong>
-                                    </span>
-                                    @endif
-                                </div>
-                            </div>
-
-                            <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-                                <label for="name" class="col-md-4 control-label">Логин*</label>
-
-                                <div class="col-md-6">
-                                    <input id="name" type="text" class="form-control" name="name"
-                                           value="{{ old('name') }}" required>
-
-                                    @if ($errors->has('name'))
-                                        <span class="help-block">
-                                        <strong>{{ $errors->first('name') }}</strong>
+                                        <strong>{{ $errors->first('email') }}</strong>
                                     </span>
                                     @endif
                                 </div>
@@ -82,12 +50,64 @@
                                 </div>
                             </div>
 
+
+                            <hr>
+
+
+                            <div class="form-group">
+                                <div class="col-md-6 col-md-offset-4 select_user_type">
+                                    <div class="radio_item">
+                                        <input id="salesForSelf" type="radio" name="userType" value="Покупки для себя">
+                                        <label for="salesForSelf">Покупки для себя</label>
+                                    </div>
+                                    <div class="radio_item">
+                                        <input id="salesForUr" type="radio" name="userType" value="Юридическое лицо">
+                                        <label for="salesForUr">Юридическое лицо</label>
+                                    </div>
+                                    <div class="radio_item">
+                                        <input id="salesForOpt" type="radio" name="userType" value="Оптовый покупатель">
+                                        <label for="salesForOpt">Оптовый покупатель</label>
+                                    </div>
+                                    <div id="insertErrorMessage"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-group{{ $errors->has('fname') ? ' has-error' : '' }}">
+                                <label for="fname" class="col-md-4 control-label">ФИО</label>
+
+                                <div class="col-md-6">
+                                    <input id="fname" type="text" class="form-control" name="fname"
+                                           value="{{ old('fname') }}" autofocus>
+
+                                    @if ($errors->has('fname'))
+                                        <span class="help-block">
+                                        <strong>{{ $errors->first('fname') }}</strong>
+                                    </span>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
+                                <label for="name" class="col-md-4 control-label">Логин</label>
+
+                                <div class="col-md-6">
+                                    <input id="name" type="text" class="form-control" name="name"
+                                           value="{{ old('name') }}" >
+
+                                    @if ($errors->has('name'))
+                                        <span class="help-block">
+                                        <strong>{{ $errors->first('name') }}</strong>
+                                    </span>
+                                    @endif
+                                </div>
+                            </div>
+
                             <div class="form-group{{ $errors->has('phone') ? ' has-error' : '' }}">
-                                <label for="phone" class="col-md-4 control-label">Телефон*</label>
+                                <label for="phone" class="col-md-4 control-label">Телефон</label>
 
                                 <div class="col-md-6">
                                     <input id="phone" type="text" class="form-control" name="phone"
-                                           value="{{ old('phone') }}" required>
+                                           value="{{ old('phone') }}" >
 
                                     @if ($errors->has('phone'))
                                         <span class="help-block">
@@ -98,30 +118,15 @@
                             </div>
 
                             <div class="form-group{{ $errors->has('address') ? ' has-error' : '' }}">
-                                <label for="address" class="col-md-4 control-label">Город*</label>
+                                <label for="address" class="col-md-4 control-label">Город</label>
 
                                 <div class="col-md-6">
                                     <input id="address" type="text" class="form-control" name="address"
-                                           value="{{ old('address') }}" required>
+                                           value="{{ old('address') }}" >
 
                                     @if ($errors->has('address'))
                                         <span class="help-block">
                                         <strong>{{ $errors->first('address') }}</strong>
-                                    </span>
-                                    @endif
-                                </div>
-                            </div>
-
-                            <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                                <label for="email" class="col-md-4 control-label">E-Mail</label>
-
-                                <div class="col-md-6">
-                                    <input id="email" type="email" class="form-control" name="email"
-                                           value="{{ old('email') }}">
-
-                                    @if ($errors->has('email'))
-                                        <span class="help-block">
-                                        <strong>{{ $errors->first('email') }}</strong>
                                     </span>
                                     @endif
                                 </div>
