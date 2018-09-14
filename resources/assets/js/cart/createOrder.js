@@ -54,7 +54,11 @@ export class CreateOrderModule extends ApiModule {
 
                     $('#loadToCreateOrder').remove();
 
-                    window.location.replace(response.redirectUrl);
+                    setTimeout(function() {
+                        console.log('sendDataMethod');
+                        window.location.replace(response.redirectUrl);
+                    }, 1000);
+
                 }
                 //todo add broker order
             },
