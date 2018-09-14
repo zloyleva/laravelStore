@@ -19,13 +19,17 @@
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
-    RewriteEngine on
-    RewriteRule (.*) http://dom-kanc.com.ua/$1 [R=301,L]
-
-    RewriteCond %{REQUEST_URI} /index.php
-    RewriteCond %{QUERY_STRING} ^\z
-    RewriteRule ^(.*)$ http://dom-kanc.com.ua/? [R=301,L]
-
-    RewriteCond %{REQUEST_URI} ^(.*)/{2,}(.*)$
-    RewriteRule . %1/%2 [R=301,L]
+#    RewriteEngine on
+#    RewriteRule (.*) http://dom-kanc.com.ua/$1 [R=301,L]
+#
+#    RewriteCond %{REQUEST_URI} /index.php
+#    RewriteCond %{QUERY_STRING} ^\z
+#    RewriteRule ^(.*)$ http://dom-kanc.com.ua/? [R=301,L]
+#
+#    RewriteCond %{REQUEST_URI} ^(.*)/{2,}(.*)$
+#    RewriteRule . %1/%2 [R=301,L]
+#
+#    <filesMatch ".(css|jpg|jpeg|png|gif|js|ico)$">
+#        Header set Cache-Control "max-age=86400, public"
+#    </filesMatch>
 </IfModule>
