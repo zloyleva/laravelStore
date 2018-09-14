@@ -7,5 +7,8 @@ Disallow: /login
 Disallow: /register
 Disallow: /get_updates
 Disallow: /queue_method
+Disallow: *?
+Disallow: */cart
+Disallow: */search
 
-Sitemap: httр://localhost/sitemap.xml
+Sitemap: http://dom-kanc.com.ua/sitemap.xml

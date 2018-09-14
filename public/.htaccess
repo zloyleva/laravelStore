@@ -18,4 +18,14 @@
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    RewriteEngine on
+    RewriteRule (.*) http://dom-kanc.com.ua/$1 [R=301,L]
+
+    RewriteCond %{REQUEST_URI} /index.php
+    RewriteCond %{QUERY_STRING} ^\z
+    RewriteRule ^(.*)$ http://dom-kanc.com.ua/? [R=301,L]
+
+    RewriteCond %{REQUEST_URI} ^(.*)/{2,}(.*)$
+    RewriteRule . %1/%2 [R=301,L]
 </IfModule>

@@ -82,27 +82,6 @@
         <?php setcookie("user_ids", md5(str_random(12)), 0);?>
     @endif
 
-    @if( !isset($_COOKIE['firsttime']) )
-        <?php setcookie("firsttime", "no", 0); ?>
-        <div id="first_time" class="modal first_time" tabindex="-1" role="dialog" style="display: block">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close close_first_time" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title">Привет, гость!</h4>
-                    </div>
-                    <div class="modal-body">
-                        <p>Для того чтобы получить оптовую цену на товары, Вам нужно зарегистрироваться в нашем магазине</p>
-                    </div>
-                    <div class="modal-footer">
-                        {{--<button type="button" class="btn btn-default close_first_time" data-dismiss="modal">Закрыть</button>--}}
-                        <a href="/" class="btn btn-default close_first_time">Закрыть</a>
-                        <a href="/register" type="button" class="btn btn-primary">Зарегистрироваться</a>
-                    </div>
-                </div><!-- /.modal-content -->
-            </div><!-- /.modal-dialog -->
-        </div><!-- /.modal -->
-    @endif
 @else
     <?php setcookie("user_ids", "", time()-3600);?>
 @endif
