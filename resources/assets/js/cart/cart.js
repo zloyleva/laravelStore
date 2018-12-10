@@ -14,7 +14,7 @@ export class CartModule extends ApiModule {
         new ChangeItemAmountModule();
         new CreateOrderModule();
 
-        this.initGeocomplete();
+        // this.initGeocomplete();
     };
 
   }

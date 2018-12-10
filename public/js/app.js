@@ -112,15 +112,18 @@ var ApiModule = function () {
             });
         }
     }, {
-        key: 'initGeocomplete',
-        value: function initGeocomplete() {
-            $.getScript('http://maps.googleapis.com/maps/api/js?key=' + this.googleApiKey + '&libraries=places', function (data, textStatus, jqxhr) {
-                console.log(textStatus);
-                $('#address').geocomplete();
-            });
-        }
-    }, {
         key: 'post',
+
+
+        // initGeocomplete() {
+        //     $.getScript('http://maps.googleapis.com/maps/api/js?key=' +
+        //         this.googleApiKey + '&libraries=places', (data, textStatus, jqxhr) => {
+        //             console.log(textStatus);
+        //             $('#address').geocomplete();
+        //         }
+        //     );
+        // };
+
         value: function post(settings) {
             console.log(this.apiToken);
             this.get(Object.assign(settings, { type: 'post' }));
@@ -11261,63 +11264,127 @@ var page = __webpack_require__(34);
 
 $(document).ready(function () {
 
-    page('/', function () {
-        return new __WEBPACK_IMPORTED_MODULE_12__pages_slider__["a" /* SliderModule */]();
-    });
+  page('/', function () {
+    return new __WEBPACK_IMPORTED_MODULE_12__pages_slider__["a" /* SliderModule */]();
+  });
 
-    page('/login', function () {
-        return new __WEBPACK_IMPORTED_MODULE_8__auth_login__["a" /* LoginModule */]();
-    });
-    page('/register', function () {
-        return new __WEBPACK_IMPORTED_MODULE_9__auth_register__["a" /* RegisterModule */]();
-    });
+  page('/login', function () {
+    return new __WEBPACK_IMPORTED_MODULE_8__auth_login__["a" /* LoginModule */]();
+  });
+  page('/register', function () {
+    return new __WEBPACK_IMPORTED_MODULE_9__auth_register__["a" /* RegisterModule */]();
+  });
 
-    page('/store*', function () {
-        return new __WEBPACK_IMPORTED_MODULE_1__store_pages__["a" /* PageModule */]();
-    });
-    page('/cart', function () {
-        return new __WEBPACK_IMPORTED_MODULE_2__cart_cart__["a" /* CartModule */]();
-    });
-    page('/my_profile', function () {
-        return new __WEBPACK_IMPORTED_MODULE_3__users_my_profile__["a" /* MyProfileModule */]();
-    });
-    page('/contacts', function () {
-        return new __WEBPACK_IMPORTED_MODULE_10__pages_contacts__["a" /* ContactsModule */]();
-    });
+  page('/store*', function () {
+    return new __WEBPACK_IMPORTED_MODULE_1__store_pages__["a" /* PageModule */]();
+  });
+  page('/cart', function () {
+    return new __WEBPACK_IMPORTED_MODULE_2__cart_cart__["a" /* CartModule */]();
+  });
+  page('/my_profile', function () {
+    return new __WEBPACK_IMPORTED_MODULE_3__users_my_profile__["a" /* MyProfileModule */]();
+  });
+  page('/contacts', function () {
+    return new __WEBPACK_IMPORTED_MODULE_10__pages_contacts__["a" /* ContactsModule */]();
+  });
 
-    page('/admin/managers', function () {
-        return new __WEBPACK_IMPORTED_MODULE_4__admin_managers__["a" /* ManagersModule */]();
-    });
-    page('/admin/users', function () {
-        return new __WEBPACK_IMPORTED_MODULE_5__admin_users_list__["a" /* UserListModule */]();
-    });
-    page('/admin/users/:id/edit', function () {
-        return new __WEBPACK_IMPORTED_MODULE_7__admin_edit_user__["a" /* EditUserModule */]();
-    });
-    page('/admin/users/create', function () {
-        return new __WEBPACK_IMPORTED_MODULE_6__admin_add_user__["a" /* AddUserModule */]();
-    });
-    page('/admin/notes/create', function () {
-        return new AddNoteModule();
-    });
+  page('/admin/managers', function () {
+    return new __WEBPACK_IMPORTED_MODULE_4__admin_managers__["a" /* ManagersModule */]();
+  });
+  page('/admin/users', function () {
+    return new __WEBPACK_IMPORTED_MODULE_5__admin_users_list__["a" /* UserListModule */]();
+  });
+  page('/admin/users/:id/edit', function () {
+    return new __WEBPACK_IMPORTED_MODULE_7__admin_edit_user__["a" /* EditUserModule */]();
+  });
+  page('/admin/users/create', function () {
+    return new __WEBPACK_IMPORTED_MODULE_6__admin_add_user__["a" /* AddUserModule */]();
+  });
+  page('/admin/notes/create', function () {
+    return new AddNoteModule();
+  });
 
-    page();
-    page.stop();
+  page();
+  page.stop();
 
-    new __WEBPACK_IMPORTED_MODULE_11__pages_CtaModule__["a" /* CtaModule */]();
-    // new Facebook();
+  new __WEBPACK_IMPORTED_MODULE_11__pages_CtaModule__["a" /* CtaModule */]();
+  // new Facebook();
 });
+
+//header actions
+(function ($) {
+
+  var common = {
+    options: {
+      elms: {
+        mega_dropdown: '.mega-dropdown',
+        dropdown_menu: '.mega-dropdown-menu',
+        nav: '.navbar__wrap',
+        nav_bottom: '.navbar__bottom'
+      },
+      menu_scroll_delta: 160
+    },
+    init: function init() {
+      var _t = this,
+          _o = _t.options;
+      _t.bind();
+      _t.checkHeaderPosition(0);
+      _t.setMaxHeaderDropdownHeight();
+    },
+    bind: function bind() {
+      var _t = this,
+          _o = _t.options;
+      // open menu by click
+      $(document).on('click', _o.mega_dropdown, function (e) {
+        e.stopPropagation();
+      });
+
+      $(window).on('scroll', function () {
+        var offset = $(this).scrollTop();
+        _t.checkHeaderPosition(offset);
+      });
+    },
+    setMaxHeaderDropdownHeight: function setMaxHeaderDropdownHeight() {
+      var _t = this,
+          _o = _t.options,
+          wh = $(window).height(),
+          ww = $(window).width(),
+          nbh = $(_o.elms.nav_bottom).height(),
+          max;
+      if (ww > 1024) {
+        max = wh - (nbh + 200);
+        $(_o.elms.dropdown_menu).css({
+          'max-height': max,
+          'overflow-y': 'auto'
+        });
+      }
+    },
+    checkHeaderPosition: function checkHeaderPosition(offset) {
+      var _t = this,
+          _o = _t.options;
+      if (offset > _o.menu_scroll_delta) {
+        $(_o.elms.nav).addClass('navbar__scrolled');
+      } else {
+        $(_o.elms.nav).removeClass('navbar__scrolled');
+      }
+    }
+  };
+
+  $(document).ready(function () {
+    common.init();
+  });
+})(window.jQuery);
 
 /***/ }),
 /* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
- * jQuery Validation Plugin v1.17.0
+ * jQuery Validation Plugin v1.18.0
  *
  * https://jqueryvalidation.org/
  *
- * Copyright (c) 2017 Jörn Zaefferer
+ * Copyright (c) 2018 Jörn Zaefferer
  * Released under the MIT license
  */
 (function( factory ) {
@@ -11384,6 +11451,7 @@ $.extend( $.fn, {
 					// Prevent form submit to be able to see console output
 					event.preventDefault();
 				}
+
 				function handle() {
 					var hidden, result;
 
@@ -11399,7 +11467,7 @@ $.extend( $.fn, {
 							.appendTo( validator.currentForm );
 					}
 
-					if ( validator.settings.submitHandler ) {
+					if ( validator.settings.submitHandler && !validator.settings.debug ) {
 						result = validator.settings.submitHandler.call( validator, validator.currentForm, event );
 						if ( hidden ) {
 
@@ -11466,7 +11534,7 @@ $.extend( $.fn, {
 			return;
 		}
 
-		if ( !element.form && element.hasAttribute( "contenteditable" ) ) {
+		if ( !element.form && element.isContentEditable ) {
 			element.form = this.closest( "form" )[ 0 ];
 			element.name = this.attr( "name" );
 		}
@@ -11710,7 +11778,8 @@ $.extend( $.validator, {
 			this.invalid = {};
 			this.reset();
 
-			var groups = ( this.groups = {} ),
+			var currentForm = this.currentForm,
+				groups = ( this.groups = {} ),
 				rules;
 			$.each( this.settings.groups, function( key, value ) {
 				if ( typeof value === "string" ) {
@@ -11728,9 +11797,15 @@ $.extend( $.validator, {
 			function delegate( event ) {
 
 				// Set form expando on contenteditable
-				if ( !this.form && this.hasAttribute( "contenteditable" ) ) {
+				if ( !this.form && this.isContentEditable ) {
 					this.form = $( this ).closest( "form" )[ 0 ];
 					this.name = $( this ).attr( "name" );
+				}
+
+				// Ignore the element if it belongs to another form. This will happen mainly
+				// when setting the `form` attribute of an input to the id of another form.
+				if ( currentForm !== this.form ) {
+					return;
 				}
 
 				var validator = $.data( this.form, "validator" ),
@@ -11961,9 +12036,14 @@ $.extend( $.validator, {
 				}
 
 				// Set form expando on contenteditable
-				if ( this.hasAttribute( "contenteditable" ) ) {
+				if ( this.isContentEditable ) {
 					this.form = $( this ).closest( "form" )[ 0 ];
 					this.name = name;
+				}
+
+				// Ignore elements that belong to other/nested forms
+				if ( this.form !== validator.currentForm ) {
+					return false;
 				}
 
 				// Select only the first element for each name, and only those with rules specified
@@ -12019,7 +12099,7 @@ $.extend( $.validator, {
 				return element.validity.badInput ? "NaN" : $element.val();
 			}
 
-			if ( element.hasAttribute( "contenteditable" ) ) {
+			if ( element.isContentEditable ) {
 				val = $element.text();
 			} else {
 				val = $element.val();
@@ -12079,10 +12159,6 @@ $.extend( $.validator, {
 			// Note that `this` in the normalizer is `element`.
 			if ( normalizer ) {
 				val = normalizer.call( element, val );
-
-				if ( typeof val !== "string" ) {
-					throw new TypeError( "The normalizer should return a string value." );
-				}
 
 				// Delete the normalizer from rules to avoid treating it as a pre-defined method.
 				delete rules.normalizer;
@@ -12459,7 +12535,19 @@ $.extend( $.validator, {
 				.removeData( "validator" )
 				.find( ".validate-equalTo-blur" )
 					.off( ".validate-equalTo" )
-					.removeClass( "validate-equalTo-blur" );
+					.removeClass( "validate-equalTo-blur" )
+				.find( ".validate-lessThan-blur" )
+					.off( ".validate-lessThan" )
+					.removeClass( "validate-lessThan-blur" )
+				.find( ".validate-lessThanEqual-blur" )
+					.off( ".validate-lessThanEqual" )
+					.removeClass( "validate-lessThanEqual-blur" )
+				.find( ".validate-greaterThanEqual-blur" )
+					.off( ".validate-greaterThanEqual" )
+					.removeClass( "validate-greaterThanEqual-blur" )
+				.find( ".validate-greaterThan-blur" )
+					.off( ".validate-greaterThan" )
+					.removeClass( "validate-greaterThan-blur" );
 		}
 
 	},
@@ -12563,6 +12651,12 @@ $.extend( $.validator, {
 
 		for ( method in $.validator.methods ) {
 			value = $element.data( "rule" + method.charAt( 0 ).toUpperCase() + method.substring( 1 ).toLowerCase() );
+
+			// Cast empty attributes like `data-rule-required` to `true`
+			if ( value === "" ) {
+				value = true;
+			}
+
 			this.normalizeAttributeRule( rules, type, method, value );
 		}
 		return rules;
@@ -12688,7 +12782,7 @@ $.extend( $.validator, {
 			if ( this.checkable( element ) ) {
 				return this.getLength( value, element ) > 0;
 			}
-			return value.length > 0;
+			return value !== undefined && value !== null && value.length > 0;
 		},
 
 		// https://jqueryvalidation.org/email-method/
@@ -12712,9 +12806,26 @@ $.extend( $.validator, {
 		},
 
 		// https://jqueryvalidation.org/date-method/
-		date: function( value, element ) {
-			return this.optional( element ) || !/Invalid|NaN/.test( new Date( value ).toString() );
-		},
+		date: ( function() {
+			var called = false;
+
+			return function( value, element ) {
+				if ( !called ) {
+					called = true;
+					if ( this.settings.debug && window.console ) {
+						console.warn(
+							"The `date` method is deprecated and will be removed in version '2.0.0'.\n" +
+							"Please don't use it, since it relies on the Date constructor, which\n" +
+							"behaves very differently across browsers and locales. Use `dateISO`\n" +
+							"instead or one of the locale specific methods in `localizations/`\n" +
+							"and `additional-methods.js`."
+						);
+					}
+				}
+
+				return this.optional( element ) || !/Invalid|NaN/.test( new Date( value ).toString() );
+			};
+		}() ),
 
 		// https://jqueryvalidation.org/dateISO-method/
 		dateISO: function( value, element ) {
@@ -15959,7 +16070,7 @@ __webpack_require__(23)
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(setImmediate) {/*
- * jQuery FlexSlider v2.7.0
+ * jQuery FlexSlider v2.7.1
  * Copyright 2012 WooThemes
  * Contributing Author: Tyler Smith
  */
@@ -15975,8 +16086,8 @@ __webpack_require__(23)
     // making variables public
 
     //if rtl value was not passed and html is in rtl..enable it by default.
-  	if(typeof options.rtl=='undefined' && $('html').attr('dir')=='rtl'){
-  		options.rtl=true;
+    if(typeof options.rtl=='undefined' && $('html').attr('dir')=='rtl'){
+      options.rtl=true;
     }
     slider.vars = $.extend({}, $.flexslider.defaults, options);
 
@@ -16035,6 +16146,7 @@ __webpack_require__(23)
           }
           return false;
         }());
+        slider.isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
         slider.ensureAnimationEnd = '';
         // CONTROLSCONTAINER:
         if (slider.vars.controlsContainer !== "") slider.controlsContainer = $(slider.vars.controlsContainer).length > 0 && $(slider.vars.controlsContainer);
@@ -16136,14 +16248,14 @@ __webpack_require__(23)
                 e.preventDefault();
                 var $slide = $(this),
                     target = $slide.index();
-        				var posFromX;
+                var posFromX;
                 if(slider.vars.rtl){
-        					posFromX = -1*($slide.offset().right - $(slider).scrollLeft()); // Find position of slide relative to right of slider container
-        				}
-        				else
-        				{
-        					posFromX = $slide.offset().left - $(slider).scrollLeft(); // Find position of slide relative to left of slider container
-        				}
+                  posFromX = -1*($slide.offset().right - $(slider).scrollLeft()); // Find position of slide relative to right of slider container
+                }
+                else
+                {
+                  posFromX = $slide.offset().left - $(slider).scrollLeft(); // Find position of slide relative to left of slider container
+                }
                 if( posFromX <= 0 && $slide.hasClass( namespace + 'active-slide' ) ) {
                   slider.flexAnimate(slider.getTarget("prev"), true);
                 } else if (!$(slider.vars.asNavFor).data('flexslider').animating && !$slide.hasClass(namespace + "active-slide")) {
@@ -16854,7 +16966,11 @@ __webpack_require__(23)
           }());
 
       if (slider.transitions) {
-        target = (vertical) ? "translate3d(0," + target + ",0)" : "translate3d(" + ((slider.vars.rtl?-1:1)*parseInt(target)+'px') + ",0,0)";
+        if (slider.isFirefox) {
+          target = (vertical) ? "translate3d(0," + target + ",0)" : "translate3d(" + (parseInt(target)+'px') + ",0,0)";
+        } else {
+          target = (vertical) ? "translate3d(0," + target + ",0)" : "translate3d(" + ((slider.vars.rtl?-1:1)*parseInt(target)+'px') + ",0,0)";
+        }
         dur = (dur !== undefined) ? (dur/1000) + "s" : "0s";
         slider.container.css("-" + slider.pfx + "-transition-duration", dur);
          slider.container.css("transition-duration", dur);
@@ -16910,7 +17026,12 @@ __webpack_require__(23)
           setTimeout(function(){
             slider.doMath();
           if(slider.vars.rtl){
+            if (slider.isFirefox) {
+              slider.newSlides.css({"width": slider.computedW, "marginRight" : slider.computedM, "float": "right", "display": "block"});
+            } else {
               slider.newSlides.css({"width": slider.computedW, "marginRight" : slider.computedM, "float": "left", "display": "block"});
+            }
+              
            }
             else{
               slider.newSlides.css({"width": slider.computedW, "marginRight" : slider.computedM, "float": "left", "display": "block"});
@@ -16956,6 +17077,7 @@ __webpack_require__(23)
           maxItems = slider.vars.maxItems;
 
       slider.w = (slider.viewport===undefined) ? slider.width() : slider.viewport.width();
+      if (slider.isFirefox) { slider.w = slider.width(); }
       slider.h = slide.height();
       slider.boxPadding = slide.outerWidth() - slide.width();
 
@@ -17099,7 +17221,7 @@ __webpack_require__(23)
     // Usability features
     pauseOnAction: true,            //Boolean: Pause the slideshow when interacting with control elements, highly recommended.
     pauseOnHover: false,            //Boolean: Pause the slideshow when hovering over slider, then resume when no longer hovering
-    pauseInvisible: true,   		//{NEW} Boolean: Pause the slideshow when tab is invisible, resume when visible. Provides better UX, lower CPU usage.
+    pauseInvisible: true,       //{NEW} Boolean: Pause the slideshow when tab is invisible, resume when visible. Provides better UX, lower CPU usage.
     useCSS: true,                   //{NEW} Boolean: Slider will use CSS3 transitions if available
     touch: true,                    //{NEW} Boolean: Allow touch swipe navigation of the slider on touch-enabled devices
     video: false,                   //{NEW} Boolean: If using video in the slider, will prevent CSS3 3D Transforms to avoid graphical glitches
@@ -17133,6 +17255,9 @@ __webpack_require__(23)
     move: 0,                        //{NEW} Integer: Number of carousel items that should move on animation. If 0, slider will move all visible items.
     allowOneSlide: true,           //{NEW} Boolean: Whether or not to allow a slider comprised of a single slide
 
+    // Browser Specific
+    isFirefox: false,             // {NEW} Boolean: Set to true when Firefox is the browser used.
+
     // Callback API
     start: function(){},            //Callback: function(slider) - Fires when the slider loads the first slide
     before: function(){},           //Callback: function(slider) - Fires asynchronously with each slider animation
@@ -17141,7 +17266,7 @@ __webpack_require__(23)
     added: function(){},            //{NEW} Callback: function(slider) - Fires after a slide is added
     removed: function(){},           //{NEW} Callback: function(slider) - Fires after a slide is removed
     init: function() {},             //{NEW} Callback: function(slider) - Fires after the slider is initially setup
-	rtl: false             //{NEW} Boolean: Whether or not to enable RTL mode
+  rtl: false             //{NEW} Boolean: Whether or not to enable RTL mode
   };
 
   //FlexSlider: Plugin Function
@@ -17469,8 +17594,8 @@ var update = __webpack_require__(6)(content, {});
 // Hot Module Replacement
 if(false) {
 	// When the styles change, update the <style> tags
-	module.hot.accept("!!/node_modules/css-loader/index.js!/node_modules/alertify-webpack/dist/themes/alertify.css", function() {
-		var newContent = require("!!/node_modules/css-loader/index.js!/node_modules/alertify-webpack/dist/themes/alertify.css");
+	module.hot.accept("!!/home/vagrant/code/node_modules/alertify-webpack/node_modules/css-loader/index.js!/home/vagrant/code/node_modules/alertify-webpack/dist/themes/alertify.css", function() {
+		var newContent = require("!!/home/vagrant/code/node_modules/alertify-webpack/node_modules/css-loader/index.js!/home/vagrant/code/node_modules/alertify-webpack/dist/themes/alertify.css");
 		if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 		update(newContent);
 	});
@@ -17499,8 +17624,8 @@ var update = __webpack_require__(6)(content, {});
 // Hot Module Replacement
 if(false) {
 	// When the styles change, update the <style> tags
-	module.hot.accept("!!/node_modules/css-loader/index.js!/node_modules/alertify-webpack/dist/themes/alertify.default.css", function() {
-		var newContent = require("!!/node_modules/css-loader/index.js!/node_modules/alertify-webpack/dist/themes/alertify.default.css");
+	module.hot.accept("!!/home/vagrant/code/node_modules/alertify-webpack/node_modules/css-loader/index.js!/home/vagrant/code/node_modules/alertify-webpack/dist/themes/alertify.default.css", function() {
+		var newContent = require("!!/home/vagrant/code/node_modules/alertify-webpack/node_modules/css-loader/index.js!/home/vagrant/code/node_modules/alertify-webpack/dist/themes/alertify.default.css");
 		if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 		update(newContent);
 	});
@@ -18785,16 +18910,6 @@ pathToRegexp_1.tokensToRegExp = tokensToRegExp_1;
   
 
   /**
-   * Module exports.
-   */
-
-  var page_js = page;
-  page.default = page;
-  page.Context = Context;
-  page.Route = Route;
-  page.sameOrigin = sameOrigin;
-
-  /**
    * Short-cuts for global-object checks
    */
 
@@ -18816,53 +18931,546 @@ pathToRegexp_1.tokensToRegExp = tokensToRegExp_1;
   var isLocation = hasWindow && !!(window.history.location || window.location);
 
   /**
-   * Perform initial dispatch.
+   * The page instance
+   * @api private
+   */
+  function Page(options) {
+    // public things
+    this.callbacks = [];
+    this.exits = [];
+    this.current = '';
+    this.len = 0;
+
+    // private things
+    this._dispatch = true;
+    this._decodeURLComponents = true;
+    this._base = '';
+    this._strict = false;
+    this._running = false;
+    this._hashbang = false;
+
+    // bound functions
+    this._onclick = this._onclick.bind(this);
+    this._onpopstate = this._onpopstate.bind(this);
+
+    this.configure(options);
+  }
+
+  /**
+   * Configure the instance of page. This can be called multiple times.
+   *
+   * @param {Object} options
+   * @api public
    */
 
-  var dispatch = true;
+  Page.prototype.configure = function(options) {
+    var opts = options || {};
+
+    this._window = opts.window || (hasWindow && window);
+    this._dispatch = opts.dispatch !== false;
+    this._decodeURLComponents = opts.decodeURLComponents !== false;
+    this._popstate = opts.popstate !== false && hasWindow;
+    this._click = opts.click !== false && hasDocument;
+    this._hashbang = !!opts.hashbang;
+
+    var _window = this._window;
+    if(this._popstate) {
+      _window.addEventListener('popstate', this._onpopstate, false);
+    } else if(hasWindow) {
+      _window.removeEventListener('popstate', this._onpopstate, false);
+    }
+
+    if (this._click) {
+      _window.document.addEventListener(clickEvent, this._onclick, false);
+    } else if(hasDocument) {
+      _window.document.removeEventListener(clickEvent, this._onclick, false);
+    }
+
+    if(this._hashbang && hasWindow && !hasHistory) {
+      _window.addEventListener('hashchange', this._onpopstate, false);
+    } else if(hasWindow) {
+      _window.removeEventListener('hashchange', this._onpopstate, false);
+    }
+  };
+
+  /**
+   * Get or set basepath to `path`.
+   *
+   * @param {string} path
+   * @api public
+   */
+
+  Page.prototype.base = function(path) {
+    if (0 === arguments.length) return this._base;
+    this._base = path;
+  };
+
+  /**
+   * Gets the `base`, which depends on whether we are using History or
+   * hashbang routing.
+
+   * @api private
+   */
+  Page.prototype._getBase = function() {
+    var base = this._base;
+    if(!!base) return base;
+    var loc = hasWindow && this._window && this._window.location;
+    return (hasWindow && this._hashbang && loc && loc.protocol === 'file:') ? loc.pathname : base;
+  };
+
+  /**
+   * Get or set strict path matching to `enable`
+   *
+   * @param {boolean} enable
+   * @api public
+   */
+
+  Page.prototype.strict = function(enable) {
+    if (0 === arguments.length) return this._strict;
+    this._strict = enable;
+  };
 
 
   /**
-   * Decode URL components (query string, pathname, hash).
-   * Accommodates both regular percent encoding and x-www-form-urlencoded format.
+   * Bind with the given `options`.
+   *
+   * Options:
+   *
+   *    - `click` bind to click events [true]
+   *    - `popstate` bind to popstate [true]
+   *    - `dispatch` perform initial dispatch [true]
+   *
+   * @param {Object} options
+   * @api public
    */
-  var decodeURLComponents = true;
+
+  Page.prototype.start = function(options) {
+    this.configure(options);
+
+    if (!this._dispatch) return;
+    this._running = true;
+
+    var url;
+    if(isLocation) {
+      var window = this._window;
+      var loc = window.location;
+
+      if(this._hashbang && ~loc.hash.indexOf('#!')) {
+        url = loc.hash.substr(2) + loc.search;
+      } else if (this._hashbang) {
+        url = loc.search + loc.hash;
+      } else {
+        url = loc.pathname + loc.search + loc.hash;
+      }
+    }
+
+    this.replace(url, null, true, this._dispatch);
+  };
 
   /**
-   * Base path.
+   * Unbind click and popstate event handlers.
+   *
+   * @api public
    */
 
-  var base = '';
+  Page.prototype.stop = function() {
+    if (!this._running) return;
+    this.current = '';
+    this.len = 0;
+    this._running = false;
+
+    var window = this._window;
+    hasDocument && window.document.removeEventListener(clickEvent, this._onclick, false);
+    hasWindow && window.removeEventListener('popstate', this._onpopstate, false);
+    hasWindow && window.removeEventListener('hashchange', this._onpopstate, false);
+  };
 
   /**
-   * Strict path matching.
+   * Show `path` with optional `state` object.
+   *
+   * @param {string} path
+   * @param {Object=} state
+   * @param {boolean=} dispatch
+   * @param {boolean=} push
+   * @return {!Context}
+   * @api public
    */
 
-  var strict = false;
+  Page.prototype.show = function(path, state, dispatch, push) {
+    var ctx = new Context(path, state, this),
+      prev = this.prevContext;
+    this.prevContext = ctx;
+    this.current = ctx.path;
+    if (this._dispatch) this.dispatch(ctx, prev);
+    if (false !== ctx.handled && false !== push) ctx.pushState();
+    return ctx;
+  };
 
   /**
-   * Running flag.
+   * Goes back in the history
+   * Back should always let the current route push state and then go back.
+   *
+   * @param {string} path - fallback path to go back if no more history exists, if undefined defaults to page.base
+   * @param {Object=} state
+   * @api public
    */
 
-  var running;
+  Page.prototype.back = function(path, state) {
+    var page = this;
+    if (this.len > 0) {
+      var window = this._window;
+      // this may need more testing to see if all browsers
+      // wait for the next tick to go back in history
+      hasHistory && window.history.back();
+      this.len--;
+    } else if (path) {
+      setTimeout(function() {
+        page.show(path, state);
+      });
+    } else {
+      setTimeout(function() {
+        page.show(page._getBase(), state);
+      });
+    }
+  };
 
   /**
-   * HashBang option
+   * Register route to redirect from one path to other
+   * or just redirect to another route
+   *
+   * @param {string} from - if param 'to' is undefined redirects to 'from'
+   * @param {string=} to
+   * @api public
    */
+  Page.prototype.redirect = function(from, to) {
+    var inst = this;
 
-  var hashbang = false;
+    // Define route from a path to another
+    if ('string' === typeof from && 'string' === typeof to) {
+      page.call(this, from, function(e) {
+        setTimeout(function() {
+          inst.replace(/** @type {!string} */ (to));
+        }, 0);
+      });
+    }
+
+    // Wait for the push state and replace it with another
+    if ('string' === typeof from && 'undefined' === typeof to) {
+      setTimeout(function() {
+        inst.replace(from);
+      }, 0);
+    }
+  };
 
   /**
-   * Previous context, for capturing
-   * page exit events.
+   * Replace `path` with optional `state` object.
+   *
+   * @param {string} path
+   * @param {Object=} state
+   * @param {boolean=} init
+   * @param {boolean=} dispatch
+   * @return {!Context}
+   * @api public
    */
 
-  var prevContext;
+
+  Page.prototype.replace = function(path, state, init, dispatch) {
+    var ctx = new Context(path, state, this),
+      prev = this.prevContext;
+    this.prevContext = ctx;
+    this.current = ctx.path;
+    ctx.init = init;
+    ctx.save(); // save before dispatching, which may redirect
+    if (false !== dispatch) this.dispatch(ctx, prev);
+    return ctx;
+  };
 
   /**
-   * The window for which this `page` is running
+   * Dispatch the given `ctx`.
+   *
+   * @param {Context} ctx
+   * @api private
    */
-  var pageWindow;
+
+  Page.prototype.dispatch = function(ctx, prev) {
+    var i = 0, j = 0, page = this;
+
+    function nextExit() {
+      var fn = page.exits[j++];
+      if (!fn) return nextEnter();
+      fn(prev, nextExit);
+    }
+
+    function nextEnter() {
+      var fn = page.callbacks[i++];
+
+      if (ctx.path !== page.current) {
+        ctx.handled = false;
+        return;
+      }
+      if (!fn) return unhandled.call(page, ctx);
+      fn(ctx, nextEnter);
+    }
+
+    if (prev) {
+      nextExit();
+    } else {
+      nextEnter();
+    }
+  };
+
+  /**
+   * Register an exit route on `path` with
+   * callback `fn()`, which will be called
+   * on the previous context when a new
+   * page is visited.
+   */
+  Page.prototype.exit = function(path, fn) {
+    if (typeof path === 'function') {
+      return this.exit('*', path);
+    }
+
+    var route = new Route(path, null, this);
+    for (var i = 1; i < arguments.length; ++i) {
+      this.exits.push(route.middleware(arguments[i]));
+    }
+  };
+
+  /**
+   * Handle "click" events.
+   */
+
+  /* jshint +W054 */
+  Page.prototype._onclick = function(e) {
+    if (1 !== this._which(e)) return;
+
+    if (e.metaKey || e.ctrlKey || e.shiftKey) return;
+    if (e.defaultPrevented) return;
+
+    // ensure link
+    // use shadow dom when available if not, fall back to composedPath()
+    // for browsers that only have shady
+    var el = e.target;
+    var eventPath = e.path || (e.composedPath ? e.composedPath() : null);
+
+    if(eventPath) {
+      for (var i = 0; i < eventPath.length; i++) {
+        if (!eventPath[i].nodeName) continue;
+        if (eventPath[i].nodeName.toUpperCase() !== 'A') continue;
+        if (!eventPath[i].href) continue;
+
+        el = eventPath[i];
+        break;
+      }
+    }
+
+    // continue ensure link
+    // el.nodeName for svg links are 'a' instead of 'A'
+    while (el && 'A' !== el.nodeName.toUpperCase()) el = el.parentNode;
+    if (!el || 'A' !== el.nodeName.toUpperCase()) return;
+
+    // check if link is inside an svg
+    // in this case, both href and target are always inside an object
+    var svg = (typeof el.href === 'object') && el.href.constructor.name === 'SVGAnimatedString';
+
+    // Ignore if tag has
+    // 1. "download" attribute
+    // 2. rel="external" attribute
+    if (el.hasAttribute('download') || el.getAttribute('rel') === 'external') return;
+
+    // ensure non-hash for the same path
+    var link = el.getAttribute('href');
+    if(!this._hashbang && this._samePath(el) && (el.hash || '#' === link)) return;
+
+    // Check for mailto: in the href
+    if (link && link.indexOf('mailto:') > -1) return;
+
+    // check target
+    // svg target is an object and its desired value is in .baseVal property
+    if (svg ? el.target.baseVal : el.target) return;
+
+    // x-origin
+    // note: svg links that are not relative don't call click events (and skip page.js)
+    // consequently, all svg links tested inside page.js are relative and in the same origin
+    if (!svg && !this.sameOrigin(el.href)) return;
+
+    // rebuild path
+    // There aren't .pathname and .search properties in svg links, so we use href
+    // Also, svg href is an object and its desired value is in .baseVal property
+    var path = svg ? el.href.baseVal : (el.pathname + el.search + (el.hash || ''));
+
+    path = path[0] !== '/' ? '/' + path : path;
+
+    // strip leading "/[drive letter]:" on NW.js on Windows
+    if (hasProcess && path.match(/^\/[a-zA-Z]:\//)) {
+      path = path.replace(/^\/[a-zA-Z]:\//, '/');
+    }
+
+    // same page
+    var orig = path;
+    var pageBase = this._getBase();
+
+    if (path.indexOf(pageBase) === 0) {
+      path = path.substr(pageBase.length);
+    }
+
+    if (this._hashbang) path = path.replace('#!', '');
+
+    if (pageBase && orig === path) return;
+
+    e.preventDefault();
+    this.show(orig);
+  };
+
+  /**
+   * Handle "populate" events.
+   * @api private
+   */
+
+  Page.prototype._onpopstate = (function () {
+    var loaded = false;
+    if ( ! hasWindow ) {
+      return function() {};
+    }
+    if (hasDocument && document.readyState === 'complete') {
+      loaded = true;
+    } else {
+      window.addEventListener('load', function() {
+        setTimeout(function() {
+          loaded = true;
+        }, 0);
+      });
+    }
+    return function onpopstate(e) {
+      if (!loaded) return;
+      var page = this;
+      if (e.state) {
+        var path = e.state.path;
+        page.replace(path, e.state);
+      } else if (isLocation) {
+        var loc = page._window.location;
+        page.show(loc.pathname + loc.search + loc.hash, undefined, undefined, false);
+      }
+    };
+  })();
+
+  /**
+   * Event button.
+   */
+  Page.prototype._which = function(e) {
+    e = e || (hasWindow && this._window.event);
+    return null == e.which ? e.button : e.which;
+  };
+
+  /**
+   * Convert to a URL object
+   * @api private
+   */
+  Page.prototype._toURL = function(href) {
+    var window = this._window;
+    if(typeof URL === 'function' && isLocation) {
+      return new URL(href, window.location.toString());
+    } else if (hasDocument) {
+      var anc = window.document.createElement('a');
+      anc.href = href;
+      return anc;
+    }
+  };
+
+  /**
+   * Check if `href` is the same origin.
+   * @param {string} href
+   * @api public
+   */
+
+  Page.prototype.sameOrigin = function(href) {
+    if(!href || !isLocation) return false;
+
+    var url = this._toURL(href);
+    var window = this._window;
+
+    var loc = window.location;
+    return loc.protocol === url.protocol &&
+      loc.hostname === url.hostname &&
+      loc.port === url.port;
+  };
+
+  /**
+   * @api private
+   */
+  Page.prototype._samePath = function(url) {
+    if(!isLocation) return false;
+    var window = this._window;
+    var loc = window.location;
+    return url.pathname === loc.pathname &&
+      url.search === loc.search;
+  };
+
+  /**
+   * Remove URL encoding from the given `str`.
+   * Accommodates whitespace in both x-www-form-urlencoded
+   * and regular percent-encoded form.
+   *
+   * @param {string} val - URL component to decode
+   * @api private
+   */
+  Page.prototype._decodeURLEncodedURIComponent = function(val) {
+    if (typeof val !== 'string') { return val; }
+    return this._decodeURLComponents ? decodeURIComponent(val.replace(/\+/g, ' ')) : val;
+  };
+
+  /**
+   * Create a new `page` instance and function
+   */
+  function createPage(options) {
+    var pageInstance = new Page();
+
+    function pageFn(/* args */) {
+      return page.apply(pageInstance, arguments);
+    }
+
+    // Copy all of the things over. In 2.0 maybe we use setPrototypeOf
+    pageFn.callbacks = pageInstance.callbacks;
+    pageFn.exits = pageInstance.exits;
+    pageFn.base = pageInstance.base.bind(pageInstance);
+    pageFn.strict = pageInstance.strict.bind(pageInstance);
+    pageFn.start = pageInstance.start.bind(pageInstance);
+    pageFn.stop = pageInstance.stop.bind(pageInstance);
+    pageFn.show = pageInstance.show.bind(pageInstance);
+    pageFn.back = pageInstance.back.bind(pageInstance);
+    pageFn.redirect = pageInstance.redirect.bind(pageInstance);
+    pageFn.replace = pageInstance.replace.bind(pageInstance);
+    pageFn.dispatch = pageInstance.dispatch.bind(pageInstance);
+    pageFn.exit = pageInstance.exit.bind(pageInstance);
+    pageFn.configure = pageInstance.configure.bind(pageInstance);
+    pageFn.sameOrigin = pageInstance.sameOrigin.bind(pageInstance);
+
+    pageFn.create = createPage;
+
+    Object.defineProperty(pageFn, 'len', {
+      get: function(){
+        return pageInstance.len;
+      },
+      set: function(val) {
+        pageInstance.len = val;
+      }
+    });
+
+    Object.defineProperty(pageFn, 'current', {
+      get: function(){
+        return pageInstance.current;
+      },
+      set: function(val) {
+        pageInstance.current = val;
+      }
+    });
+
+    // In 2.0 these can be named exports
+    pageFn.Context = Context;
+    pageFn.Route = Route;
+
+    return pageFn;
+  }
 
   /**
    * Register `path` with callback `fn()`,
@@ -18885,265 +19493,23 @@ pathToRegexp_1.tokensToRegExp = tokensToRegExp_1;
   function page(path, fn) {
     // <callback>
     if ('function' === typeof path) {
-      return page('*', path);
+      return page.call(this, '*', path);
     }
 
     // route <path> to <callback ...>
     if ('function' === typeof fn) {
-      var route = new Route(/** @type {string} */ (path));
+      var route = new Route(/** @type {string} */ (path), null, this);
       for (var i = 1; i < arguments.length; ++i) {
-        page.callbacks.push(route.middleware(arguments[i]));
+        this.callbacks.push(route.middleware(arguments[i]));
       }
       // show <path> with [state]
     } else if ('string' === typeof path) {
-      page['string' === typeof fn ? 'redirect' : 'show'](path, fn);
+      this['string' === typeof fn ? 'redirect' : 'show'](path, fn);
       // start [options]
     } else {
-      page.start(path);
+      this.start(path);
     }
   }
-
-  /**
-   * Callback functions.
-   */
-
-  page.callbacks = [];
-  page.exits = [];
-
-  /**
-   * Current path being processed
-   * @type {string}
-   */
-  page.current = '';
-
-  /**
-   * Number of pages navigated to.
-   * @type {number}
-   *
-   *     page.len == 0;
-   *     page('/login');
-   *     page.len == 1;
-   */
-
-  page.len = 0;
-
-  /**
-   * Get or set basepath to `path`.
-   *
-   * @param {string} path
-   * @api public
-   */
-
-  page.base = function(path) {
-    if (0 === arguments.length) return base;
-    base = path;
-  };
-
-  /**
-   * Get or set strict path matching to `enable`
-   *
-   * @param {boolean} enable
-   * @api public
-   */
-
-  page.strict = function(enable) {
-    if (0 === arguments.length) return strict;
-    strict = enable;
-  };
-
-  /**
-   * Bind with the given `options`.
-   *
-   * Options:
-   *
-   *    - `click` bind to click events [true]
-   *    - `popstate` bind to popstate [true]
-   *    - `dispatch` perform initial dispatch [true]
-   *
-   * @param {Object} options
-   * @api public
-   */
-
-  page.start = function(options) {
-    options = options || {};
-    if (running) return;
-    running = true;
-    pageWindow = options.window || (hasWindow && window);
-    if (false === options.dispatch) dispatch = false;
-    if (false === options.decodeURLComponents) decodeURLComponents = false;
-    if (false !== options.popstate && hasWindow) pageWindow.addEventListener('popstate', onpopstate, false);
-    if (false !== options.click && hasDocument) {
-      pageWindow.document.addEventListener(clickEvent, onclick, false);
-    }
-    hashbang = !!options.hashbang;
-    if(hashbang && hasWindow && !hasHistory) {
-      pageWindow.addEventListener('hashchange', onpopstate, false);
-    }
-    if (!dispatch) return;
-
-    var url;
-    if(isLocation) {
-      var loc = pageWindow.location;
-
-      if(hashbang && ~loc.hash.indexOf('#!')) {
-        url = loc.hash.substr(2) + loc.search;
-      } else if (hashbang) {
-        url = loc.search + loc.hash;
-      } else {
-        url = loc.pathname + loc.search + loc.hash;
-      }
-    }
-
-    page.replace(url, null, true, dispatch);
-  };
-
-  /**
-   * Unbind click and popstate event handlers.
-   *
-   * @api public
-   */
-
-  page.stop = function() {
-    if (!running) return;
-    page.current = '';
-    page.len = 0;
-    running = false;
-    hasDocument && pageWindow.document.removeEventListener(clickEvent, onclick, false);
-    hasWindow && pageWindow.removeEventListener('popstate', onpopstate, false);
-    hasWindow && pageWindow.removeEventListener('hashchange', onpopstate, false);
-  };
-
-  /**
-   * Show `path` with optional `state` object.
-   *
-   * @param {string} path
-   * @param {Object=} state
-   * @param {boolean=} dispatch
-   * @param {boolean=} push
-   * @return {!Context}
-   * @api public
-   */
-
-  page.show = function(path, state, dispatch, push) {
-    var ctx = new Context(path, state),
-      prev = prevContext;
-    prevContext = ctx;
-    page.current = ctx.path;
-    if (false !== dispatch) page.dispatch(ctx, prev);
-    if (false !== ctx.handled && false !== push) ctx.pushState();
-    return ctx;
-  };
-
-  /**
-   * Goes back in the history
-   * Back should always let the current route push state and then go back.
-   *
-   * @param {string} path - fallback path to go back if no more history exists, if undefined defaults to page.base
-   * @param {Object=} state
-   * @api public
-   */
-
-  page.back = function(path, state) {
-    if (page.len > 0) {
-      // this may need more testing to see if all browsers
-      // wait for the next tick to go back in history
-      hasHistory && pageWindow.history.back();
-      page.len--;
-    } else if (path) {
-      setTimeout(function() {
-        page.show(path, state);
-      });
-    }else{
-      setTimeout(function() {
-        page.show(getBase(), state);
-      });
-    }
-  };
-
-
-  /**
-   * Register route to redirect from one path to other
-   * or just redirect to another route
-   *
-   * @param {string} from - if param 'to' is undefined redirects to 'from'
-   * @param {string=} to
-   * @api public
-   */
-  page.redirect = function(from, to) {
-    // Define route from a path to another
-    if ('string' === typeof from && 'string' === typeof to) {
-      page(from, function(e) {
-        setTimeout(function() {
-          page.replace(/** @type {!string} */ (to));
-        }, 0);
-      });
-    }
-
-    // Wait for the push state and replace it with another
-    if ('string' === typeof from && 'undefined' === typeof to) {
-      setTimeout(function() {
-        page.replace(from);
-      }, 0);
-    }
-  };
-
-  /**
-   * Replace `path` with optional `state` object.
-   *
-   * @param {string} path
-   * @param {Object=} state
-   * @param {boolean=} init
-   * @param {boolean=} dispatch
-   * @return {!Context}
-   * @api public
-   */
-
-
-  page.replace = function(path, state, init, dispatch) {
-    var ctx = new Context(path, state),
-      prev = prevContext;
-    prevContext = ctx;
-    page.current = ctx.path;
-    ctx.init = init;
-    ctx.save(); // save before dispatching, which may redirect
-    if (false !== dispatch) page.dispatch(ctx, prev);
-    return ctx;
-  };
-
-  /**
-   * Dispatch the given `ctx`.
-   *
-   * @param {Context} ctx
-   * @api private
-   */
-
-  page.dispatch = function(ctx, prev) {
-    var i = 0,
-      j = 0;
-
-    function nextExit() {
-      var fn = page.exits[j++];
-      if (!fn) return nextEnter();
-      fn(prev, nextExit);
-    }
-
-    function nextEnter() {
-      var fn = page.callbacks[i++];
-
-      if (ctx.path !== page.current) {
-        ctx.handled = false;
-        return;
-      }
-      if (!fn) return unhandled(ctx);
-      fn(ctx, nextEnter);
-    }
-
-    if (prev) {
-      nextExit();
-    } else {
-      nextEnter();
-    }
-  };
 
   /**
    * Unhandled `ctx`. When it's not the initial
@@ -19156,46 +19522,19 @@ pathToRegexp_1.tokensToRegExp = tokensToRegExp_1;
   function unhandled(ctx) {
     if (ctx.handled) return;
     var current;
+    var page = this;
+    var window = page._window;
 
-    if (hashbang) {
-      current = isLocation && getBase() + pageWindow.location.hash.replace('#!', '');
+    if (page._hashbang) {
+      current = isLocation && this._getBase() + window.location.hash.replace('#!', '');
     } else {
-      current = isLocation && pageWindow.location.pathname + pageWindow.location.search;
+      current = isLocation && window.location.pathname + window.location.search;
     }
 
     if (current === ctx.canonicalPath) return;
     page.stop();
     ctx.handled = false;
-    isLocation && (pageWindow.location.href = ctx.canonicalPath);
-  }
-
-  /**
-   * Register an exit route on `path` with
-   * callback `fn()`, which will be called
-   * on the previous context when a new
-   * page is visited.
-   */
-  page.exit = function(path, fn) {
-    if (typeof path === 'function') {
-      return page.exit('*', path);
-    }
-
-    var route = new Route(path);
-    for (var i = 1; i < arguments.length; ++i) {
-      page.exits.push(route.middleware(arguments[i]));
-    }
-  };
-
-  /**
-   * Remove URL encoding from the given `str`.
-   * Accommodates whitespace in both x-www-form-urlencoded
-   * and regular percent-encoded form.
-   *
-   * @param {string} val - URL component to decode
-   */
-  function decodeURLEncodedURIComponent(val) {
-    if (typeof val !== 'string') { return val; }
-    return decodeURLComponents ? decodeURIComponent(val.replace(/\+/g, ' ')) : val;
+    isLocation && (window.location.href = ctx.canonicalPath);
   }
 
   /**
@@ -19208,8 +19547,12 @@ pathToRegexp_1.tokensToRegExp = tokensToRegExp_1;
    * @api public
    */
 
-  function Context(path, state) {
-    var pageBase = getBase();
+  function Context(path, state, pageInstance) {
+    var _page = this.page = pageInstance || page;
+    var window = _page._window;
+    var hashbang = _page._hashbang;
+
+    var pageBase = _page._getBase();
     if ('/' === path[0] && 0 !== path.indexOf(pageBase)) path = pageBase + (hashbang ? '#!' : '') + path;
     var i = path.indexOf('?');
 
@@ -19217,11 +19560,11 @@ pathToRegexp_1.tokensToRegExp = tokensToRegExp_1;
     this.path = path.replace(pageBase, '') || '/';
     if (hashbang) this.path = this.path.replace('#!', '') || '/';
 
-    this.title = (hasDocument && pageWindow.document.title);
+    this.title = (hasDocument && window.document.title);
     this.state = state || {};
     this.state.path = path;
-    this.querystring = ~i ? decodeURLEncodedURIComponent(path.slice(i + 1)) : '';
-    this.pathname = decodeURLEncodedURIComponent(~i ? path.slice(0, i) : path);
+    this.querystring = ~i ? _page._decodeURLEncodedURIComponent(path.slice(i + 1)) : '';
+    this.pathname = _page._decodeURLEncodedURIComponent(~i ? path.slice(0, i) : path);
     this.params = {};
 
     // fragment
@@ -19230,16 +19573,10 @@ pathToRegexp_1.tokensToRegExp = tokensToRegExp_1;
       if (!~this.path.indexOf('#')) return;
       var parts = this.path.split('#');
       this.path = this.pathname = parts[0];
-      this.hash = decodeURLEncodedURIComponent(parts[1]) || '';
+      this.hash = _page._decodeURLEncodedURIComponent(parts[1]) || '';
       this.querystring = this.querystring.split('#')[0];
     }
   }
-
-  /**
-   * Expose `Context`.
-   */
-
-  page.Context = Context;
 
   /**
    * Push state.
@@ -19248,9 +19585,13 @@ pathToRegexp_1.tokensToRegExp = tokensToRegExp_1;
    */
 
   Context.prototype.pushState = function() {
+    var page = this.page;
+    var window = page._window;
+    var hashbang = page._hashbang;
+
     page.len++;
     if (hasHistory) {
-        pageWindow.history.pushState(this.state, this.title,
+        window.history.pushState(this.state, this.title,
           hashbang && this.path !== '/' ? '#!' + this.path : this.canonicalPath);
     }
   };
@@ -19262,9 +19603,10 @@ pathToRegexp_1.tokensToRegExp = tokensToRegExp_1;
    */
 
   Context.prototype.save = function() {
-    if (hasHistory && pageWindow.location.protocol !== 'file:') {
-        pageWindow.history.replaceState(this.state, this.title,
-          hashbang && this.path !== '/' ? '#!' + this.path : this.canonicalPath);
+    var page = this.page;
+    if (hasHistory && page._window.location.protocol !== 'file:') {
+        page._window.history.replaceState(this.state, this.title,
+          page._hashbang && this.path !== '/' ? '#!' + this.path : this.canonicalPath);
     }
   };
 
@@ -19283,21 +19625,14 @@ pathToRegexp_1.tokensToRegExp = tokensToRegExp_1;
    * @api private
    */
 
-  function Route(path, options) {
-    options = options || {};
-    options.strict = options.strict || strict;
+  function Route(path, options, page) {
+    var _page = this.page = page || globalPage;
+    var opts = options || {};
+    opts.strict = opts.strict || page._strict;
     this.path = (path === '*') ? '(.*)' : path;
     this.method = 'GET';
-    this.regexp = pathToRegexp_1(this.path,
-      this.keys = [],
-      options);
+    this.regexp = pathToRegexp_1(this.path, this.keys = [], opts);
   }
-
-  /**
-   * Expose `Route`.
-   */
-
-  page.Route = Route;
 
   /**
    * Return route middleware with
@@ -19336,7 +19671,7 @@ pathToRegexp_1.tokensToRegExp = tokensToRegExp_1;
 
     for (var i = 1, len = m.length; i < len; ++i) {
       var key = keys[i - 1];
-      var val = decodeURLEncodedURIComponent(m[i]);
+      var val = this.page._decodeURLEncodedURIComponent(m[i]);
       if (val !== undefined || !(hasOwnProperty.call(params, key.name))) {
         params[key.name] = val;
       }
@@ -19347,172 +19682,12 @@ pathToRegexp_1.tokensToRegExp = tokensToRegExp_1;
 
 
   /**
-   * Handle "populate" events.
+   * Module exports.
    */
 
-  var onpopstate = (function () {
-    var loaded = false;
-    if ( ! hasWindow ) {
-      return;
-    }
-    if (hasDocument && document.readyState === 'complete') {
-      loaded = true;
-    } else {
-      window.addEventListener('load', function() {
-        setTimeout(function() {
-          loaded = true;
-        }, 0);
-      });
-    }
-    return function onpopstate(e) {
-      if (!loaded) return;
-      if (e.state) {
-        var path = e.state.path;
-        page.replace(path, e.state);
-      } else if (isLocation) {
-        var loc = pageWindow.location;
-        page.show(loc.pathname + loc.hash, undefined, undefined, false);
-      }
-    };
-  })();
-  /**
-   * Handle "click" events.
-   */
-
-  /* jshint +W054 */
-  function onclick(e) {
-    if (1 !== which(e)) return;
-
-    if (e.metaKey || e.ctrlKey || e.shiftKey) return;
-    if (e.defaultPrevented) return;
-
-    // ensure link
-    // use shadow dom when available if not, fall back to composedPath() for browsers that only have shady
-    var el = e.target;
-    var eventPath = e.path || (e.composedPath ? e.composedPath() : null);
-
-    if(eventPath) {
-      for (var i = 0; i < eventPath.length; i++) {
-        if (!eventPath[i].nodeName) continue;
-        if (eventPath[i].nodeName.toUpperCase() !== 'A') continue;
-        if (!eventPath[i].href) continue;
-
-        el = eventPath[i];
-        break;
-      }
-    }
-    // continue ensure link
-    // el.nodeName for svg links are 'a' instead of 'A'
-    while (el && 'A' !== el.nodeName.toUpperCase()) el = el.parentNode;
-    if (!el || 'A' !== el.nodeName.toUpperCase()) return;
-
-    // check if link is inside an svg
-    // in this case, both href and target are always inside an object
-    var svg = (typeof el.href === 'object') && el.href.constructor.name === 'SVGAnimatedString';
-
-    // Ignore if tag has
-    // 1. "download" attribute
-    // 2. rel="external" attribute
-    if (el.hasAttribute('download') || el.getAttribute('rel') === 'external') return;
-
-    // ensure non-hash for the same path
-    var link = el.getAttribute('href');
-    if(!hashbang && samePath(el) && (el.hash || '#' === link)) return;
-
-    // Check for mailto: in the href
-    if (link && link.indexOf('mailto:') > -1) return;
-
-    // check target
-    // svg target is an object and its desired value is in .baseVal property
-    if (svg ? el.target.baseVal : el.target) return;
-
-    // x-origin
-    // note: svg links that are not relative don't call click events (and skip page.js)
-    // consequently, all svg links tested inside page.js are relative and in the same origin
-    if (!svg && !sameOrigin(el.href)) return;
-
-    // rebuild path
-    // There aren't .pathname and .search properties in svg links, so we use href
-    // Also, svg href is an object and its desired value is in .baseVal property
-    var path = svg ? el.href.baseVal : (el.pathname + el.search + (el.hash || ''));
-
-    path = path[0] !== '/' ? '/' + path : path;
-
-    // strip leading "/[drive letter]:" on NW.js on Windows
-    if (hasProcess && path.match(/^\/[a-zA-Z]:\//)) {
-      path = path.replace(/^\/[a-zA-Z]:\//, '/');
-    }
-
-    // same page
-    var orig = path;
-    var pageBase = getBase();
-
-    if (path.indexOf(pageBase) === 0) {
-      path = path.substr(base.length);
-    }
-
-    if (hashbang) path = path.replace('#!', '');
-
-    if (pageBase && orig === path) return;
-
-    e.preventDefault();
-    page.show(orig);
-  }
-
-  /**
-   * Event button.
-   */
-
-  function which(e) {
-    e = e || (hasWindow && window.event);
-    return null == e.which ? e.button : e.which;
-  }
-
-  /**
-   * Convert to a URL object
-   */
-  function toURL(href) {
-    if(typeof URL === 'function' && isLocation) {
-      return new URL(href, location.toString());
-    } else if (hasDocument) {
-      var anc = document.createElement('a');
-      anc.href = href;
-      return anc;
-    }
-  }
-
-  /**
-   * Check if `href` is the same origin.
-   */
-
-  function sameOrigin(href) {
-    if(!href || !isLocation) return false;
-    var url = toURL(href);
-
-    var loc = pageWindow.location;
-    return loc.protocol === url.protocol &&
-      loc.hostname === url.hostname &&
-      loc.port === url.port;
-  }
-
-  function samePath(url) {
-    if(!isLocation) return false;
-    var loc = pageWindow.location;
-    return url.pathname === loc.pathname &&
-      url.search === loc.search;
-  }
-
-  /**
-   * Gets the `base`, which depends on whether we are using History or
-   * hashbang routing.
-   */
-  function getBase() {
-    if(!!base) return base;
-    var loc = hasWindow && pageWindow && pageWindow.location;
-    return (hasWindow && hashbang && loc && loc.protocol === 'file:') ? loc.pathname : base;
-  }
-
-  page.sameOrigin = sameOrigin;
+  var globalPage = createPage();
+  var page_js = globalPage;
+  page.default = globalPage;
 
 return page_js;
 
@@ -19959,7 +20134,7 @@ var CartModule = function (_ApiModule) {
         new __WEBPACK_IMPORTED_MODULE_3__changeItemAmountCart__["a" /* ChangeItemAmountModule */]();
         new __WEBPACK_IMPORTED_MODULE_4__createOrder__["a" /* CreateOrderModule */]();
 
-        _this.initGeocomplete();
+        // this.initGeocomplete();
         return _this;
     }
 
@@ -20411,7 +20586,7 @@ var MyProfileModule = function (_ApiModule) {
         new __WEBPACK_IMPORTED_MODULE_1__user_data__["a" /* UserDataModule */]();
         new __WEBPACK_IMPORTED_MODULE_2__user_password__["a" /* UserPasswordModule */]();
 
-        _this.initGeocomplete();
+        // this.initGeocomplete();
         return _this;
     }
 
@@ -21050,7 +21225,7 @@ var RegisterModule = function (_ApiModule) {
                     phone: {
                         rangelength: "Не верное количество символов в номере телефона",
                         number: "Вводите только цифры!",
-                        // required: this.requiredField,
+                        required: this.requiredField,
                         minlength: this.minlengthField
                     },
                     address: {

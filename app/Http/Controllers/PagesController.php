@@ -26,7 +26,7 @@ class PagesController extends Controller
     public function home(Category $category, Slider $slider){
         $collection = $collection1 = $category->collectCategories();
         $parent_id = 0;
-        $categories = $category->categoryHandler($collection,$parent_id);
+        $categories = $category->categoryHandler($collection, $parent_id);
 
 
         return view('pages.home',[

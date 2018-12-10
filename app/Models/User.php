@@ -10,7 +10,19 @@ class User extends Authenticatable
     use Notifiable;
 
     protected $fillable = [
-        'name', 'fname', 'lname', 'email', 'password', 'role', 'price_type', 'address', 'phone', 'manager_id', 'client_type'
+        'name',
+	    'fname',
+	    'lname',
+	    'email',
+	    'password',
+	    'role',
+	    'price_type',
+	    'address',
+	    'phone',
+	    'manager_id',
+	    'client_type',
+	    'company',
+	    'status'
     ];
 
     protected $hidden = [
@@ -63,14 +75,16 @@ class User extends Authenticatable
     {
         return User::create([
             'name' => $data['name'],
-            'fname' => $data['fname'] ?? 'Unnamed',
-            'lname' => $data['lname'] ?? 'Unnamed',
+            'fname' => $data['fname'] ?? '',
+            'lname' => $data['lname'] ?? '',
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
             'role' => $data['role'] ?? 'user',
             'price_type' => $data['price_type'] ?? 'price_user',
             'address' => $data['address'] ?? '',
             'phone' => $data['phone'] ?? '',
+            'company' => $data['company'] ?? '',
+            'status' => $data['status'],
             'manager_id' => $data['manager_id'],
         ]);
     }
@@ -81,12 +95,14 @@ class User extends Authenticatable
 
         $args = [
             'name' => $data['name'],
-            'fname' => $data['fname'] ?? 'Unnamed',
-            'lname' => $data['lname'] ?? 'Unnamed',
+            'fname' => $data['fname'] ?? '',
+            'lname' => $data['lname'] ?? '',
             'email' => $data['email'],
             'price_type' => $data['price_type'] ?? 'price_user',
             'address' => $data['address'] ?? '',
             'phone' => $data['phone'] ?? '',
+	        'company' => $data['company'] ?? '',
+	        'status' => $data['status'],
             'manager_id' => $data['manager_id'],
         ];
 

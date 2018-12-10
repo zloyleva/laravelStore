@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class LoginController extends Controller
 {
@@ -52,7 +53,14 @@ class LoginController extends Controller
         }
 
         if ($this->attemptLogin($request)) {
-            $this->guard()->user()->generateToken();
+
+	        DB::table('shoppingcart')->where('identifier', ''.$this->guard()->user()->id)->delete();
+
+	        DB::table('shoppingcart')
+		        ->where('identifier', ''.$request->cookie('user_ids'))
+		        ->update(['identifier' => $this->guard()->user()->id]);
+
+        	$this->guard()->user()->generateToken();
 
             return $this->sendLoginResponse($request);
         }
@@ -96,7 +104,7 @@ class LoginController extends Controller
 	protected function validateLogin(Request $request)
 	{
 		$this->validate($request, [
-			'name' => 'required|string',//validate field from BE
+			'name' => 'required|string', //validate field from BE
 			'password' => 'required|string',
 		]);
 	}

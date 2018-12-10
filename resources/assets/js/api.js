@@ -35,14 +35,14 @@ export class ApiModule {
         });
     };
 
-    initGeocomplete() {
-        $.getScript('http://maps.googleapis.com/maps/api/js?key=' +
-            this.googleApiKey + '&libraries=places', (data, textStatus, jqxhr) => {
-                console.log(textStatus);
-                $('#address').geocomplete();
-            }
-        );
-    };
+    // initGeocomplete() {
+    //     $.getScript('http://maps.googleapis.com/maps/api/js?key=' +
+    //         this.googleApiKey + '&libraries=places', (data, textStatus, jqxhr) => {
+    //             console.log(textStatus);
+    //             $('#address').geocomplete();
+    //         }
+    //     );
+    // };
 
     post(settings) {
       console.log(this.apiToken);

@@ -114,14 +114,14 @@ class CartController extends Controller
         }
 
         $stored = DB::table('shoppingcart')->where('identifier', $identifcator)->first();
-        $productsInCart = $stored?unserialize($stored->content):collect([]);
+        $productsInCart = $stored ? unserialize($stored->content) : collect([]);
 
         return view('store.cart',[
-            'request'=>$request->session()->get('laravel_session'),
-            'productsInCart'=>$productsInCart,
+            'request' => $request->session()->get('laravel_session'),
+            'productsInCart' => $productsInCart,
             'cart' => $request->session()->get('cart'),
-            'user'=>Auth::user(),
-            'totalSum'=>preg_replace('/,/', '', $this->total($productsInCart))
+            'user' => Auth::user(),
+            'totalSum' => preg_replace('/,/', '', $this->total($productsInCart))
         ]);
     }
 
@@ -144,11 +144,15 @@ class CartController extends Controller
      * @return \Illuminate\Contracts\Auth\Authenticatable|null
      */
     private function getIdsOfCurrentUser($request){
-        if(!$currentUser = auth('api')->user()){
-            $currentUser = $request->user_ids;
-        }else{
-            $currentUser = $currentUser->id;
-        }
+
+    	$currentUser = auth('api')->user();
+
+    	if(!$currentUser){
+		    $currentUser = $request->user_ids;
+	    } else {
+		    $currentUser = $currentUser->id;
+	    }
+
         return $currentUser;
     }
 
@@ -157,12 +161,14 @@ class CartController extends Controller
      * @return string
      */
     private function getPriceTypeOfCurrentUser($priceType){
+
         if(!$currentUser = auth('api')->user()){
             $price_type = 'price_user';
-        }else{
+        } else {
             $getAllPriceTypes = $priceType->get();
             $price_type = $getAllPriceTypes[$currentUser->price_type-1]['type']??'price_user';
         }
+
         return $price_type;
     }
 }

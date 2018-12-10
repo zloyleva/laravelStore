@@ -5,6 +5,16 @@
         <h1>Корзина</h1>
     </div>
 
+    @guest
+        <div class="container text-center">
+            <div class="alert alert-danger" role="alert">
+                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                Если Вы зарегистрированы, то <a href="/login"><b>зайдите</b></a> в свой кабинет, для получения персональной оптовой цены.
+                Если же вы новый пользователь, то <a href="/register"><b>зарегистрируйтесь</b></a> и с вами свяжется менеджер для указания оптовой стоимости, при заказе от 3000 грн.
+            </div>
+        </div>
+    @endguest
+
     @if(count($productsInCart) > 0)
         <div class="container js-cart-content">
             <div class="row">
@@ -64,14 +74,16 @@
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <form id="create-order-form" class="" action="{{route('orders.list')}}" method="get">
                         <input type="hidden" name="status" value="setOrder">
+
                         @if(isset($_COOKIE['user_ids']))
                             <input type="hidden" name="user_ids" value="{{$_COOKIE['user_ids']}}">
                         @endif
+
                         <div class="form-group">
                             <label>Введите адресс доставки <sup>*</sup></label>
                             <input id="address" name="address" type="text" class="form-control" value="{{$user->address or ''}}" placeholder="Введите адресс доставки"/>
                             {{--https://developers.google.com/places/web-service/policies--}}
-                            <img src="https://developers.google.com/places/documentation/images/powered-by-google-on-white.png">
+                            {{--<img src="https://developers.google.com/places/documentation/images/powered-by-google-on-white.png">--}}
                         </div>
                         <div class="form-group">
                             <label>Введите Ваш телефон(для связи) <sup>*</sup></label>
@@ -84,8 +96,8 @@
                                       placeholder="Введите свои пожелания"></textarea>
                         </div>
                         <div class="form-group">
-                            <input id="submitCart" class="btn btn-primary" type="button" value="Сделать заказ">
-                            <input id="clearCart" class="btn btn-danger" type="button" value="Очистить корзину">
+                            <input id="clearCart" class="btn" type="button" value="Очистить корзину">
+                            <input id="submitCart" class="btn btn-primary pull-right" type="button" value="Сделать заказ">
                         </div>
                     </form>
                 </div>

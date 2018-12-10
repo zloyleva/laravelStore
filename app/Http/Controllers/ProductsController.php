@@ -68,13 +68,13 @@ class ProductsController extends Controller
         $collection = $collection1 = $category->collectCategories();
         $parent_id = 0;
 
-        $categories = $category->categoryHandler($collection,$parent_id,'');
+        $categories = $category->categoryHandler($collection, $parent_id, '');
 
         return view('product.index', [
-                'categories'=>$categories,
-                'product'=>$getProduct,
+                'categories' => $categories,
+                'product' => $getProduct,
                 'priceTypeList' => $priceType->get(),
-                'og'=>[
+                'og' => [
                     'title'=>$getProduct->name,
                     'description'=>(count($getProduct->description)>3)?$getProduct->description:$getProduct->name,
                     'image'=>url('/') . $getProduct->image

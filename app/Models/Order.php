@@ -72,7 +72,22 @@ class Order extends Model
     public function showOrdersAdmin()
     {
         return $this
-            ->select('orders.id','users.name','users.fname','users.lname','orders.created_at','orders.status','orders.total','managers.name as manager','users.price_type','price_types.description')
+            ->select(
+            	'orders.id',
+	            'orders.created_at',
+	            'users.email',
+	            'users.name',
+	            'users.fname',
+	            'users.lname',
+	            'orders.phone',
+	            'users.company',
+	            'orders.address',
+	            'orders.status',
+	            'orders.total',
+	            'managers.name as manager',
+	            'users.price_type',
+	            'price_types.description'
+            )
             ->leftJoin('users', 'user_id', '=', 'users.id')
             ->leftJoin('managers', 'users.manager_id', '=', 'managers.id')
             ->leftJoin('price_types', 'users.price_type', '=', 'price_types.id')
@@ -102,13 +117,13 @@ class Order extends Model
 
         $jsonOrder = [
             'user'=>[
-                'name'=>$userName??"Неуказанно",
-                'email'=>$userEmail??"Неуказанно",
-                'dalivery'=>$result['orderInstance']['address'],
-                'phone'=>$result['orderInstance']['phone'],
-                'note'=>$result['orderInstance']['note'],
-                'total'=>strval($result['orderInstance']['total']),
-                'date'=>$result['orderInstance']['created_at']->toDateTimeString(),
+                'name' => $userName ?? "Неуказанно",
+                'email'=> $userEmail ?? "Неуказанно",
+                'dalivery' => $result['orderInstance']['address'],
+                'phone' => $result['orderInstance']['phone'],
+                'note' => $result['orderInstance']['note'],
+                'total' => strval($result['orderInstance']['total']),
+                'date' => $result['orderInstance']['created_at']->toDateTimeString(),
             ],
             'products'=>[]
         ];

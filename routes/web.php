@@ -31,6 +31,7 @@ Route::post('/cart/sub_item', [ 'as'=>'cart_item.sub', 'uses'=>'CartController@s
 Route::delete('/cart/item', [ 'as'=>'cart_item.delete', 'uses'=>'CartController@deleteCartItem']);
 
 Route::post( '/orders/create', [ 'as' => 'orders.create', 'uses' => 'OrdersController@createOrder' ] );
+Route::get( '/orders/thanks', [ 'as' => 'orders.thanks', 'uses' => 'OrdersController@thanksOrder' ] );
 
 Route::group( [ 'middleware' => [ 'auth' ] ], function () {
 	Route::get( '/my_profile', [ 'as' => 'my_profile', 'uses' => 'PagesController@myProfile' ] );

@@ -33,18 +33,18 @@ class OrdersController extends Controller
 	public function createOrder(Request $request, Order $order, OrderList $orderList, User $user){
 
         $currentUserId = $this->getIdsOfCurrentUser($request);
-        $result = $order->createOrder($request,$currentUserId, $orderList);
+        $result = $order->createOrder($request, $currentUserId, $orderList);
         $request->session()->forget('cart');
 
         /**
          * todo need to move to own Class
          */
-        $redirectUrl = route('store');
+//        $redirectUrl = route('store');
         if(Auth::check() && !!filter_var(Auth::user()->email, FILTER_VALIDATE_EMAIL) ){
             $sendTo = $user->find(Auth::user()->id);
             Mail::to($sendTo)->send(new CreatedOrder($result['order_id'], $order));
 
-            $redirectUrl = route('orders.list');
+//            $redirectUrl = route('orders.list');
         }
 
         $order->createOrderFile($currentUserId, $result, $user);
@@ -84,13 +84,19 @@ class OrdersController extends Controller
 
         //Redirect to THNX page + eCommerce stat
         return $this->jsonResponse([
-            'result'=>$result,
-            'message'=>'order Created',
-            'redirectUrl'=>$redirectUrl,
+            'result' => $result,
+            'message' => 'order Created',
+//            'redirectUrl' => $redirectUrl,
+            'redirectUrl' => route('orders.thanks'),
 
-            'transaction'=>$transaction,
-            'jsonOrder'=>$jsonOrder,
+            'transaction' => $transaction,
+            'jsonOrder' => $jsonOrder,
         ]);
+	}
+
+	public function thanksOrder()
+	{
+		return view('store.thanks');
 	}
 
     /**

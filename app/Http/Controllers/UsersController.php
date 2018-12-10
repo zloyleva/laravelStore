@@ -10,6 +10,11 @@ use Illuminate\Http\Request;
 
 class UsersController extends Controller
 {
+	/**
+	 * @param PriceType $priceType
+	 * @param Manager $manager
+	 * @return array|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+	 */
     public function createUser(PriceType $priceType, Manager $manager){
         $managerList = $manager->get();
         $priceTypeList = $priceType->get();
@@ -20,6 +25,11 @@ class UsersController extends Controller
         ]);
     }
 
+	/**
+	 * @param AddNewUserRequest $request
+	 * @param User $user
+	 * @return \Illuminate\Http\JsonResponse
+	 */
     public function store(AddNewUserRequest $request, User $user){
         return $this->jsonResponse( [
             'user'=>$user->addNewUser($request->all()),
@@ -50,7 +60,11 @@ class UsersController extends Controller
         ]);
     }
 
-
+	/**
+	 * @param Request $request
+	 * @param User $user
+	 * @return \Illuminate\Http\JsonResponse
+	 */
     public function updateUser(Request $request, User $user){
 
         return $this->jsonResponse( [

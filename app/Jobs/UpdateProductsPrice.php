@@ -39,7 +39,7 @@ class UpdateProductsPrice implements ShouldQueue
         Log::info('Queue -- ::>>' . count($this->productsArray));
 
 	    foreach ( $this->productsArray as $item ) {
-		    if ( ! $item ) {
+		    if ( !$item ) {
 			    continue;
 		    }
 		    $categoryId = $this->category->takeCategoryId( $item['category'] );

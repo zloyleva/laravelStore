@@ -121,7 +121,7 @@ export class RegisterModule extends ApiModule {
                 phone: {
                     rangelength: "Не верное количество символов в номере телефона",
                     number: "Вводите только цифры!",
-                    // required: this.requiredField,
+                    required: this.requiredField,
                     minlength: this.minlengthField
                 },
                 address: {

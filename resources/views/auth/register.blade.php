@@ -54,23 +54,23 @@
                             <hr>
 
 
-                            <div class="form-group">
-                                <div class="col-md-6 col-md-offset-4 select_user_type">
-                                    <div class="radio_item">
-                                        <input id="salesForSelf" type="radio" name="userType" value="Покупки для себя">
-                                        <label for="salesForSelf">Покупки для себя</label>
-                                    </div>
-                                    <div class="radio_item">
-                                        <input id="salesForUr" type="radio" name="userType" value="Юридическое лицо">
-                                        <label for="salesForUr">Юридическое лицо</label>
-                                    </div>
-                                    <div class="radio_item">
-                                        <input id="salesForOpt" type="radio" name="userType" value="Оптовый покупатель">
-                                        <label for="salesForOpt">Оптовый покупатель</label>
-                                    </div>
-                                    <div id="insertErrorMessage"></div>
-                                </div>
-                            </div>
+                            {{--<div class="form-group">--}}
+                                {{--<div class="col-md-6 col-md-offset-4 select_user_type">--}}
+                                    {{--<div class="radio_item">--}}
+                                        {{--<input id="salesForSelf" type="radio" name="userType" value="Покупки для себя">--}}
+                                        {{--<label for="salesForSelf">Покупки для себя</label>--}}
+                                    {{--</div>--}}
+                                    {{--<div class="radio_item">--}}
+                                        {{--<input id="salesForUr" type="radio" name="userType" value="Юридическое лицо">--}}
+                                        {{--<label for="salesForUr">Юридическое лицо</label>--}}
+                                    {{--</div>--}}
+                                    {{--<div class="radio_item">--}}
+                                        {{--<input id="salesForOpt" type="radio" name="userType" value="Оптовый покупатель">--}}
+                                        {{--<label for="salesForOpt">Оптовый покупатель</label>--}}
+                                    {{--</div>--}}
+                                    {{--<div id="insertErrorMessage"></div>--}}
+                                {{--</div>--}}
+                            {{--</div>--}}
 
                             <div class="form-group{{ $errors->has('fname') ? ' has-error' : '' }}">
                                 <label for="fname" class="col-md-4 control-label">ФИО</label>
@@ -87,27 +87,27 @@
                                 </div>
                             </div>
 
-                            <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-                                <label for="name" class="col-md-4 control-label">Логин</label>
+                            {{--<div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">--}}
+                                {{--<label for="name" class="col-md-4 control-label">Логин</label>--}}
 
-                                <div class="col-md-6">
-                                    <input id="name" type="text" class="form-control" name="name"
-                                           value="{{ old('name') }}" >
+                                {{--<div class="col-md-6">--}}
+                                    {{--<input id="name" type="text" class="form-control" name="name"--}}
+                                           {{--value="{{ old('name') }}" >--}}
 
-                                    @if ($errors->has('name'))
-                                        <span class="help-block">
-                                        <strong>{{ $errors->first('name') }}</strong>
-                                    </span>
-                                    @endif
-                                </div>
-                            </div>
+                                    {{--@if ($errors->has('name'))--}}
+                                        {{--<span class="help-block">--}}
+                                        {{--<strong>{{ $errors->first('name') }}</strong>--}}
+                                    {{--</span>--}}
+                                    {{--@endif--}}
+                                {{--</div>--}}
+                            {{--</div>--}}
 
                             <div class="form-group{{ $errors->has('phone') ? ' has-error' : '' }}">
-                                <label for="phone" class="col-md-4 control-label">Телефон</label>
+                                <label for="phone" class="col-md-4 control-label">Телефон*</label>
 
                                 <div class="col-md-6">
                                     <input id="phone" type="text" class="form-control" name="phone"
-                                           value="{{ old('phone') }}" >
+                                           value="{{ old('phone') }}" required>
 
                                     @if ($errors->has('phone'))
                                         <span class="help-block">
@@ -118,7 +118,7 @@
                             </div>
 
                             <div class="form-group{{ $errors->has('address') ? ' has-error' : '' }}">
-                                <label for="address" class="col-md-4 control-label">Город</label>
+                                <label for="address" class="col-md-4 control-label">Адрес</label>
 
                                 <div class="col-md-6">
                                     <input id="address" type="text" class="form-control" name="address"
@@ -132,14 +132,14 @@
                                 </div>
                             </div>
 
-                            <div class="form-group">
-                                <label for="comment" class="col-md-4 control-label">Коментарий</label>
+                            {{--<div class="form-group">--}}
+                                {{--<label for="comment" class="col-md-4 control-label">Коментарий</label>--}}
 
-                                <div class="col-md-6">
-                                    <textarea class="form-control" name="comment" id="comment"
-                                              rows="5">{{ old('comment') }}</textarea>
-                                </div>
-                            </div>
+                                {{--<div class="col-md-6">--}}
+                                    {{--<textarea class="form-control" name="comment" id="comment"--}}
+                                              {{--rows="5">{{ old('comment') }}</textarea>--}}
+                                {{--</div>--}}
+                            {{--</div>--}}
 
                             <div class="form-group">
                                 <div class="col-md-6 col-md-offset-4">

@@ -47,7 +47,7 @@ class Product extends Model
         if( isset($request->inputData) && $request->inputData == 'name' && is_string($request->name) ){
 	        $query->where('name', 'like',"%{$request->name}%");
         //todo add custom url for search	        $query->withPath('custom/url');
-        }elseif ( isset($request->inputData) && $request->inputData == 'sku' && is_numeric($request->name) ){
+        } elseif ( isset($request->inputData) && $request->inputData == 'sku' && is_numeric($request->name) ){
 		    $query->where('sku', 'like',"%{$request->name}%");
 	    }
 
@@ -104,7 +104,7 @@ class Product extends Model
 			    'price_vip'    => (float) strtr( $item['price_vip'], [ ',' => '.' ] ),
 
 			    'category_id' => $categoryId,
-			    'stock'       => $item['stock'],
+			    'stock'       => filter_var($item['stock'], FILTER_SANITIZE_NUMBER_INT),
 			    'featured'    => false,
 			    'image'       => $imageURL
 		    ]
@@ -122,6 +122,6 @@ class Product extends Model
     }
 
     public function getProduct($slug){
-        return $this->where('slug',$slug)->firstOrFail();
+        return $this->where('slug', $slug)->firstOrFail();
     }
 }

@@ -70,7 +70,7 @@ class Category extends Model
 	 *
 	 * @return mixed
 	 */
-    private function insertOrGetId($category,$parent_id){
+    private function insertOrGetId($category, $parent_id){
     	if(!$category){
 		    $category = 'unCategory';
 		    $parent_id = 0;
@@ -86,7 +86,7 @@ class Category extends Model
 		    ->get()->toArray();
     }
 
-	public function categoryHandler(&$collection,$parent_id,$slug = ''){
+	public function categoryHandler(&$collection, $parent_id, $slug = ''){
 		$menuHtml = '';
 		$slug_id = $this->searchData['find']??null;
 		foreach( $collection as $key => $value ){
@@ -114,7 +114,7 @@ class Category extends Model
 					$menuHtml .=    ($sub_menu = $this->categoryHandler($collection,$value['id'],$slug))?'<span class="caret"></span></a>'.$sub_menu:'</a>';
 
 					$menuHtml .= '</li>';
-				}else{
+				} else {
 					$menuHtml .= '<li><a href="/store/category/'.$value['slug'].'" class="';
 					$menuHtml .=    ($slug == $value['slug'])?'active':'';
 					$menuHtml .=    '">'.$value['name'].'</a></li>';
@@ -142,7 +142,6 @@ class Category extends Model
 				}
 			}
 		}
-
 
 		array_unshift($breadcrumbs,[
 				'name' => 'Магазин',

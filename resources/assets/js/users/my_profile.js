@@ -10,7 +10,7 @@ export class MyProfileModule extends ApiModule {
         new UserDataModule();
         new UserPasswordModule();
 
-        this.initGeocomplete();
+        // this.initGeocomplete();
     }
 
 }
