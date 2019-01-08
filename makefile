@@ -89,4 +89,4 @@ start_queue: #start queue worker
 	@sudo docker exec -it $(docker_name) bash -c 'php artisan queue:work'
 
 clean_log:
-	@sudo cat /dev/null > storage/logs/laravel.log;
+	@sudo cat /dev/null > storage/logs/laravel.log; sudo cat /dev/null > storage/logs/queue-worker.log

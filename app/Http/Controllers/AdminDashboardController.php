@@ -85,41 +85,32 @@ class AdminDashboardController extends Controller
         return 'upload price ';
     }
 
-    public function queueMethod(Product $product, Category $category, UploadPrice $uploadPrice)
+    public function queueMethod(Product $product, Category $category)
     {
 
-        $chunkSize = 250;
+        $chunkSize = 2000;
+        $ChunkToUpload = [];
 
-        //Read price to array
-        $localPriceName = storage_path('price/price.json');
-
-        while (true) {
-
-            $productsPriceArray = file($localPriceName);
-            $ChunkToUpload = [];
-            //Slice from array chunks(200 ps)
-            $chunkItemCounts = (count($productsPriceArray) < $chunkSize) ? count($productsPriceArray) : $chunkSize;
-            for ($i = 0; $i < $chunkItemCounts; $i++) {
-                $ChunkToUpload[] = json_decode($productsPriceArray[$i], JSON_UNESCAPED_UNICODE);
-                unset($productsPriceArray[$i]);
+        $handle = fopen(storage_path('price/price.json'), "r");
+        if ($handle) {
+            while (($line = fgets($handle)) !== false) {
+                array_push($ChunkToUpload, $line);
+                if(count($ChunkToUpload) >= $chunkSize){
+                    $this->sendToQueue($ChunkToUpload, $product, $category);
+                    $ChunkToUpload = [];
+                }
             }
 
-            //Call Queue and pass it chunk data and slice data array
-            $this->sendToQueue($ChunkToUpload, $product, $category);
-
-            if (count($productsPriceArray) < 1) {
-                //finish read price
-                //if data's array empty - write to DB - update price is done ->> Pass status last chunk for set it
-                //delete price file
-
-                //todo write to DB about finish upload price
-                $uploadPrice->successLoadPrice('Upload price is done', "upload products", 2);
-
-                return 'finish upload';
-            }
-
-            file_put_contents($localPriceName, $productsPriceArray);
+            fclose($handle);
+        } else {
+            // error opening the file.
         }
+
+        if($ChunkToUpload > 0){
+            $this->sendToQueue($ChunkToUpload, $product, $category);
+        }
+
+        return "Finish upload";
     }
 
     /**
@@ -129,8 +120,7 @@ class AdminDashboardController extends Controller
      */
     private function sendToQueue($ChunkToUpload, $product, $category)
     {
-
-        $jobUploadPrice = (new UpdateProductsPrice($ChunkToUpload, $product, $category))->delay(Carbon::now()->addSeconds(50));
+        $jobUploadPrice = (new UpdateProductsPrice($ChunkToUpload, $product, $category))->delay(Carbon::now()->addSeconds(4));
         dispatch($jobUploadPrice);
     }
 

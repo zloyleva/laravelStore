@@ -37,15 +37,6 @@ class UpdateProductsPrice implements ShouldQueue
     public function handle()
     {
         Log::info('Queue -- ::>>' . count($this->productsArray));
-
-	    foreach ( $this->productsArray as $item ) {
-		    if ( !$item ) {
-			    continue;
-		    }
-		    $categoryId = $this->category->takeCategoryId( $item['category'] );
-
-		    $this->product->insertOrUpdateProducts($item, $categoryId);//todo check returned data, and report if error
-
-	    }
+        $this->product->insertOrUpdateProducts($this->productsArray, $this->category);
     }
 }
