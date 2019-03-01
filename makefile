@@ -1,92 +1,142 @@
-docker_name = laravelstore_web_1
-docker_image = laravelstore_web
+include .env
+export
+
+php     = app
+db      = db
+nodejs  = nodejs
+nginx  = webserver
+
+container_php       = $(DOCKER_PREFIX)-$(php)
+container_db        = $(DOCKER_PREFIX)-$(db)
+container_nodejs    = $(DOCKER_PREFIX)-$(nodejs)
+
+#####################################
+###                               ###
+### MakeFile for Laravel Skeleton ###
+###                               ###
+#####################################
+
+
+echo:
+	@echo $(php)
 
 help: #prints list of commands
 	@cat ./makefile | grep : | grep -v "grep"
 
-install: #start docker container #
-	@sudo docker-compose up -d && sudo docker exec -it $(docker_name) bash -c 'php composer.phar update && chmod -R 777 . && php composer.phar dump-autoload && php artisan migrate:refresh --seed'
+composer_dep: #install composer dependency >> ./vendors
+	@docker run --rm -v $(CURDIR):/app composer install
 
-start: #start docker container #
+key: #generate APP key
+	@sudo docker-compose exec $(php) php artisan key:generate
+
+
+#####################################
+###                               ###
+###       Start/stop project      ###
+###                               ###
+#####################################
+
+start: #start docker container
 	@sudo docker-compose up -d
 
 stop: #stop docker container
 	@sudo docker-compose down
 
-remove: #remove docker image
-	@sudo docker-compose down; sudo docker rmi -f $(docker_image)
 
-composer_update: #update vendors
-	@sudo docker exec -it $(docker_name) bash -c 'php composer.phar update && chmod -R 777 . && php composer.phar dump-autoload'
+#####################################
+###                               ###
+###       Work in containers      ###
+###                               ###
+#####################################
 
-composer_dump: #update vendors
-	@sudo docker exec -it $(docker_name) bash -c 'php composer.phar dump-autoload'
+show: #show docker's containers
+	@sudo docker ps
 
-set_env: #set default environments
-	@cp ./.env.example ./.env
+connect_app: #Connect
+	@docker-compose exec $(php) bash
+
+connect_db: #Connect
+	@docker-compose exec $(db) bash
+
+connect_nodejs: #Connect
+	@sudo docker-compose exec $(nodejs) /bin/sh
+
+connect_nginx: #Connect
+	@sudo docker-compose exec $(nginx) /bin/sh
+
+
+run_com_app: #Run commands in PHP container c=[commands]
+	@sudo docker-compose exec $(php) $(c)
+
+run_com_node: #Run commands in PHP container c=[commands]
+	@sudo docker-compose exec $(nodejs) $(c)
+
+
+#####################################
+###                               ###
+###       Work with Laravel       ###
+###                               ###
+#####################################
 
 create_controller: #create controller name=[controllerName]
-	@sudo docker exec -it $(docker_name) bash -c 'php artisan make:controller $(name) && chmod -R 777 .'
+	@sudo docker-compose exec $(php) php artisan make:controller $(name)
 
-create_model: #create model name=[modelName]
-	@sudo docker exec -it $(docker_name) bash -c 'php artisan make:model "Models\$(name)" -m && chmod -R 777 .'
+create_api_controller: #create API controller name=[controllerName]
+	@sudo docker-compose exec $(php) php artisan make:controller ..\\..\\Api\\V1\\Controllers\\$(name)
 
-create_seeder: #create seeder name=[seederName]
-	@sudo docker exec -it $(docker_name) bash -c 'php artisan make:seeder $(name) && chmod -R 777 .'
+create_request: #create FormRequest name=[controllerName]
+	@sudo docker-compose exec $(php) php artisan make:request $(name)
+
+create_resource: #create Resource name=[resource]
+	@sudo docker-compose exec $(php) php artisan make:resource $(name)Collection
+
+create_mailer: #create mailer name=[controllerName]
+	@sudo docker-compose exec $(php) php artisan make:mail $(name)
 
 create_test: #create test name=[testName]
-	@sudo docker exec -it $(docker_name) bash -c 'php artisan make:test $(name) && chmod -R 777 .'
+	@sudo docker-compose exec $(php) php artisan make:test $(name)Test
 
-create_email: #create email name=[emailName]
-	@sudo docker exec -it $(docker_name) bash -c 'php artisan make:mail $(name) && chmod -R 777 .'
+#####################################
+###                               ###
+###          Work with FE         ###
+###                               ###
+#####################################
 
-create_middleware: #create middleware name=[emailName]
-	@sudo docker exec -it $(docker_name) bash -c 'php artisan make:middleware $(name) && chmod -R 777 .'
+watch: #Run watch
+	@sudo docker-compose exec $(nodejs) npm run watch
 
-migration: #run migration
-	@sudo docker exec -it $(docker_name) bash -c 'php composer.phar dump-autoload && php artisan migrate'
+test: #test
+	@sudo docker exec -it $(container_php) bash -c 'vendor/bin/phpunit'
 
-seed: #run migration
-	@sudo docker exec -it $(docker_name) bash -c 'php composer.phar dump-autoload && php artisan db:seed'
+test_class: #test specific class name="$(name)"
+	@sudo docker exec -it $(container_php) bash -c 'vendor/bin/phpunit --filter $(name)'
+
+tinker: #Run tinker
+	@sudo docker-compose exec $(php) php artisan tinker
+
+route: #Run tinker
+	@sudo docker-compose exec $(php) php artisan route:list
+
 
 refresh: #Refresh the database and run all database seeds
-	@sudo docker exec -it $(docker_name) bash -c 'php composer.phar dump-autoload && php artisan migrate:refresh --seed'
+	@@sudo docker exec -it $(container_php) bash -c 'php artisan migrate:refresh --seed'
 
-migrate: #To run all of your outstanding migrations
-	@sudo docker exec -it $(docker_name) bash -c 'php artisan migrate'
 
-chmod: #allow RW to all
-	@sudo chmod -R 777 .
+clear_cache: #clear laravel cache php artisan optimize --force php artisan config:cache php artisan route:cache
+	@sudo docker exec -it $(container_php) bash -c 'php artisan cache:clear && php artisan view:clear && php artisan route:clear && php artisan config:clear'
 
-route: #show all routes
-	@sudo docker exec -it $(docker_name) bash -c 'php artisan route:list'
 
-conf: #refresh config cache
-	@sudo docker exec -it $(docker_name) bash -c 'php artisan config:cache'
+composer_update: #update vendors
+	@sudo docker exec -it $(container_php) bash -c 'php composer.phar update'
 
-test: #run test cases
-	@sudo docker exec -it $(docker_name) bash -c 'vendor/bin/phpunit'
+composer_dump: #update vendors
+	@sudo docker exec -it $(container_php) bash -c 'php composer.phar dump-autoload'
 
-mix_dev: #run mix in dev mode
-	@sudo docker exec -it $(docker_name) bash -c 'npm run dev && chmod -R 777 .'
-
-mix_prod: #run mix in prod mode
-	@sudo docker exec -it $(docker_name) bash -c 'npm run production && chmod -R 777 .'
-
-mix_watch: #run mix in watch
-	@sudo docker exec -it $(docker_name) bash -c 'npm run watch && chmod -R 777 .'
-
-clear_cache: #clear laravel cache
-	@sudo docker exec -it $(docker_name) bash -c 'php artisan cache:clear && php artisan view:clear'
-
-connect: #connect to container bash
-	@sudo docker exec -it $(docker_name) bash
-
-queue_product: #run
-    @sudo docker exec -it $(docker_name) bash -c 'php artisan queue:listen --tries=2'
-
-start_queue: #start queue worker
-	@sudo docker exec -it $(docker_name) bash -c 'php artisan queue:work'
-
-clean_log:
+clear_log:
 	@sudo cat /dev/null > storage/logs/laravel.log; sudo cat /dev/null > storage/logs/queue-worker.log
+
+swagger_publish: #publish swagger conf
+	@sudo docker exec -it $(container_php) bash -c 'php artisan l5-swagger:publish'
+
+swagger: #generate dock
+	@sudo docker exec -it $(container_php) bash -c 'php artisan l5-swagger:generate'
