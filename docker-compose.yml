@@ -1,14 +1,6 @@
 version: '3'
 services:
 
-  mailhog:
-    image: mailhog/mailhog:latest
-    container_name: "${DOCKER_PREFIX}-mailhog"
-    ports:
-      - "8025:8025"
-    networks:
-      - app-network
-
   nodejs:
     build:
       context: .
@@ -35,7 +27,6 @@ services:
     tty: true
     depends_on:
       - db
-      - mailhog
     environment:
       SERVICE_NAME: app
       SERVICE_TAGS: dev
@@ -60,7 +51,8 @@ services:
       - "443:443"
     volumes:
       - ./:/var/www
-      - ./docker/nginx/conf.d/app.conf:/etc/nginx/conf.d/default.conf
+      - ./docker/nginx/conf.d/prod.conf:/etc/nginx/conf.d/default.conf
+      - /etc/letsencrypt:/etc/letsencrypt
     networks:
       - app-network
 
