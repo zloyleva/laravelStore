@@ -76,11 +76,11 @@ class ProductsController extends Controller
                 'priceTypeList' => $priceType->get(),
                 'og' => [
                     'title'=>$getProduct->name,
-                    'description'=>(count($getProduct->description)>3)?$getProduct->description:$getProduct->name,
+                    'description'=>(is_string($getProduct->description) && strlen($getProduct->description)>3)?$getProduct->description:$getProduct->name,
                     'image'=>url('/') . $getProduct->image
                 ],
                 'header_title' => "Товары: " . $getProduct->name,
-                'header_description'=>(count($getProduct->description)>3)?$getProduct->description:$getProduct->name,
+                'header_description'=>(is_string($getProduct->description) && strlen($getProduct->description)>3)?$getProduct->description:$getProduct->name,
             ]
         );
     }
